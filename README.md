@@ -30,15 +30,46 @@ Serão desenvolvidas as seguintes telas:
 
 ---
 
+
 ## Tecnologias Utilizadas
 
 - **Java 8**
 - **Maven**
-- **JSF (JavaServer Faces)**
+- **JSF (JavaServer Faces) 2.2**
 - **PrimeFaces**
 - **PostgreSQL**
+- **Apache Tomcat 9.x** (servidor de aplicação recomendado)
+
 
 O sistema contará com autenticação de usuários (login) e será desenvolvido do zero, com código limpo, organizado e seguindo boas práticas.
+
+### Geração automática de tabelas
+
+- O sistema cria e atualiza automaticamente as tabelas do banco de dados conforme as entidades Java (JPA/Hibernate), incluindo tabelas de auditoria.
+- Se uma tabela não existir, ela será criada. Se houver mudanças nas entidades, o Hibernate atualiza o schema automaticamente.
+- Isso garante que o banco esteja sempre sincronizado com o modelo do sistema, facilitando o desenvolvimento e a manutenção.
+
+---
+
+
+## Ambiente de Desenvolvimento Recomendado
+
+- **Eclipse IDE for Enterprise Java and Web Developers** (versão 2020-06 ou superior)
+	- Suporte a Maven, Java EE (Web Tools Platform) e JSF
+- **Apache Tomcat 9.x** (configurado para rodar na porta 8081)
+- **Java 8**
+
+---
+
+## Como acessar a aplicação
+
+Acesse no navegador:
+
+	http://localhost:8081/wb_cars/
+
+---
+
+> Projeto em desenvolvimento colaborativo. Em breve, mais detalhes e instruções de uso!
 
 ---
 
