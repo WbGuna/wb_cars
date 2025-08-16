@@ -4,6 +4,8 @@ package br.com.wbcars.controle;
 import br.com.wbcars.dao.UsuarioDAO;
 import javax.faces.bean.ManagedProperty;
 import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import br.com.wbcars.modelo.Usuario;
 import br.com.wbcars.util.CriptografiaUtil;
 
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 @Component("loginBean")
 @Scope("session")
 public class LoginBean implements Serializable {
+    private static final Logger auditLogger = LoggerFactory.getLogger("AUDITORIA");
     public String logout() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         try {
@@ -40,9 +43,9 @@ public class LoginBean implements Serializable {
 
     public String entrar() {
     String ip = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRemoteAddr();
-    System.out.println("Tentativa de login: usuário=" + login + ", IP=" + ip);
+    auditLogger.info("Tentativa de login: usuário={}, IP={}", login, ip);
         if (bloqueadoAte != null && LocalDateTime.now().isBefore(bloqueadoAte)) {
-            System.out.println("Login BLOQUEADO para usuário=" + login + " até " + bloqueadoAte);
+            auditLogger.warn("Login BLOQUEADO para usuário={} até {}", login, bloqueadoAte);
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário bloqueado por tentativas inválidas. Tente novamente após " + BLOQUEIO_MINUTOS + " minutos.", null));
             return null;
@@ -51,12 +54,12 @@ public class LoginBean implements Serializable {
     FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         Usuario usuario = usuarioDAO.buscarPorLogin(login);
         if (usuario == null) {
-            System.out.println("Login FALHOU: usuário inexistente=" + login);
+            auditLogger.warn("Login FALHOU: usuário inexistente={}", login);
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário inexistente", null));
             tentativas++;
             if (tentativas >= MAX_TENTATIVAS) {
-                System.out.println("Usuário BLOQUEADO por tentativas inválidas: " + login);
+                auditLogger.warn("Usuário BLOQUEADO por tentativas inválidas: {}", login);
                 bloqueadoAte = LocalDateTime.now().plusMinutes(BLOQUEIO_MINUTOS);
                 FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário bloqueado por tentativas inválidas. Tente novamente após " + BLOQUEIO_MINUTOS + " minutos.", null));
@@ -64,7 +67,7 @@ public class LoginBean implements Serializable {
             return null;
         }
         if (!CriptografiaUtil.verificarSenha(senha, usuario.getSenha())) {
-            System.out.println("Login FALHOU: senha incorreta para usuário=" + login);
+            auditLogger.warn("Login FALHOU: senha incorreta para usuário={}", login);
             tentativas++;
             if (tentativas >= MAX_TENTATIVAS) {
                 bloqueadoAte = LocalDateTime.now().plusMinutes(BLOQUEIO_MINUTOS);
@@ -77,7 +80,7 @@ public class LoginBean implements Serializable {
             return null;
         }
         // Login bem-sucedido: zera tentativas e bloqueio
-    System.out.println("Login SUCESSO: usuário=" + login);
+    auditLogger.info("Login SUCESSO: usuário={}", login);
         tentativas = 0;
         bloqueadoAte = null;
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuarioLogado", usuario);
@@ -88,6 +91,7 @@ public class LoginBean implements Serializable {
         }
         return null;
     }
+
 
 
     // Getters e Setters
