@@ -1,13 +1,12 @@
 // ...existing code...
 package br.com.wbcars.controle;
 
-import br.com.wbcars.dao.UsuarioDAO;
+import br.com.wbcars.service.UsuarioService;
+import br.com.wbcars.dto.UsuarioDTO;
 import javax.faces.bean.ManagedProperty;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import br.com.wbcars.modelo.Usuario;
-import br.com.wbcars.util.CriptografiaUtil;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -39,51 +38,39 @@ public class LoginBean implements Serializable {
     private String senha;
 
     @Autowired
-    private UsuarioDAO usuarioDAO;
+    private UsuarioService usuarioService;
 
     public String entrar() {
-    String ip = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRemoteAddr();
-    auditLogger.info("Tentativa de login: usuário={}, IP={}", login, ip);
+        String ip = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRemoteAddr();
+        auditLogger.info("Tentativa de login: usuário={}, IP={}", login, ip);
         if (bloqueadoAte != null && LocalDateTime.now().isBefore(bloqueadoAte)) {
             auditLogger.warn("Login BLOQUEADO para usuário={} até {}", login, bloqueadoAte);
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário bloqueado por tentativas inválidas. Tente novamente após " + BLOQUEIO_MINUTOS + " minutos.", null));
             return null;
         }
-    // Proteção contra session fixation: invalida a sessão antes de logar
-    FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        Usuario usuario = usuarioDAO.buscarPorLogin(login);
-        if (usuario == null) {
-            auditLogger.warn("Login FALHOU: usuário inexistente={}", login);
-            FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário inexistente", null));
+        // Proteção contra session fixation: invalida a sessão antes de logar
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        UsuarioDTO usuarioDTO = usuarioService.autenticar(login, senha);
+        if (usuarioDTO == null) {
+            auditLogger.warn("Login FALHOU: usuário ou senha inválidos={}", login);
             tentativas++;
             if (tentativas >= MAX_TENTATIVAS) {
                 auditLogger.warn("Usuário BLOQUEADO por tentativas inválidas: {}", login);
                 bloqueadoAte = LocalDateTime.now().plusMinutes(BLOQUEIO_MINUTOS);
                 FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário bloqueado por tentativas inválidas. Tente novamente após " + BLOQUEIO_MINUTOS + " minutos.", null));
-            }
-            return null;
-        }
-        if (!CriptografiaUtil.verificarSenha(senha, usuario.getSenha())) {
-            auditLogger.warn("Login FALHOU: senha incorreta para usuário={}", login);
-            tentativas++;
-            if (tentativas >= MAX_TENTATIVAS) {
-                bloqueadoAte = LocalDateTime.now().plusMinutes(BLOQUEIO_MINUTOS);
+            } else {
                 FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário bloqueado por tentativas inválidas. Tente novamente após " + BLOQUEIO_MINUTOS + " minutos.", null));
-                return null;
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário ou senha inválidos", null));
             }
-            FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Senha incorreta", null));
             return null;
         }
         // Login bem-sucedido: zera tentativas e bloqueio
-    auditLogger.info("Login SUCESSO: usuário={}", login);
+        auditLogger.info("Login SUCESSO: usuário={}", login);
         tentativas = 0;
         bloqueadoAte = null;
-        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuarioLogado", usuario);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuarioLogado", usuarioDTO);
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("home.xhtml");
         } catch (IOException e) {
@@ -99,4 +86,22 @@ public class LoginBean implements Serializable {
     public void setLogin(String login) { this.login = login; }
     public String getSenha() { return senha; }
     public void setSenha(String senha) { this.senha = senha; }
+    // Retorna o usuário logado da sessão
+    public UsuarioDTO getUsuarioLogado() {
+        Object obj = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogado");
+        if (obj instanceof UsuarioDTO) {
+            return (UsuarioDTO) obj;
+        }
+        return null;
+    }
+
+    // Retorna o penúltimo login real do usuário logado, formatado
+    public String getPenultimoLoginFormatado() {
+        UsuarioDTO usuario = getUsuarioLogado();
+        if (usuario != null && usuario.getPenultimoLogin() != null) {
+            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            return usuario.getPenultimoLogin().format(formatter);
+        }
+        return "-";
+    }
 }

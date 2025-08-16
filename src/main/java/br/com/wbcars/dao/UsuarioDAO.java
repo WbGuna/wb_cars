@@ -22,4 +22,17 @@ public class UsuarioDAO {
     public void salvar(Usuario usuario) {
         em.persist(usuario);
     }
+
+    public void atualizar(Usuario usuario) {
+        em.merge(usuario);
+    }
+
+    public Usuario buscarPorId(Long id) {
+        return em.find(Usuario.class, id);
+    }
+
+    public boolean verificarSenha(Usuario usuario, String senha) {
+        // Supondo que a senha esteja criptografada com BCrypt
+        return org.mindrot.jbcrypt.BCrypt.checkpw(senha, usuario.getSenha());
+    }
 }

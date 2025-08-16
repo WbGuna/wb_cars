@@ -11,11 +11,16 @@
     <title>Bem-vindo ao wb_cars</title>
     <link rel="icon" type="image/png" href="#{request.contextPath}/resources/imagens/logo_2.png" />
 </h:head>
-<h:body>
-    <h1>Bem-vindo à aplicação wb_cars!</h1>
-    <h:outputText value="Você está autenticado." />
-    <h:form>
-        <p:commandButton value="Logout" action="#{loginBean.logout}" icon="pi pi-sign-out"/>
-    </h:form>
+<h:body style="margin:0; padding:0;">
+    <h:panelGrid columns="2" columnClasses="menuCol,conteudoCol" style="width:100%; min-height:100vh;">
+        <h:panelGroup style="vertical-align:top; background:#f4f4f4; min-width:220px; height:100vh;">
+            <h:form id="menuForm">
+                <ui:include src="/WEB-INF/componentes/menu.xhtml" />
+            </h:form>
+        </h:panelGroup>
+        <h:panelGroup id="conteudoPanel" style="padding:32px; width:100%; min-height:90vh;">
+            <ui:include src="/WEB-INF/componentes/#{conteudoBean.pagina}" />
+        </h:panelGroup>
+    </h:panelGrid>
 </h:body>
 </html>

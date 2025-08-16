@@ -1,0 +1,64 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+              xmlns:ui="http://java.sun.com/jsf/facelets"
+              xmlns:h="http://java.sun.com/jsf/html"
+              xmlns:p="http://primefaces.org/ui">
+    <p:panelMenu style="width:220px; margin-top:0;">
+        <p:submenu label="Usuário" icon="pi pi-user">
+            <p:menuitem value="#{loginBean.usuarioLogado.nome}" icon="pi pi-user" disabled="true" style="font-weight:bold; color:#007ad9;" />
+            <p:menuitem value="Penúltimo login: #{loginBean.penultimoLoginFormatado}" icon="pi pi-clock" disabled="true" style="color:#555;" />
+        </p:submenu>
+    
+        <p:submenu label="Cadastros Gerais">
+            <p:menuitem value="Veículos" icon="pi pi-car"
+                actionListener="#{conteudoBean.navegar('veiculo.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Clientes" icon="pi pi-users"
+                actionListener="#{conteudoBean.navegar('cliente.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Funcionários" icon="pi pi-user"
+                actionListener="#{conteudoBean.navegar('funcionario.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Usuários" icon="pi pi-user-edit"
+                actionListener="#{conteudoBean.navegar('usuario.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Cidades" icon="pi pi-map-marker"
+                actionListener="#{conteudoBean.navegar('cidade.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Empresas" icon="pi pi-building"
+                actionListener="#{conteudoBean.navegar('empresa.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Fornecedores" icon="pi pi-briefcase"
+                actionListener="#{conteudoBean.navegar('fornecedor.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Produtos" icon="pi pi-box"
+                actionListener="#{conteudoBean.navegar('produto.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Unidades de Medida" icon="pi pi-sliders-h"
+                actionListener="#{conteudoBean.navegar('unidadeMedida.xhtml')}" update=":conteudoPanel" />
+        </p:submenu>
+        <p:submenu label="Serviços">
+            <p:menuitem value="Agendamento de Serviços" icon="pi pi-calendar"
+                actionListener="#{conteudoBean.navegar('agendamento.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Ordens de Serviço" icon="pi pi-file"
+                actionListener="#{conteudoBean.navegar('ordemServico.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Orçamentos" icon="pi pi-money-bill"
+                actionListener="#{conteudoBean.navegar('orcamento.xhtml')}" update=":conteudoPanel" />
+        </p:submenu>
+        <p:submenu label="Estoque e Vendas">
+            <p:menuitem value="Controle de Estoque e Peças" icon="pi pi-database"
+                actionListener="#{conteudoBean.navegar('estoque.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Vendas" icon="pi pi-shopping-cart"
+                actionListener="#{conteudoBean.navegar('venda.xhtml')}" update=":conteudoPanel" />
+        </p:submenu>
+        <p:submenu label="Financeiro">
+            <p:menuitem value="Contas a Pagar" icon="pi pi-credit-card"
+                actionListener="#{conteudoBean.navegar('contasPagar.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Relatórios Financeiros" icon="pi pi-chart-line"
+                actionListener="#{conteudoBean.navegar('relatorioFinanceiro.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Relatórios Financeiros Detalhados" icon="pi pi-chart-bar"
+                actionListener="#{conteudoBean.navegar('relatorioDetalhado.xhtml')}" update=":conteudoPanel" />
+        </p:submenu>
+        <p:submenu label="Configuração">
+            <p:menuitem value="Troca de Senha" icon="pi pi-key"
+                actionListener="#{conteudoBean.navegar('trocaSenha.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Cadastro de Usuário" icon="pi pi-user-plus"
+                actionListener="#{conteudoBean.navegar('usuario.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Atribuir Permissão" icon="pi pi-lock"
+                actionListener="#{conteudoBean.navegar('atribuirPermissao.xhtml')}" update=":conteudoPanel" />
+            <p:menuitem value="Logout" icon="pi pi-sign-out"
+                actionListener="#{loginBean.logout}" />
+        </p:submenu>
+    </p:panelMenu>
+</ui:component>
