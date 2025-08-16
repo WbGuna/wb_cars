@@ -23,7 +23,7 @@ public class AdminInitializer implements ApplicationListener<ContextRefreshedEve
         if (admin == null) {
             Usuario novoAdmin = new Usuario();
             novoAdmin.setLogin("admin");
-            novoAdmin.setSenha(CriptografiaUtil.sha256("admin"));
+            novoAdmin.setSenha(CriptografiaUtil.hashSenha("admin"));
             usuarioDAO.salvar(novoAdmin);
             System.out.println("Usuário admin criado automaticamente.");
         }

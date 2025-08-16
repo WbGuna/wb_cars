@@ -12,10 +12,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Component("loginBean")
 @Scope("session")
 public class LoginBean implements Serializable {
+    private static final int MAX_TENTATIVAS = 5;
+    private static final int BLOQUEIO_MINUTOS = 5;
+    private int tentativas = 0;
+    private LocalDateTime bloqueadoAte = null;
     private String login;
     private String senha;
 
@@ -23,18 +28,38 @@ public class LoginBean implements Serializable {
     private UsuarioDAO usuarioDAO;
 
     public String entrar() {
+        if (bloqueadoAte != null && LocalDateTime.now().isBefore(bloqueadoAte)) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário bloqueado por tentativas inválidas. Tente novamente após " + BLOQUEIO_MINUTOS + " minutos.", null));
+            return null;
+        }
         Usuario usuario = usuarioDAO.buscarPorLogin(login);
         if (usuario == null) {
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário inexistente", null));
+            tentativas++;
+            if (tentativas >= MAX_TENTATIVAS) {
+                bloqueadoAte = LocalDateTime.now().plusMinutes(BLOQUEIO_MINUTOS);
+                FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário bloqueado por tentativas inválidas. Tente novamente após " + BLOQUEIO_MINUTOS + " minutos.", null));
+            }
             return null;
         }
-        String senhaCriptografada = CriptografiaUtil.sha256(senha);
-        if (!senhaCriptografada.equals(usuario.getSenha())) {
+        if (!CriptografiaUtil.verificarSenha(senha, usuario.getSenha())) {
+            tentativas++;
+            if (tentativas >= MAX_TENTATIVAS) {
+                bloqueadoAte = LocalDateTime.now().plusMinutes(BLOQUEIO_MINUTOS);
+                FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário bloqueado por tentativas inválidas. Tente novamente após " + BLOQUEIO_MINUTOS + " minutos.", null));
+                return null;
+            }
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Senha incorreta", null));
             return null;
         }
+        // Login bem-sucedido: zera tentativas e bloqueio
+        tentativas = 0;
+        bloqueadoAte = null;
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuarioLogado", usuario);
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("home.xhtml");
