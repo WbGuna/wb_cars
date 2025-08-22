@@ -1,3 +1,0 @@
-Este diretório é destinado ao armazenamento de imagens utilizadas nas telas do sistema.
-
-Coloque aqui arquivos .png, .jpg, .jpeg, .gif, etc.
