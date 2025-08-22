@@ -4,14 +4,18 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <!-- Ativa a varredura de componentes (beans) -->
+    <!-- Component Scan -->
     <context:component-scan base-package="br.com.wbcars"/>
+    <context:annotation-config/>
 
-    <!-- Configuração do DataSource para PostgreSQL -->
+    <!-- DataSource - PostgreSQL Configuration -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.postgresql.Driver"/>
         <property name="url" value="jdbc:postgresql://localhost:5433/postgres?autoReconnect=true"/>
@@ -19,27 +23,36 @@
         <property name="password" value="will@123"/>
     </bean>
 
-    <!-- Configuração do EntityManagerFactory (JPA + Hibernate) -->
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <!-- Hibernate Session Factory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="br.com.wbcars.modelo"/>
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
-        </property>
-        <property name="jpaProperties">
+        <property name="packagesToScan" value="br.com.wbcars.entity"/>
+        <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.jdbc.batch_size">20</prop>
+                <prop key="hibernate.connection.pool_size">10</prop>
+                
+                <!-- Hibernate Envers Configuration -->
+                <prop key="org.hibernate.envers.audit_table_suffix">_AUD</prop>
+                <prop key="org.hibernate.envers.revision_field_name">REV</prop>
+                <prop key="org.hibernate.envers.revision_type_field_name">REVTYPE</prop>
+                <prop key="org.hibernate.envers.audit_strategy">org.hibernate.envers.strategy.DefaultAuditStrategy</prop>
+                <prop key="org.hibernate.envers.store_data_at_delete">true</prop>
+                <prop key="org.hibernate.envers.global_with_modified_flag">true</prop>
             </props>
         </property>
     </bean>
 
-    <!-- Gerenciador de transações -->
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    <!-- Transaction Manager -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
+
+    <!-- Enable Transactions -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
 </beans>

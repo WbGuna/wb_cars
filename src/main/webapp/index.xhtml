@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+<head>
+    <title>WB Cars System</title>
+    <style>
+        .welcome-panel {
+            text-align: center;
+            padding: 2em;
+        }
+        .test-link {
+            margin-top: 2em;
+            padding: 1em;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+        .ui-button {
+            margin: 0.5em;
+        }
+    </style>
+</head>
+<body>
+    <h:form>
+        <div class="welcome-panel">
+            <p:panel header="🚗 WB Cars System" styleClass="welcome-panel">
+                
+                <h:outputText value="#{indexController.message}" 
+                            style="font-size: 1.2em; color: #495057; display: block; margin-bottom: 1em;"/>
+                
+                <br/>
+                
+                <h:commandButton value="🚀 Inicializar Sistema" 
+                               action="#{indexController.inicializar()}" 
+                               styleClass="ui-button ui-button-success"
+                               icon="pi pi-play"/>
+                
+                <br/><br/>
+                
+                <!-- Link para página de teste -->
+                <div class="test-link">
+                    <h4>🧪 Demonstração Técnica</h4>
+                    <p>Veja todos os componentes PrimeFaces funcionando com Jakarta EE 10</p>
+                                                        
+                    <br/><br/>
+                          
+                    <h:link value="📖 TESTE OFICIAL DOCUMENTAÇÃO" 
+                           outcome="teste-oficial"
+                           styleClass="ui-button ui-button-success"
+                           style="text-decoration: none; color: black; padding: 0.75em 1em; border-radius: 4px; margin-right: 10px; font-weight: bold;"/>
+                           
+                    <h:link value="🗄️ TESTE CONEXÃO POSTGRESQL" 
+                           outcome="teste-banco"
+                           styleClass="ui-button ui-button-warning"
+                           style="text-decoration: none; color: black; padding: 0.75em 1em; border-radius: 4px; margin-right: 10px; font-weight: bold;"/>
+                </div>
+                
+                <!-- Status do Sistema -->
+                <br/>
+                <h:panelGrid columns="4" styleClass="ui-noborder" style="margin: 0 auto;">
+                    <p:badge value="✅ PrimeFaces 15.0.0" severity="success"/>
+                    <p:badge value="✅ Jakarta EE 10" severity="info"/>
+                    <p:badge value="✅ Java 17" severity="warning"/>
+                    <p:badge value="✅ CDI Funcionando" severity="secondary"/>
+                </h:panelGrid>
+                
+            </p:panel>
+        </div>
+    </h:form>
+</body>
+</html>
