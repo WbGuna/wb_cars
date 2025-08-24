@@ -1,0 +1,83 @@
+package br.com.wbcars.service;
+
+import br.com.wbcars.dao.FuncionarioDAO;
+import br.com.wbcars.dto.FuncionarioDTO;
+import br.com.wbcars.entity.Funcionario;
+import br.com.wbcars.mapper.FuncionarioMapper;
+import java.time.LocalDateTime;
+import java.util.List;
+
+public class FuncionarioService extends GenericService<Funcionario, FuncionarioDTO, Long> {
+    private static FuncionarioService instance;
+    private final FuncionarioDAO funcionarioDAO = FuncionarioDAO.getInstance();
+
+    private FuncionarioService() {}
+
+    public static FuncionarioService getInstance() {
+        if (instance == null) {
+            synchronized (FuncionarioService.class) {
+                if (instance == null) {
+                    instance = new FuncionarioService();
+                }
+            }
+        }
+        return instance;
+    }
+
+    @Override
+    protected FuncionarioDTO toDTO(Funcionario entity) {
+        return FuncionarioMapper.INSTANCE.toDTO(entity);
+    }
+
+    @Override
+    protected Funcionario toEntity(FuncionarioDTO dto) {
+        return FuncionarioMapper.INSTANCE.toEntity(dto);
+    }
+
+    @Override
+    public FuncionarioDTO save(FuncionarioDTO dto) {
+        Funcionario entity = toEntity(dto);
+        funcionarioDAO.save(entity);
+        return toDTO(entity);
+    }
+
+    @Override
+    public FuncionarioDTO update(FuncionarioDTO dto) {
+        Funcionario entity = toEntity(dto);
+        funcionarioDAO.update(entity);
+        return toDTO(entity);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Funcionario entity = funcionarioDAO.findById(id);
+        if (entity != null) {
+            funcionarioDAO.delete(entity);
+        }
+    }
+
+    @Override
+    public FuncionarioDTO findById(Long id) {
+        return toDTO(funcionarioDAO.findById(id));
+    }
+
+    @Override
+    public List<FuncionarioDTO> findAll() {
+        List<Funcionario> entities = funcionarioDAO.findAll();
+        return toDTOList(entities);
+    }
+
+    public List<FuncionarioDTO> findByNome(String nome) {
+        List<Funcionario> entities = funcionarioDAO.findByNome(nome);
+        return toDTOList(entities);
+    }
+
+    public FuncionarioDTO findByLogin(String login) {
+        return toDTO(funcionarioDAO.findByLogin(login));
+    }
+
+    public List<FuncionarioDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Funcionario> entities = funcionarioDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+}
