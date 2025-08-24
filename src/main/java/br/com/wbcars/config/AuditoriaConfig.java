@@ -2,8 +2,8 @@ package br.com.wbcars.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.hibernate.SessionFactory;
-import org.hibernate.Session;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 
@@ -14,11 +14,12 @@ import java.util.List;
 public class AuditoriaConfig {
 
     @Autowired
-    private SessionFactory sessionFactory;
+    private EntityManagerFactory entityManagerFactory;
 
     @PostConstruct
     public void verificarTabelasAuditoria() {
-        try (Session session = sessionFactory.openSession()) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
             System.out.println("=== HIBERNATE ENVERS - AUDITORIA CONFIGURADA ===");
             
             // Lista todas as tabelas criadas
@@ -26,7 +27,12 @@ public class AuditoriaConfig {
                         "WHERE table_schema = 'public' AND table_name LIKE '%_aud' " +
                         "ORDER BY table_name";
             
-            List<String> tabelasAuditoria = session.createNativeQuery(sql, String.class).getResultList();
+            @SuppressWarnings("unchecked")
+            List<String> tabelasAuditoria = entityManager.createNativeQuery(sql)
+                                                        .getResultList()
+                                                        .stream()
+                                                        .map(Object::toString)
+                                                        .toList();
             
             if (tabelasAuditoria.isEmpty()) {
                 System.out.println("⚠️  Nenhuma tabela de auditoria encontrada ainda.");
@@ -44,7 +50,12 @@ public class AuditoriaConfig {
             String sqlRevinfo = "SELECT table_name FROM information_schema.tables " +
                                "WHERE table_schema = 'public' AND table_name = 'revinfo'";
             
-            List<String> tabelaRevinfo = session.createNativeQuery(sqlRevinfo, String.class).getResultList();
+            @SuppressWarnings("unchecked")
+            List<String> tabelaRevinfo = entityManager.createNativeQuery(sqlRevinfo)
+                                                    .getResultList()
+                                                    .stream()
+                                                    .map(Object::toString)
+                                                    .toList();
             
             if (tabelaRevinfo.isEmpty()) {
                 System.out.println("⚠️  Tabela REVINFO ainda não foi criada.");
@@ -69,6 +80,8 @@ public class AuditoriaConfig {
             
         } catch (Exception e) {
             System.err.println("❌ Erro ao verificar auditoria: " + e.getMessage());
+        } finally {
+            entityManager.close();
         }
     }
     
@@ -77,19 +90,24 @@ public class AuditoriaConfig {
      * Exemplo de uso futuro nas camadas de serviço
      */
     public List<Object[]> obterHistoricoAuditoria(Class<?> entityClass, Long entityId) {
-        try (Session session = sessionFactory.openSession()) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
             // Exemplo de consulta para buscar histórico
             // Este método pode ser expandido conforme necessário
-            return session.createNativeQuery(
+            @SuppressWarnings("unchecked")
+            List<Object[]> resultList = entityManager.createNativeQuery(
                 "SELECT * FROM " + entityClass.getSimpleName().toLowerCase() + "_aud " +
-                "WHERE " + getIdFieldName(entityClass) + " = :id ORDER BY rev DESC",
-                Object[].class
+                "WHERE " + getIdFieldName(entityClass) + " = :id ORDER BY rev DESC"
             )
             .setParameter("id", entityId)
             .getResultList();
+            
+            return resultList;
         } catch (Exception e) {
             System.err.println("Erro ao obter histórico: " + e.getMessage());
             return List.of();
+        } finally {
+            entityManager.close();
         }
     }
     

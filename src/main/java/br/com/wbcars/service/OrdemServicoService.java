@@ -68,10 +68,12 @@ public class OrdemServicoService extends GenericService<OrdemServico, OrdemServi
     }
 
     public List<OrdemServicoDTO> findByNumero(String numero) {
-        return ordemServicoDAO.findByNumero(numero).stream().map(this::toDTO).collect(Collectors.toList());
+        List<OrdemServico> entities = ordemServicoDAO.findByNumero(numero);
+        return toDTOList(entities);
     }
 
     public List<OrdemServicoDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
-        return ordemServicoDAO.findByDataCadastroRange(inicio, fim).stream().map(this::toDTO).collect(Collectors.toList());
+        List<OrdemServico> entities = ordemServicoDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
     }
 }

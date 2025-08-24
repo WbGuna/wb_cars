@@ -2,8 +2,8 @@ package br.com.wbcars.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.hibernate.SessionFactory;
-import org.hibernate.Session;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.annotation.PostConstruct;
 import java.util.logging.Logger;
 
@@ -13,19 +13,19 @@ public class DatabaseConfig {
     private static final Logger logger = Logger.getLogger(DatabaseConfig.class.getName());
     
     @Autowired
-    private SessionFactory sessionFactory;
+    private EntityManagerFactory entityManagerFactory;
     
     @PostConstruct
     public void testConnection() {
         try {
             logger.info("🔧 Testando conexão com PostgreSQL...");
             
-            Session session = sessionFactory.openSession();
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
             
             // Teste simples de conexão
-            String result = session.createNativeQuery("SELECT version()", String.class).getSingleResult();
+            String result = (String) entityManager.createNativeQuery("SELECT version()").getSingleResult();
             
-            session.close();
+            entityManager.close();
             
             logger.info("✅ CONEXÃO POSTGRESQL ESTABELECIDA COM SUCESSO!");
             logger.info("📋 Versão do PostgreSQL: " + result);

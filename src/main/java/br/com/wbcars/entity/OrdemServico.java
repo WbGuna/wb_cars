@@ -27,6 +27,9 @@ public class OrdemServico implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ordem_servico_seq")
     private Long id;
+    
+    // Adicionado campo numero para representar o número da ordem de serviço
+    private String numero;
 
     @ManyToOne
     @JoinColumn(name = "atendente_id")
@@ -57,6 +60,8 @@ public class OrdemServico implements Serializable {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+    public String getNumero() { return numero; }
+    public void setNumero(String numero) { this.numero = numero; }
     public Funcionario getAtendente() { return atendente; }
     public void setAtendente(Funcionario atendente) { this.atendente = atendente; }
     public Cliente getCliente() { return cliente; }
@@ -85,6 +90,7 @@ public class OrdemServico implements Serializable {
     public String toString() {
     return "OrdemServico{" +
         "id=" + id +
+        ", numero='" + numero + '\'' +
         ", atendente=" + (atendente != null ? atendente.getNome() : null) +
         ", cliente=" + (cliente != null ? cliente.getNome() : null) +
         ", descricao='" + descricao + '\'' +
