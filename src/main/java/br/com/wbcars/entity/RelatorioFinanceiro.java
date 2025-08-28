@@ -1,8 +1,12 @@
 package br.com.wbcars.entity;
 
-import jakarta.persistence.*;
-import org.hibernate.envers.Audited;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+import org.hibernate.envers.Audited;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "relatorio_financeiro")
@@ -17,38 +21,81 @@ public class RelatorioFinanceiro implements Serializable {
     private Long id;
 
     private Double totalVendas;
+    
     private Double totalOrcamentos;
+    
     private Double totalGastos;
-    private java.time.LocalDateTime dataCadastro;
-    private java.time.LocalDateTime dataAlteracao;
-    public java.time.LocalDateTime getDataCadastro() { return dataCadastro; }
-    public void setDataCadastro(java.time.LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
-    public java.time.LocalDateTime getDataAlteracao() { return dataAlteracao; }
-    public void setDataAlteracao(java.time.LocalDateTime dataAlteracao) { this.dataAlteracao = dataAlteracao; }
+    
+    private LocalDateTime dataCadastro;
+    
+    private LocalDateTime dataAlteracao;
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
+    }
 
     public RelatorioFinanceiro() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public Double getTotalVendas() { return totalVendas; }
-    public void setTotalVendas(Double totalVendas) { this.totalVendas = totalVendas; }
-    public Double getTotalOrcamentos() { return totalOrcamentos; }
-    public void setTotalOrcamentos(Double totalOrcamentos) { this.totalOrcamentos = totalOrcamentos; }
-    public Double getTotalGastos() { return totalGastos; }
-    public void setTotalGastos(Double totalGastos) { this.totalGastos = totalGastos; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RelatorioFinanceiro that = (RelatorioFinanceiro) o;
-        return id != null && id.equals(that.id);
+    public Long getId() { 
+        return id; 
+    }
+    
+    public void setId(Long id) { 
+        this.id = id; 
+    }
+    
+    public Double getTotalVendas() { 
+        return totalVendas; 
+    }
+    
+    public void setTotalVendas(Double totalVendas) { 
+        this.totalVendas = totalVendas; 
+    }
+    
+    public Double getTotalOrcamentos() { 
+        return totalOrcamentos; 
+    }
+    
+    public void setTotalOrcamentos(Double totalOrcamentos) { 
+        this.totalOrcamentos = totalOrcamentos; 
+    }
+    
+    public Double getTotalGastos() { 
+        return totalGastos; 
+    }
+    
+    public void setTotalGastos(Double totalGastos) { 
+        this.totalGastos = totalGastos; 
     }
 
     @Override
-    public int hashCode() {
-        return 31;
-    }
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RelatorioFinanceiro other = (RelatorioFinanceiro) obj;
+		return Objects.equals(id, other.id);
+	}
 
     @Override
     public String toString() {

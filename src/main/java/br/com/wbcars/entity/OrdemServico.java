@@ -1,7 +1,9 @@
 package br.com.wbcars.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import org.hibernate.envers.Audited;
 
@@ -28,9 +30,6 @@ public class OrdemServico implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ordem_servico_seq")
     private Long id;
     
-    // Adicionado campo numero para representar o número da ordem de serviço
-    private String numero;
-
     @ManyToOne
     @JoinColumn(name = "atendente_id")
     private Funcionario atendente;
@@ -40,13 +39,28 @@ public class OrdemServico implements Serializable {
     private Cliente cliente;
 
     private String descricao;
+    
     private Double valor;
-    private java.time.LocalDateTime dataCadastro;
-    private java.time.LocalDateTime dataAlteracao;
-    public java.time.LocalDateTime getDataCadastro() { return dataCadastro; }
-    public void setDataCadastro(java.time.LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
-    public java.time.LocalDateTime getDataAlteracao() { return dataAlteracao; }
-    public void setDataAlteracao(java.time.LocalDateTime dataAlteracao) { this.dataAlteracao = dataAlteracao; }
+    
+    private LocalDateTime dataCadastro;
+    
+    private LocalDateTime dataAlteracao;
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
+    }
 
     @ManyToMany
     @JoinTable(
@@ -58,39 +72,75 @@ public class OrdemServico implements Serializable {
 
     public OrdemServico() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getNumero() { return numero; }
-    public void setNumero(String numero) { this.numero = numero; }
-    public Funcionario getAtendente() { return atendente; }
-    public void setAtendente(Funcionario atendente) { this.atendente = atendente; }
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
-    public Double getValor() { return valor; }
-    public void setValor(Double valor) { this.valor = valor; }
-    public List<ControleEstoque> getPecas() { return pecas; }
-    public void setPecas(List<ControleEstoque> pecas) { this.pecas = pecas; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OrdemServico that = (OrdemServico) o;
-        return id != null && id.equals(that.id);
+    public Long getId() { 
+        return id; 
+    }
+    
+    public void setId(Long id) { 
+        this.id = id; 
+    }
+       
+    public Funcionario getAtendente() { 
+        return atendente; 
+    }
+    
+    public void setAtendente(Funcionario atendente) { 
+        this.atendente = atendente; 
+    }
+    
+    public Cliente getCliente() { 
+        return cliente; 
+    }
+    
+    public void setCliente(Cliente cliente) { 
+        this.cliente = cliente; 
+    }
+    
+    public String getDescricao() { 
+        return descricao; 
+    }
+    
+    public void setDescricao(String descricao) { 
+        this.descricao = descricao; 
+    }
+    
+    public Double getValor() { 
+        return valor; 
+    }
+    
+    public void setValor(Double valor) { 
+        this.valor = valor; 
+    }
+    
+    public List<ControleEstoque> getPecas() { 
+        return pecas; 
+    }
+    
+    public void setPecas(List<ControleEstoque> pecas) { 
+        this.pecas = pecas; 
     }
 
     @Override
-    public int hashCode() {
-        return 31;
-    }
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OrdemServico other = (OrdemServico) obj;
+		return Objects.equals(id, other.id);
+	}
 
     @Override
     public String toString() {
     return "OrdemServico{" +
         "id=" + id +
-        ", numero='" + numero + '\'' +
         ", atendente=" + (atendente != null ? atendente.getNome() : null) +
         ", cliente=" + (cliente != null ? cliente.getNome() : null) +
         ", descricao='" + descricao + '\'' +

@@ -2,6 +2,7 @@ package br.com.wbcars.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.envers.Audited;
 
@@ -46,50 +47,124 @@ public class Orcamento implements Serializable {
     private Cliente cliente;
 
     private Double valorTotal;
+    
     private LocalDateTime dataInicial;
+    
     private LocalDateTime dataEntrega;
+    
     private LocalDateTime dataCadastro;
+    
     private LocalDateTime dataAlteracao;
+    
     @Enumerated(EnumType.STRING)
     private StatusOrcamento status;
 
     public Orcamento() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public TipoOrcamento getTipo() { return tipo; }
-    public void setTipo(TipoOrcamento tipo) { this.tipo = tipo; }
-    public Produto getProduto() { return produto; }
-    public void setProduto(Produto produto) { this.produto = produto; }
-    public Funcionario getFuncionario() { return funcionario; }
-    public void setFuncionario(Funcionario funcionario) { this.funcionario = funcionario; }
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
-    public Double getValorTotal() { return valorTotal; }
-    public void setValorTotal(Double valorTotal) { this.valorTotal = valorTotal; }
-    public LocalDateTime getDataInicial() { return dataInicial; }
-    public void setDataInicial(LocalDateTime dataInicial) { this.dataInicial = dataInicial; }
-    public LocalDateTime getDataEntrega() { return dataEntrega; }
-    public void setDataEntrega(LocalDateTime dataEntrega) { this.dataEntrega = dataEntrega; }
-    public LocalDateTime getDataCadastro() { return dataCadastro; }
-    public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
-    public LocalDateTime getDataAlteracao() { return dataAlteracao; }
-    public void setDataAlteracao(LocalDateTime dataAlteracao) { this.dataAlteracao = dataAlteracao; }
-    public StatusOrcamento getStatus() { return status; }
-    public void setStatus(StatusOrcamento status) { this.status = status; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Orcamento that = (Orcamento) o;
-        return id != null && id.equals(that.id);
+    public Long getId() { 
+        return id; 
+    }
+    
+    public void setId(Long id) { 
+        this.id = id; 
+    }
+    
+    public TipoOrcamento getTipo() { 
+        return tipo; 
+    }
+    
+    public void setTipo(TipoOrcamento tipo) { 
+        this.tipo = tipo; 
+    }
+    
+    public Produto getProduto() { 
+        return produto; 
+    }
+    
+    public void setProduto(Produto produto) { 
+        this.produto = produto; 
+    }
+    
+    public Funcionario getFuncionario() { 
+        return funcionario; 
+    }
+    
+    public void setFuncionario(Funcionario funcionario) { 
+        this.funcionario = funcionario; 
+    }
+    
+    public Cliente getCliente() { 
+        return cliente; 
+    }
+    
+    public void setCliente(Cliente cliente) { 
+        this.cliente = cliente; 
+    }
+    
+    public Double getValorTotal() { 
+        return valorTotal; 
+    }
+    
+    public void setValorTotal(Double valorTotal) { 
+        this.valorTotal = valorTotal; 
+    }
+    
+    public LocalDateTime getDataInicial() { 
+        return dataInicial; 
+    }
+    
+    public void setDataInicial(LocalDateTime dataInicial) { 
+        this.dataInicial = dataInicial; 
+    }
+    
+    public LocalDateTime getDataEntrega() { 
+        return dataEntrega; 
+    }
+    
+    public void setDataEntrega(LocalDateTime dataEntrega) { 
+        this.dataEntrega = dataEntrega; 
+    }
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
+    }
+    
+    public StatusOrcamento getStatus() { 
+        return status; 
+    }
+    
+    public void setStatus(StatusOrcamento status) { 
+        this.status = status; 
     }
 
     @Override
-    public int hashCode() {
-        return 31;
-    }
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Orcamento other = (Orcamento) obj;
+		return Objects.equals(id, other.id);
+	}
 
     @Override
     public String toString() {

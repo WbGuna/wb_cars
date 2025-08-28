@@ -2,17 +2,11 @@ package br.com.wbcars.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.envers.Audited;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "controle_estoque")
@@ -31,8 +25,11 @@ public class ControleEstoque implements Serializable {
     private Produto produto;
 
     private Integer quantidade;
+    
     private Double valor;
+    
     private LocalDateTime dataCadastro;
+    
     private LocalDateTime dataAlteracao;
 
     @ManyToOne
@@ -41,33 +38,78 @@ public class ControleEstoque implements Serializable {
 
     public ControleEstoque() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public Produto getProduto() { return produto; }
-    public void setProduto(Produto produto) { this.produto = produto; }
-    public Integer getQuantidade() { return quantidade; }
-    public void setQuantidade(Integer quantidade) { this.quantidade = quantidade; }
-    public Double getValor() { return valor; }
-    public void setValor(Double valor) { this.valor = valor; }
-    public LocalDateTime getDataCadastro() { return dataCadastro; }
-    public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
-    public LocalDateTime getDataAlteracao() { return dataAlteracao; }
-    public void setDataAlteracao(LocalDateTime dataAlteracao) { this.dataAlteracao = dataAlteracao; }
-    public Fornecedor getFornecedor() { return fornecedor; }
-    public void setFornecedor(Fornecedor fornecedor) { this.fornecedor = fornecedor; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ControleEstoque that = (ControleEstoque) o;
-        return id != null && id.equals(that.id);
+    public Long getId() { 
+        return id; 
+    }
+    
+    public void setId(Long id) { 
+        this.id = id; 
+    }
+    
+    public Produto getProduto() { 
+        return produto; 
+    }
+    
+    public void setProduto(Produto produto) { 
+        this.produto = produto; 
+    }
+    
+    public Integer getQuantidade() { 
+        return quantidade; 
+    }
+    
+    public void setQuantidade(Integer quantidade) { 
+        this.quantidade = quantidade; 
+    }
+    
+    public Double getValor() { 
+        return valor; 
+    }
+    
+    public void setValor(Double valor) { 
+        this.valor = valor; 
+    }
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
+    }
+    
+    public Fornecedor getFornecedor() { 
+        return fornecedor; 
+    }
+    
+    public void setFornecedor(Fornecedor fornecedor) { 
+        this.fornecedor = fornecedor; 
     }
 
     @Override
-    public int hashCode() {
-        return 31;
-    }
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ControleEstoque other = (ControleEstoque) obj;
+		return Objects.equals(id, other.id);
+	}
 
     @Override
     public String toString() {

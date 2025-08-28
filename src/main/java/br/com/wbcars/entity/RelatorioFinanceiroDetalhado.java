@@ -1,7 +1,9 @@
 package br.com.wbcars.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import org.hibernate.envers.Audited;
 
@@ -35,36 +37,77 @@ public class RelatorioFinanceiroDetalhado implements Serializable {
     private List<ContaPagar> contasPagar;
 
     private Double valorTotalEntrada;
-    private java.time.LocalDateTime dataCadastro;
-    private java.time.LocalDateTime dataAlteracao;
-    public java.time.LocalDateTime getDataCadastro() { return dataCadastro; }
-    public void setDataCadastro(java.time.LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
-    public java.time.LocalDateTime getDataAlteracao() { return dataAlteracao; }
-    public void setDataAlteracao(java.time.LocalDateTime dataAlteracao) { this.dataAlteracao = dataAlteracao; }
+    
+    private LocalDateTime dataCadastro;
+    
+    private LocalDateTime dataAlteracao;
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
+    }
 
     public RelatorioFinanceiroDetalhado() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public List<OrdemServico> getOrdensServico() { return ordensServico; }
-    public void setOrdensServico(List<OrdemServico> ordensServico) { this.ordensServico = ordensServico; }
-    public List<ContaPagar> getContasPagar() { return contasPagar; }
-    public void setContasPagar(List<ContaPagar> contasPagar) { this.contasPagar = contasPagar; }
-    public Double getValorTotalEntrada() { return valorTotalEntrada; }
-    public void setValorTotalEntrada(Double valorTotalEntrada) { this.valorTotalEntrada = valorTotalEntrada; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RelatorioFinanceiroDetalhado that = (RelatorioFinanceiroDetalhado) o;
-        return id != null && id.equals(that.id);
+    public Long getId() { 
+        return id; 
+    }
+    
+    public void setId(Long id) { 
+        this.id = id; 
+    }
+    
+    public List<OrdemServico> getOrdensServico() { 
+        return ordensServico; 
+    }
+    
+    public void setOrdensServico(List<OrdemServico> ordensServico) { 
+        this.ordensServico = ordensServico; 
+    }
+    
+    public List<ContaPagar> getContasPagar() { 
+        return contasPagar; 
+    }
+    
+    public void setContasPagar(List<ContaPagar> contasPagar) { 
+        this.contasPagar = contasPagar; 
+    }
+    
+    public Double getValorTotalEntrada() { 
+        return valorTotalEntrada; 
+    }
+    
+    public void setValorTotalEntrada(Double valorTotalEntrada) { 
+        this.valorTotalEntrada = valorTotalEntrada; 
     }
 
     @Override
-    public int hashCode() {
-        return 31;
-    }
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RelatorioFinanceiroDetalhado other = (RelatorioFinanceiroDetalhado) obj;
+		return Objects.equals(id, other.id);
+	}
 
     @Override
     public String toString() {

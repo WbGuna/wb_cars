@@ -2,6 +2,7 @@ package br.com.wbcars.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.envers.Audited;
 
@@ -35,36 +36,77 @@ public class Produto implements Serializable {
     @ManyToOne
     @JoinColumn(name = "unidade_medida_id")
     private UnidadeMedida unidadeMedida;
+    
     private LocalDateTime dataCadastro;
+    
     private LocalDateTime dataAlteracao;
 
     public Produto() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
-    public Fornecedor getFornecedor() { return fornecedor; }
-    public void setFornecedor(Fornecedor fornecedor) { this.fornecedor = fornecedor; }
-    public UnidadeMedida getUnidadeMedida() { return unidadeMedida; }
-    public void setUnidadeMedida(UnidadeMedida unidadeMedida) { this.unidadeMedida = unidadeMedida; }
-    public LocalDateTime getDataCadastro() { return dataCadastro; }
-    public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
-    public LocalDateTime getDataAlteracao() { return dataAlteracao; }
-    public void setDataAlteracao(LocalDateTime dataAlteracao) { this.dataAlteracao = dataAlteracao; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Produto produto = (Produto) o;
-        return id != null && id.equals(produto.id);
+    public Long getId() { 
+        return id; 
+    }
+    
+    public void setId(Long id) { 
+        this.id = id; 
+    }
+    
+    public String getNome() { 
+        return nome; 
+    }
+    
+    public void setNome(String nome) { 
+        this.nome = nome; 
+    }
+    
+    public Fornecedor getFornecedor() { 
+        return fornecedor; 
+    }
+    
+    public void setFornecedor(Fornecedor fornecedor) { 
+        this.fornecedor = fornecedor; 
+    }
+    
+    public UnidadeMedida getUnidadeMedida() { 
+        return unidadeMedida; 
+    }
+    
+    public void setUnidadeMedida(UnidadeMedida unidadeMedida) { 
+        this.unidadeMedida = unidadeMedida; 
+    }
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
     }
 
     @Override
-    public int hashCode() {
-        return 31;
-    }
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Produto other = (Produto) obj;
+		return Objects.equals(id, other.id);
+	}
 
     @Override
     public String toString() {

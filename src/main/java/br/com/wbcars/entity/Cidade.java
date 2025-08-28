@@ -2,9 +2,12 @@ package br.com.wbcars.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import jakarta.persistence.*;
+import java.util.Objects;
+
 import org.hibernate.envers.Audited;
+
 import br.com.wbcars.enuns.EstadoBrasil;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "cidade")
@@ -19,8 +22,10 @@ public class Cidade implements Serializable {
     private Long id;
 
     private String nome;
+    
     @Enumerated(EnumType.STRING)
     private EstadoBrasil estado;
+    
     private String pais;
     
     @Column(name = "data_cadastro")
@@ -30,6 +35,14 @@ public class Cidade implements Serializable {
     private LocalDateTime dataAlteracao;
 
     public Cidade() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;
@@ -55,14 +68,6 @@ public class Cidade implements Serializable {
         this.pais = pais;
     }
     
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
     public LocalDateTime getDataCadastro() {
         return dataCadastro;
     }
@@ -78,8 +83,26 @@ public class Cidade implements Serializable {
     public void setDataAlteracao(LocalDateTime dataAlteracao) {
         this.dataAlteracao = dataAlteracao;
     }
-
+    
+    
     @Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cidade other = (Cidade) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	@Override
     public String toString() {
         return "Cidade{" +
             "id=" + getId() +

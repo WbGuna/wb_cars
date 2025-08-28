@@ -1,17 +1,12 @@
 package br.com.wbcars.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.envers.Audited;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "agendamento_servico")
@@ -29,37 +24,74 @@ public class AgendamentoServico implements Serializable {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    private java.time.LocalDateTime diaAgendamento;
-    private java.time.LocalDateTime dataCadastro;
-    private java.time.LocalDateTime dataAlteracao;
+    private LocalDateTime diaAgendamento;
+    
+    private LocalDateTime dataCadastro;
+    
+    private LocalDateTime dataAlteracao;
+    
 
     public AgendamentoServico() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
-    public java.time.LocalDateTime getDiaAgendamento() { return diaAgendamento; }
-    public void setDiaAgendamento(java.time.LocalDateTime diaAgendamento) { this.diaAgendamento = diaAgendamento; }
-    public java.time.LocalDateTime getDataCadastro() { return dataCadastro; }
-    public void setDataCadastro(java.time.LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
-    public java.time.LocalDateTime getDataAlteracao() { return dataAlteracao; }
-    public void setDataAlteracao(java.time.LocalDateTime dataAlteracao) { this.dataAlteracao = dataAlteracao; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AgendamentoServico that = (AgendamentoServico) o;
-        return id != null && id.equals(that.id);
+    public Long getId() { 
+    	return id; 
+    }
+    
+    public void setId(Long id) { 
+    	this.id = id; 
+    }
+    
+    public Cliente getCliente() { 
+    	return cliente; 
+    }
+    
+    public void setCliente(Cliente cliente) { 
+    	this.cliente = cliente; 
+    }
+    
+    public LocalDateTime getDiaAgendamento() { 
+    	return diaAgendamento; 
+    }
+    
+    public void setDiaAgendamento(LocalDateTime diaAgendamento) { 
+    	this.diaAgendamento = diaAgendamento;
+    }
+    
+    public LocalDateTime getDataCadastro() { 
+    	return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+    	this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+    	return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) {
+    	this.dataAlteracao = dataAlteracao;
     }
 
+   
     @Override
-    public int hashCode() {
-        return 31;
-    }
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 
-    @Override
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AgendamentoServico other = (AgendamentoServico) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	@Override
     public String toString() {
     return "AgendamentoServico{" +
         "id=" + id +

@@ -1,6 +1,8 @@
 package br.com.wbcars.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.envers.Audited;
 
@@ -28,32 +30,61 @@ public class Venda implements Serializable {
     @OneToOne
     @JoinColumn(name = "orcamento_id")
     private Orcamento orcamento;
-    private java.time.LocalDateTime dataCadastro;
-    private java.time.LocalDateTime dataAlteracao;
-    public java.time.LocalDateTime getDataCadastro() { return dataCadastro; }
-    public void setDataCadastro(java.time.LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
-    public java.time.LocalDateTime getDataAlteracao() { return dataAlteracao; }
-    public void setDataAlteracao(java.time.LocalDateTime dataAlteracao) { this.dataAlteracao = dataAlteracao; }
+    
+    private LocalDateTime dataCadastro;
+    
+    private LocalDateTime dataAlteracao;
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
+    }
 
     public Venda() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public Orcamento getOrcamento() { return orcamento; }
-    public void setOrcamento(Orcamento orcamento) { this.orcamento = orcamento; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Venda venda = (Venda) o;
-        return id != null && id.equals(venda.id);
+    public Long getId() { 
+        return id; 
+    }
+    
+    public void setId(Long id) { 
+        this.id = id; 
+    }
+    
+    public Orcamento getOrcamento() { 
+        return orcamento; 
+    }
+    
+    public void setOrcamento(Orcamento orcamento) { 
+        this.orcamento = orcamento; 
     }
 
     @Override
-    public int hashCode() {
-        return 31;
-    }
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Venda other = (Venda) obj;
+		return Objects.equals(id, other.id);
+	}
 
     @Override
     public String toString() {
