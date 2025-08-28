@@ -3,6 +3,9 @@ package br.com.wbcars.service;
 import br.com.wbcars.dao.FuncionarioDAO;
 import br.com.wbcars.dto.FuncionarioDTO;
 import br.com.wbcars.entity.Funcionario;
+import br.com.wbcars.enuns.SetorFuncionario;
+import br.com.wbcars.enuns.StatusGeral;
+import br.com.wbcars.enuns.TipoUsuario;
 import br.com.wbcars.mapper.FuncionarioMapper;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -76,8 +79,68 @@ public class FuncionarioService extends GenericService<Funcionario, FuncionarioD
         return toDTO(funcionarioDAO.findByLogin(login));
     }
 
+    @Override
     public List<FuncionarioDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         List<Funcionario> entities = funcionarioDAO.findByDataCadastroRange(inicio, fim);
         return toDTOList(entities);
+    }
+    
+    @Override
+    public List<FuncionarioDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Funcionario> entities = funcionarioDAO.findByDataAlteracaoRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    public List<FuncionarioDTO> findBySetor(SetorFuncionario setor) {
+        List<Funcionario> entities = funcionarioDAO.findBySetor(setor);
+        return toDTOList(entities);
+    }
+    
+    public List<FuncionarioDTO> findByDataRegistroRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Funcionario> entities = funcionarioDAO.findByDataRegistroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    public List<FuncionarioDTO> findByFuncao(String funcao) {
+        List<Funcionario> entities = funcionarioDAO.findByFuncao(funcao);
+        return toDTOList(entities);
+    }
+    
+    public FuncionarioDTO findByCpfCnpj(String cpfCnpj) {
+        return toDTO(funcionarioDAO.findByCpfCnpj(cpfCnpj));
+    }
+    
+    public List<FuncionarioDTO> findByTelefone(String telefone) {
+        List<Funcionario> entities = funcionarioDAO.findByTelefone(telefone);
+        return toDTOList(entities);
+    }
+    
+    public List<FuncionarioDTO> findByEmail(String email) {
+        List<Funcionario> entities = funcionarioDAO.findByEmail(email);
+        return toDTOList(entities);
+    }
+    
+    public List<FuncionarioDTO> findByEndereco(String endereco) {
+        List<Funcionario> entities = funcionarioDAO.findByEndereco(endereco);
+        return toDTOList(entities);
+    }
+    
+    public List<FuncionarioDTO> findByCidade(Long cidadeId) {
+        List<Funcionario> entities = funcionarioDAO.findByCidade(cidadeId);
+        return toDTOList(entities);
+    }
+    
+    public List<FuncionarioDTO> findByStatus(StatusGeral status) {
+        List<Funcionario> entities = funcionarioDAO.findByStatus(status);
+        return toDTOList(entities);
+    }
+    
+    public List<FuncionarioDTO> findByPerfil(TipoUsuario perfil) {
+        List<Funcionario> entities = funcionarioDAO.findByPerfil(perfil);
+        return toDTOList(entities);
+    }
+    
+    public FuncionarioDTO findByLoginAndSenha(String login, String senha) {
+        return toDTO(funcionarioDAO.findByLoginAndSenha(login, senha));
     }
 }

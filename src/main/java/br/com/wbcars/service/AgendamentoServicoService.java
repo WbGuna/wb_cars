@@ -72,14 +72,26 @@ public class AgendamentoServicoService extends GenericService<AgendamentoServico
         List<AgendamentoServico> entities = agendamentoServicoDAO.findByCliente(nomeCliente);
         return toDTOList(entities);
     }
+    
+    public List<AgendamentoServicoDTO> findByClienteId(Long clienteId) {
+        List<AgendamentoServico> entities = agendamentoServicoDAO.findByClienteId(clienteId);
+        return toDTOList(entities);
+    }
 
     public List<AgendamentoServicoDTO> findByDataAgendadaRange(LocalDateTime inicio, LocalDateTime fim) {
         List<AgendamentoServico> entities = agendamentoServicoDAO.findByDataAgendadaRange(inicio, fim);
         return toDTOList(entities);
     }
     
+    @Override
     public List<AgendamentoServicoDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         List<AgendamentoServico> entities = agendamentoServicoDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    @Override
+    public List<AgendamentoServicoDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<AgendamentoServico> entities = agendamentoServicoDAO.findByDataAlteracaoRange(inicio, fim);
         return toDTOList(entities);
     }
 }

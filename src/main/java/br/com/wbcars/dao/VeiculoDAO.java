@@ -85,4 +85,21 @@ public class VeiculoDAO extends GenericDAO<Veiculo> {
             return List.of();
         }
     }
+    
+    /**
+     * Busca veículos pela observação
+     * @param observacao Texto a ser buscado na observação
+     * @return Lista de veículos que atendem ao critério
+     */
+    public List<Veiculo> findByObservacao(String observacao) {
+        try {
+            TypedQuery<Veiculo> query = em.createQuery(
+                "SELECT v FROM Veiculo v WHERE LOWER(v.observacao) LIKE LOWER(:observacao)", Veiculo.class);
+            query.setParameter("observacao", "%" + observacao + "%");
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar veículos por observação: " + observacao, e);
+            return List.of();
+        }
+    }
 }

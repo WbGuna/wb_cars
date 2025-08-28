@@ -68,13 +68,25 @@ public class RelatorioFinanceiroDetalhadoService extends GenericService<Relatori
         return toDTOList(entities);
     }
 
+    public List<RelatorioFinanceiroDetalhadoDTO> findByValorTotalEntrada(Double valor) {
+        List<RelatorioFinanceiroDetalhado> entities = relatorioFinanceiroDetalhadoDAO.findByValorTotalEntrada(valor);
+        return toDTOList(entities);
+    }
+    
     public List<RelatorioFinanceiroDetalhadoDTO> findByPeriodo(LocalDateTime inicio, LocalDateTime fim) {
         List<RelatorioFinanceiroDetalhado> entities = relatorioFinanceiroDetalhadoDAO.findByPeriodo(inicio, fim);
         return toDTOList(entities);
     }
     
+    @Override
     public List<RelatorioFinanceiroDetalhadoDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         List<RelatorioFinanceiroDetalhado> entities = relatorioFinanceiroDetalhadoDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    @Override
+    public List<RelatorioFinanceiroDetalhadoDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<RelatorioFinanceiroDetalhado> entities = relatorioFinanceiroDetalhadoDAO.findByDataAlteracaoRange(inicio, fim);
         return toDTOList(entities);
     }
 }

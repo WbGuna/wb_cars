@@ -63,11 +63,5 @@ public class AgendamentoServicoDAO extends GenericDAO<AgendamentoServico> {
         }
     }
     
-    /**
-     * Sobrescreve o método da classe pai para manter compatibilidade
-     */
-    @Override
-    public List<AgendamentoServico> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
-        return super.findByDataCadastroRange(inicio, fim);
-    }
+
 }

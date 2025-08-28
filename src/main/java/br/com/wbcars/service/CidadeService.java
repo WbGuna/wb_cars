@@ -3,8 +3,10 @@ package br.com.wbcars.service;
 import br.com.wbcars.dao.CidadeDAO;
 import br.com.wbcars.dto.CidadeDTO;
 import br.com.wbcars.entity.Cidade;
+import br.com.wbcars.enuns.EstadoBrasil;
 import br.com.wbcars.mapper.CidadeMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,5 +71,25 @@ public class CidadeService extends GenericService<Cidade, CidadeDTO, Long> {
 
     public List<CidadeDTO> findByNome(String nome) {
         return cidadeDAO.findByNome(nome).stream().map(this::toDTO).collect(Collectors.toList());
+    }
+    
+    public List<CidadeDTO> findByEstado(EstadoBrasil estado) {
+        return cidadeDAO.findByEstado(estado).stream().map(this::toDTO).collect(Collectors.toList());
+    }
+    
+    public List<CidadeDTO> findByPais(String pais) {
+        return cidadeDAO.findByPais(pais).stream().map(this::toDTO).collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<CidadeDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Cidade> entities = cidadeDAO.findByDataCadastroRange(inicio, fim);
+        return entities.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<CidadeDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Cidade> entities = cidadeDAO.findByDataAlteracaoRange(inicio, fim);
+        return entities.stream().map(this::toDTO).collect(Collectors.toList());
     }
 }

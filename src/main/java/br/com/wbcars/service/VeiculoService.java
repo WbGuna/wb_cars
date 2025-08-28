@@ -76,9 +76,36 @@ public class VeiculoService extends GenericService<Veiculo, VeiculoDTO, Long> {
         List<Veiculo> entities = veiculoDAO.findByModelo(modelo);
         return toDTOList(entities);
     }
+    
+    public List<VeiculoDTO> findByMarca(String marca) {
+        List<Veiculo> entities = veiculoDAO.findByMarca(marca);
+        return toDTOList(entities);
+    }
+    
+    public List<VeiculoDTO> findByKilometragemRange(Integer minKm, Integer maxKm) {
+        List<Veiculo> entities = veiculoDAO.findByKilometragemRange(minKm, maxKm);
+        return toDTOList(entities);
+    }
+    
+    public List<VeiculoDTO> findByCliente(Long clienteId) {
+        List<Veiculo> entities = veiculoDAO.findByCliente(clienteId);
+        return toDTOList(entities);
+    }
+    
+    public List<VeiculoDTO> findByObservacao(String observacao) {
+        List<Veiculo> entities = veiculoDAO.findByObservacao(observacao);
+        return toDTOList(entities);
+    }
 
+    @Override
     public List<VeiculoDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         List<Veiculo> entities = veiculoDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    @Override
+    public List<VeiculoDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Veiculo> entities = veiculoDAO.findByDataAlteracaoRange(inicio, fim);
         return toDTOList(entities);
     }
 }

@@ -3,6 +3,7 @@ package br.com.wbcars.service;
 import br.com.wbcars.dao.ClienteDAO;
 import br.com.wbcars.dto.ClienteDTO;
 import br.com.wbcars.entity.Cliente;
+import br.com.wbcars.enuns.StatusGeral;
 import br.com.wbcars.mapper.ClienteMapper;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -77,9 +78,46 @@ public class ClienteService extends GenericService<Cliente, ClienteDTO, Long> {
         Cliente entity = clienteDAO.findByCpfCnpj(cpfCnpj);
         return toDTO(entity);
     }
+    
+    public List<ClienteDTO> findByEmail(String email) {
+        List<Cliente> entities = clienteDAO.findByEmail(email);
+        return toDTOList(entities);
+    }
+    
+    public List<ClienteDTO> findByCelular(String celular) {
+        List<Cliente> entities = clienteDAO.findByCelular(celular);
+        return toDTOList(entities);
+    }
+    
+    public List<ClienteDTO> findByEndereco(String endereco) {
+        List<Cliente> entities = clienteDAO.findByEndereco(endereco);
+        return toDTOList(entities);
+    }
+    
+    public List<ClienteDTO> findByCidade(Long cidadeId) {
+        List<Cliente> entities = clienteDAO.findByCidade(cidadeId);
+        return toDTOList(entities);
+    }
+    
+    public List<ClienteDTO> findByStatus(StatusGeral status) {
+        List<Cliente> entities = clienteDAO.findByStatus(status);
+        return toDTOList(entities);
+    }
+    
+    public List<ClienteDTO> findByDataNascimentoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Cliente> entities = clienteDAO.findByDataNascimentoRange(inicio, fim);
+        return toDTOList(entities);
+    }
 
+    @Override
     public List<ClienteDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         List<Cliente> entities = clienteDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    @Override
+    public List<ClienteDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Cliente> entities = clienteDAO.findByDataAlteracaoRange(inicio, fim);
         return toDTOList(entities);
     }
 }

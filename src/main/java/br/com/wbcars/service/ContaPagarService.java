@@ -3,6 +3,8 @@ package br.com.wbcars.service;
 import br.com.wbcars.dao.ContaPagarDAO;
 import br.com.wbcars.dto.ContaPagarDTO;
 import br.com.wbcars.entity.ContaPagar;
+import br.com.wbcars.enuns.StatusGeral;
+import br.com.wbcars.enuns.TipoContaPagar;
 import br.com.wbcars.mapper.ContaPagarMapper;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -78,8 +80,35 @@ public class ContaPagarService extends GenericService<ContaPagar, ContaPagarDTO,
         return toDTOList(entities);
     }
     
+    @Override
     public List<ContaPagarDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         List<ContaPagar> entities = contaPagarDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    @Override
+    public List<ContaPagarDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<ContaPagar> entities = contaPagarDAO.findByDataAlteracaoRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    public List<ContaPagarDTO> findByTipo(TipoContaPagar tipo) {
+        List<ContaPagar> entities = contaPagarDAO.findByTipo(tipo);
+        return toDTOList(entities);
+    }
+    
+    public List<ContaPagarDTO> findByPrazoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<ContaPagar> entities = contaPagarDAO.findByPrazoRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    public List<ContaPagarDTO> findByStatus(StatusGeral status) {
+        List<ContaPagar> entities = contaPagarDAO.findByStatus(status);
+        return toDTOList(entities);
+    }
+    
+    public List<ContaPagarDTO> findByValorRange(Double valorMinimo, Double valorMaximo) {
+        List<ContaPagar> entities = contaPagarDAO.findByValorRange(valorMinimo, valorMaximo);
         return toDTOList(entities);
     }
 }

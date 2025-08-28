@@ -103,11 +103,5 @@ public class ContaPagarDAO extends GenericDAO<ContaPagar> {
         }
     }
     
-    /**
-     * Sobrescreve o método da classe pai para manter compatibilidade
-     */
-    @Override
-    public List<ContaPagar> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
-        return super.findByDataCadastroRange(inicio, fim);
-    }
+
 }

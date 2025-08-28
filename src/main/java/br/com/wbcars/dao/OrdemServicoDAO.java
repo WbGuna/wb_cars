@@ -23,42 +23,7 @@ public class OrdemServicoDAO extends GenericDAO<OrdemServico> {
         return instance;
     }
 
-    /**
-     * Busca ordens de serviço por número
-     * @param numero String contendo o número da ordem de serviço
-     * @return Lista de ordens de serviço encontradas
-     */
-    public List<OrdemServico> findByNumero(String numero) {
-        try {
-            if (numero == null || numero.isEmpty()) {
-                return List.of();
-            }
-            
-            // Primeiro tenta buscar pelo campo numero
-            jakarta.persistence.TypedQuery<OrdemServico> query = em.createQuery(
-                "SELECT o FROM OrdemServico o WHERE o.numero = :numero", OrdemServico.class);
-            query.setParameter("numero", numero);
-            List<OrdemServico> result = query.getResultList();
-            
-            // Se não encontrou pelo campo numero, tenta buscar pelo ID
-            if (result.isEmpty()) {
-                try {
-                    Long id = Long.parseLong(numero);
-                    OrdemServico entity = findById(id);
-                    if (entity != null) {
-                        return List.of(entity);
-                    }
-                } catch (NumberFormatException e) {
-                    // Ignora se não for um número válido
-                }
-            }
-            
-            return result;
-        } catch (Exception e) {
-            LOGGER.severe("Erro ao buscar ordem de serviço por número: " + e.getMessage());
-            return List.of();
-        }
-    }
+
     
     /**
      * Busca ordens de serviço por atendente
@@ -130,5 +95,23 @@ public class OrdemServicoDAO extends GenericDAO<OrdemServico> {
         }
     }
     
-    // findByDataCadastroRange herdado de GenericDAO
+    /**
+     * Busca ordens de serviço que contenham uma determinada peça do controle de estoque.
+     * Este método utiliza o relacionamento ManyToMany entre OrdemServico e ControleEstoque,
+     * permitindo encontrar todas as ordens que utilizaram uma peça específica.
+     * 
+     * @param pecaId ID da peça no controle de estoque
+     * @return Lista de ordens de serviço que contêm a peça
+     */
+    public List<OrdemServico> findByPeca(Long pecaId) {
+        try {
+            jakarta.persistence.TypedQuery<OrdemServico> query = em.createQuery(
+                "SELECT o FROM OrdemServico o JOIN o.pecas p WHERE p.id = :pecaId", OrdemServico.class);
+            query.setParameter("pecaId", pecaId);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.severe("Erro ao buscar ordens de serviço por peça: " + e.getMessage());
+            return List.of();
+        }
+    }
 }

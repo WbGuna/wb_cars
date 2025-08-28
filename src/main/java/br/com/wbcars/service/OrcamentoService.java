@@ -3,6 +3,8 @@ package br.com.wbcars.service;
 import br.com.wbcars.dao.OrcamentoDAO;
 import br.com.wbcars.dto.OrcamentoDTO;
 import br.com.wbcars.entity.Orcamento;
+import br.com.wbcars.enuns.StatusOrcamento;
+import br.com.wbcars.enuns.TipoOrcamento;
 import br.com.wbcars.mapper.OrcamentoMapper;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -72,9 +74,56 @@ public class OrcamentoService extends GenericService<Orcamento, OrcamentoDTO, Lo
         List<Orcamento> entities = orcamentoDAO.findByCliente(nomeCliente);
         return toDTOList(entities);
     }
+    
+    public List<OrcamentoDTO> findByTipo(TipoOrcamento tipo) {
+        List<Orcamento> entities = orcamentoDAO.findByTipo(tipo);
+        return toDTOList(entities);
+    }
+    
+    public List<OrcamentoDTO> findByProduto(Long produtoId) {
+        List<Orcamento> entities = orcamentoDAO.findByProduto(produtoId);
+        return toDTOList(entities);
+    }
+    
+    public List<OrcamentoDTO> findByFuncionario(Long funcionarioId) {
+        List<Orcamento> entities = orcamentoDAO.findByFuncionario(funcionarioId);
+        return toDTOList(entities);
+    }
+    
+    public List<OrcamentoDTO> findByClienteId(Long clienteId) {
+        List<Orcamento> entities = orcamentoDAO.findByClienteId(clienteId);
+        return toDTOList(entities);
+    }
+    
+    public List<OrcamentoDTO> findByValorRange(Double valorMinimo, Double valorMaximo) {
+        List<Orcamento> entities = orcamentoDAO.findByValorRange(valorMinimo, valorMaximo);
+        return toDTOList(entities);
+    }
+    
+    public List<OrcamentoDTO> findByDataInicialRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Orcamento> entities = orcamentoDAO.findByDataInicialRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    public List<OrcamentoDTO> findByDataEntregaRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Orcamento> entities = orcamentoDAO.findByDataEntregaRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    public List<OrcamentoDTO> findByStatus(StatusOrcamento status) {
+        List<Orcamento> entities = orcamentoDAO.findByStatus(status);
+        return toDTOList(entities);
+    }
 
+    @Override
     public List<OrcamentoDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         List<Orcamento> entities = orcamentoDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    @Override
+    public List<OrcamentoDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Orcamento> entities = orcamentoDAO.findByDataAlteracaoRange(inicio, fim);
         return toDTOList(entities);
     }
 }

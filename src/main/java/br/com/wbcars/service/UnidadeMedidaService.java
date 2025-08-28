@@ -3,6 +3,7 @@ package br.com.wbcars.service;
 import br.com.wbcars.dao.UnidadeMedidaDAO;
 import br.com.wbcars.dto.UnidadeMedidaDTO;
 import br.com.wbcars.entity.UnidadeMedida;
+import br.com.wbcars.enuns.TipoUnidadeMedida;
 import br.com.wbcars.mapper.UnidadeMedidaMapper;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -75,9 +76,21 @@ public class UnidadeMedidaService extends GenericService<UnidadeMedida, UnidadeM
     public UnidadeMedidaDTO findBySigla(String sigla) {
         return toDTO(unidadeMedidaDAO.findBySigla(sigla));
     }
+    
+    public List<UnidadeMedidaDTO> findByTipo(TipoUnidadeMedida tipo) {
+        List<UnidadeMedida> entities = unidadeMedidaDAO.findByTipo(tipo);
+        return toDTOList(entities);
+    }
 
+    @Override
     public List<UnidadeMedidaDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         List<UnidadeMedida> entities = unidadeMedidaDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    @Override
+    public List<UnidadeMedidaDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<UnidadeMedida> entities = unidadeMedidaDAO.findByDataAlteracaoRange(inicio, fim);
         return toDTOList(entities);
     }
 }

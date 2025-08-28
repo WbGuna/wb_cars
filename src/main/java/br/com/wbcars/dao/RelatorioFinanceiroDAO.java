@@ -81,9 +81,6 @@ public class RelatorioFinanceiroDAO extends GenericDAO<RelatorioFinanceiro> {
         }
     }
     
-    /**
-     * Sobrescreve o método da classe pai para manter compatibilidade
-     */
     @Override
     public List<RelatorioFinanceiro> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         return findByPeriodo(inicio, fim);

@@ -72,9 +72,31 @@ public class ControleEstoqueService extends GenericService<ControleEstoque, Cont
         List<ControleEstoque> entities = controleEstoqueDAO.findByProduto(nomeProduto);
         return toDTOList(entities);
     }
+    
+    public List<ControleEstoqueDTO> findByQuantidadeRange(Integer quantidadeMinima, Integer quantidadeMaxima) {
+        List<ControleEstoque> entities = controleEstoqueDAO.findByQuantidadeRange(quantidadeMinima, quantidadeMaxima);
+        return toDTOList(entities);
+    }
+    
+    public List<ControleEstoqueDTO> findByValorRange(Double valorMinimo, Double valorMaximo) {
+        List<ControleEstoque> entities = controleEstoqueDAO.findByValorRange(valorMinimo, valorMaximo);
+        return toDTOList(entities);
+    }
+    
+    public List<ControleEstoqueDTO> findByFornecedor(Long fornecedorId) {
+        List<ControleEstoque> entities = controleEstoqueDAO.findByFornecedor(fornecedorId);
+        return toDTOList(entities);
+    }
 
+    @Override
     public List<ControleEstoqueDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         List<ControleEstoque> entities = controleEstoqueDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    @Override
+    public List<ControleEstoqueDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<ControleEstoque> entities = controleEstoqueDAO.findByDataAlteracaoRange(inicio, fim);
         return toDTOList(entities);
     }
 }

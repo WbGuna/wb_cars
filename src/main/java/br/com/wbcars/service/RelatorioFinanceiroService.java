@@ -73,8 +73,30 @@ public class RelatorioFinanceiroService extends GenericService<RelatorioFinancei
         return toDTOList(entities);
     }
     
+    public List<RelatorioFinanceiroDTO> findByTotalVendasRange(Double minimo, Double maximo) {
+        List<RelatorioFinanceiro> entities = relatorioFinanceiroDAO.findByTotalVendasRange(minimo, maximo);
+        return toDTOList(entities);
+    }
+    
+    public List<RelatorioFinanceiroDTO> findByTotalOrcamentosRange(Double minimo, Double maximo) {
+        List<RelatorioFinanceiro> entities = relatorioFinanceiroDAO.findByTotalOrcamentosRange(minimo, maximo);
+        return toDTOList(entities);
+    }
+    
+    public List<RelatorioFinanceiroDTO> findByTotalGastosRange(Double minimo, Double maximo) {
+        List<RelatorioFinanceiro> entities = relatorioFinanceiroDAO.findByTotalGastosRange(minimo, maximo);
+        return toDTOList(entities);
+    }
+    
+    @Override
     public List<RelatorioFinanceiroDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         List<RelatorioFinanceiro> entities = relatorioFinanceiroDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    @Override
+    public List<RelatorioFinanceiroDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<RelatorioFinanceiro> entities = relatorioFinanceiroDAO.findByDataAlteracaoRange(inicio, fim);
         return toDTOList(entities);
     }
 }

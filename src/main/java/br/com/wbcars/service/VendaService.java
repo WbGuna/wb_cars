@@ -78,8 +78,20 @@ public class VendaService extends GenericService<Venda, VendaDTO, Long> {
         return toDTOList(entities);
     }
     
+    public List<VendaDTO> findByOrcamento(Long orcamentoId) {
+        List<Venda> entities = vendaDAO.findByOrcamento(orcamentoId);
+        return toDTOList(entities);
+    }
+    
+    @Override
     public List<VendaDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         List<Venda> entities = vendaDAO.findByDataCadastroRange(inicio, fim);
+        return toDTOList(entities);
+    }
+    
+    @Override
+    public List<VendaDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        List<Venda> entities = vendaDAO.findByDataAlteracaoRange(inicio, fim);
         return toDTOList(entities);
     }
 }

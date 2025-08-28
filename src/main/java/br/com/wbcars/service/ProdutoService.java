@@ -71,7 +71,21 @@ public class ProdutoService extends GenericService<Produto, ProdutoDTO, Long> {
         return produtoDAO.findAllByNome(nome).stream().map(this::toDTO).collect(Collectors.toList());
     }
     
+    public List<ProdutoDTO> findByFornecedor(Long fornecedorId) {
+        return produtoDAO.findByFornecedor(fornecedorId).stream().map(this::toDTO).collect(Collectors.toList());
+    }
+    
+    public List<ProdutoDTO> findByUnidadeMedida(Long unidadeMedidaId) {
+        return produtoDAO.findByUnidadeMedida(unidadeMedidaId).stream().map(this::toDTO).collect(Collectors.toList());
+    }
+    
+    @Override
     public List<ProdutoDTO> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         return produtoDAO.findByDataCadastroRange(inicio, fim).stream().map(this::toDTO).collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<ProdutoDTO> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        return produtoDAO.findByDataAlteracaoRange(inicio, fim).stream().map(this::toDTO).collect(Collectors.toList());
     }
 }

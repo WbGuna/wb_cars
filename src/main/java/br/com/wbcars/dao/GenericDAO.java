@@ -61,7 +61,20 @@ public abstract class GenericDAO<T extends Serializable> {
             query.setParameter("fim", fim);
             return query.getResultList();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Erro ao buscar entidades por intervalo de data", e);
+            LOGGER.log(Level.SEVERE, "Erro ao buscar entidades por intervalo de data de cadastro", e);
+            return List.of();
+        }
+    }
+    
+    public List<T> findByDataAlteracaoRange(LocalDateTime inicio, LocalDateTime fim) {
+        try {
+            String jpql = "SELECT e FROM " + clazz.getSimpleName() + " e WHERE e.dataAlteracao BETWEEN :inicio AND :fim";
+            TypedQuery<T> query = getEntityManager().createQuery(jpql, clazz);
+            query.setParameter("inicio", inicio);
+            query.setParameter("fim", fim);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar entidades por intervalo de data de alteração", e);
             return List.of();
         }
     }
