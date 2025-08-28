@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.logging.Logger;
-import java.util.logging.Level;
 
 /**
  * Serviço genérico que fornece operações básicas para todos os serviços específicos.
@@ -14,7 +13,8 @@ import java.util.logging.Level;
  * @param <ID> Tipo do identificador (normalmente Long)
  */
 public abstract class GenericService<E, D, ID extends Serializable> {
-    private static final Logger LOGGER = Logger.getLogger(GenericService.class.getName());
+    @SuppressWarnings("unused")
+	private static final Logger LOGGER = Logger.getLogger(GenericService.class.getName());
     
     /**
      * Converte uma entidade para DTO
