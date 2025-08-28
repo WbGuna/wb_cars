@@ -3,47 +3,101 @@ package br.com.wbcars.dto;
 import br.com.wbcars.enuns.TipoContaPagar;
 import br.com.wbcars.enuns.StatusGeral;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class ContaPagarDTO implements Serializable {
 
 	private static final long serialVersionUID = -4929550242563769742L;
+	
 	private Long id;
+	
     private TipoContaPagar tipo;
-    private java.time.LocalDateTime prazo;
-    private java.time.LocalDateTime dataCadastro;
-    private java.time.LocalDateTime dataAlteracao;
+    
+    private LocalDateTime prazo;
+    
+    private LocalDateTime dataCadastro;
+    
+    private LocalDateTime dataAlteracao;
+    
     private Double valor;
+    
     private StatusGeral status;
 
     public ContaPagarDTO() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public TipoContaPagar getTipo() { return tipo; }
-    public void setTipo(TipoContaPagar tipo) { this.tipo = tipo; }
-    public java.time.LocalDateTime getPrazo() { return prazo; }
-    public void setPrazo(java.time.LocalDateTime prazo) { this.prazo = prazo; }
-    public java.time.LocalDateTime getDataCadastro() { return dataCadastro; }
-    public void setDataCadastro(java.time.LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
-    public java.time.LocalDateTime getDataAlteracao() { return dataAlteracao; }
-    public void setDataAlteracao(java.time.LocalDateTime dataAlteracao) { this.dataAlteracao = dataAlteracao; }
-    public Double getValor() { return valor; }
-    public void setValor(Double valor) { this.valor = valor; }
-    public StatusGeral getStatus() { return status; }
-    public void setStatus(StatusGeral status) { this.status = status; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ContaPagarDTO that = (ContaPagarDTO) o;
-        return id != null && id.equals(that.id);
+    public Long getId() { 
+    	return id; 
+    }
+    
+    public void setId(Long id) { 
+    	this.id = id; 
+    }
+    
+    public TipoContaPagar getTipo() { 
+    	return tipo; 
+    }
+    
+    public void setTipo(TipoContaPagar tipo) { 
+    	this.tipo = tipo; 
+    }
+    
+    public LocalDateTime getPrazo() { 
+    	return prazo; 
+    }
+    
+    public void setPrazo(LocalDateTime prazo) { 
+    	this.prazo = prazo; 
+    }
+    
+    public LocalDateTime getDataCadastro() { 
+    	return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+    	this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+    	return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+    	this.dataAlteracao = dataAlteracao; 
+    }
+    
+    public Double getValor() { 
+    	return valor; 
+    }
+    
+    public void setValor(Double valor) { 
+    	this.valor = valor; 
+    }
+    
+    public StatusGeral getStatus() { 
+    	return status; 
+    }
+    
+    public void setStatus(StatusGeral status) { 
+    	this.status = status; 
     }
 
     @Override
-    public int hashCode() {
-        return 31;
-    }
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ContaPagarDTO other = (ContaPagarDTO) obj;
+		return Objects.equals(id, other.id);
+	}
 
     @Override
     public String toString() {
