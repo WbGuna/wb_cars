@@ -2,7 +2,6 @@ package br.com.wbcars.dao;
 
 import br.com.wbcars.entity.RelatorioFinanceiroDetalhado;
 import jakarta.persistence.TypedQuery;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,24 +25,15 @@ public class RelatorioFinanceiroDetalhadoDAO extends GenericDAO<RelatorioFinance
         return instance;
     }
 
-    public List<RelatorioFinanceiroDetalhado> findByPeriodo(LocalDateTime inicio, LocalDateTime fim) {
+    public List<RelatorioFinanceiroDetalhado> findByValorTotalEntrada(Double valor) {
         try {
             TypedQuery<RelatorioFinanceiroDetalhado> query = em.createQuery(
-                "SELECT r FROM RelatorioFinanceiroDetalhado r WHERE r.dataCadastro BETWEEN :inicio AND :fim", RelatorioFinanceiroDetalhado.class);
-            query.setParameter("inicio", inicio);
-            query.setParameter("fim", fim);
+                "SELECT r FROM RelatorioFinanceiroDetalhado r WHERE r.valorTotalEntrada = :valor", RelatorioFinanceiroDetalhado.class);
+            query.setParameter("valor", valor);
             return query.getResultList();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Erro ao buscar relatórios financeiros detalhados por período", e);
+            LOGGER.log(Level.SEVERE, "Erro ao buscar relatórios financeiros detalhados por valor total de entrada", e);
             return List.of();
         }
-    }
-    
-    /**
-     * Sobrescreve o método da classe pai para manter compatibilidade
-     */
-    @Override
-    public List<RelatorioFinanceiroDetalhado> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
-        return findByPeriodo(inicio, fim);
     }
 }

@@ -2,7 +2,6 @@ package br.com.wbcars.dao;
 
 import br.com.wbcars.entity.ControleEstoque;
 import jakarta.persistence.TypedQuery;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,16 +36,43 @@ public class ControleEstoqueDAO extends GenericDAO<ControleEstoque> {
             return List.of();
         }
     }
-
-    public List<ControleEstoque> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
+    
+    public List<ControleEstoque> findByQuantidadeRange(Integer quantidadeMinima, Integer quantidadeMaxima) {
         try {
             TypedQuery<ControleEstoque> query = em.createQuery(
-                "SELECT c FROM ControleEstoque c WHERE c.dataCadastro BETWEEN :inicio AND :fim", ControleEstoque.class);
-            query.setParameter("inicio", inicio);
-            query.setParameter("fim", fim);
+                "SELECT c FROM ControleEstoque c WHERE c.quantidade BETWEEN :quantidadeMinima AND :quantidadeMaxima", 
+                ControleEstoque.class);
+            query.setParameter("quantidadeMinima", quantidadeMinima);
+            query.setParameter("quantidadeMaxima", quantidadeMaxima);
             return query.getResultList();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Erro ao buscar controle de estoque por intervalo de data", e);
+            LOGGER.log(Level.SEVERE, "Erro ao buscar controle de estoque por faixa de quantidade", e);
+            return List.of();
+        }
+    }
+    
+    public List<ControleEstoque> findByValorRange(Double valorMinimo, Double valorMaximo) {
+        try {
+            TypedQuery<ControleEstoque> query = em.createQuery(
+                "SELECT c FROM ControleEstoque c WHERE c.valor BETWEEN :valorMinimo AND :valorMaximo", 
+                ControleEstoque.class);
+            query.setParameter("valorMinimo", valorMinimo);
+            query.setParameter("valorMaximo", valorMaximo);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar controle de estoque por faixa de valor", e);
+            return List.of();
+        }
+    }
+    
+    public List<ControleEstoque> findByFornecedor(Long fornecedorId) {
+        try {
+            TypedQuery<ControleEstoque> query = em.createQuery(
+                "SELECT c FROM ControleEstoque c WHERE c.fornecedor.id = :fornecedorId", ControleEstoque.class);
+            query.setParameter("fornecedorId", fornecedorId);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar controle de estoque por fornecedor: " + fornecedorId, e);
             return List.of();
         }
     }

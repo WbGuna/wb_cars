@@ -28,22 +28,6 @@ public class UnidadeMedida implements Serializable {
     
     private LocalDateTime dataAlteracao;
     
-    public LocalDateTime getDataCadastro() { 
-        return dataCadastro; 
-    }
-    
-    public void setDataCadastro(LocalDateTime dataCadastro) { 
-        this.dataCadastro = dataCadastro; 
-    }
-    
-    public LocalDateTime getDataAlteracao() { 
-        return dataAlteracao; 
-    }
-    
-    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
-        this.dataAlteracao = dataAlteracao; 
-    }
-
     public UnidadeMedida() {}
 
     public Long getId() { 
@@ -60,6 +44,22 @@ public class UnidadeMedida implements Serializable {
     
     public void setTipo(TipoUnidadeMedida tipo) { 
         this.tipo = tipo; 
+    }
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
     }
 
     @Override

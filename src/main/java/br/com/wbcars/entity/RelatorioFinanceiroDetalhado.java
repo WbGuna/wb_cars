@@ -42,24 +42,8 @@ public class RelatorioFinanceiroDetalhado implements Serializable {
     
     private LocalDateTime dataAlteracao;
     
-    public LocalDateTime getDataCadastro() { 
-        return dataCadastro; 
-    }
-    
-    public void setDataCadastro(LocalDateTime dataCadastro) { 
-        this.dataCadastro = dataCadastro; 
-    }
-    
-    public LocalDateTime getDataAlteracao() { 
-        return dataAlteracao; 
-    }
-    
-    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
-        this.dataAlteracao = dataAlteracao; 
-    }
-
     public RelatorioFinanceiroDetalhado() {}
-
+    
     public Long getId() { 
         return id; 
     }
@@ -90,6 +74,22 @@ public class RelatorioFinanceiroDetalhado implements Serializable {
     
     public void setValorTotalEntrada(Double valorTotalEntrada) { 
         this.valorTotalEntrada = valorTotalEntrada; 
+    }
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
     }
 
     @Override

@@ -50,22 +50,6 @@ public class Fornecedor implements Serializable {
 
     public Fornecedor() {}
 
-    public LocalDateTime getDataCadastro() { 
-        return dataCadastro; 
-    }
-    
-    public void setDataCadastro(LocalDateTime dataCadastro) { 
-        this.dataCadastro = dataCadastro; 
-    }
-    
-    public LocalDateTime getDataAlteracao() { 
-        return dataAlteracao; 
-    }
-    
-    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
-        this.dataAlteracao = dataAlteracao; 
-    }
-
     public Long getId() { 
         return id; 
     }
@@ -144,6 +128,22 @@ public class Fornecedor implements Serializable {
     
     public void setCidade(Cidade cidade) { 
         this.cidade = cidade; 
+    }
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
     }
 
     @Override

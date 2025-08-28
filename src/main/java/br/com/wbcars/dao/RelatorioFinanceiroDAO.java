@@ -39,6 +39,48 @@ public class RelatorioFinanceiroDAO extends GenericDAO<RelatorioFinanceiro> {
         }
     }
     
+    public List<RelatorioFinanceiro> findByTotalVendasRange(Double minimo, Double maximo) {
+        try {
+            TypedQuery<RelatorioFinanceiro> query = em.createQuery(
+                "SELECT r FROM RelatorioFinanceiro r WHERE r.totalVendas BETWEEN :minimo AND :maximo", 
+                RelatorioFinanceiro.class);
+            query.setParameter("minimo", minimo);
+            query.setParameter("maximo", maximo);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar relatórios financeiros por faixa de total de vendas", e);
+            return List.of();
+        }
+    }
+    
+    public List<RelatorioFinanceiro> findByTotalOrcamentosRange(Double minimo, Double maximo) {
+        try {
+            TypedQuery<RelatorioFinanceiro> query = em.createQuery(
+                "SELECT r FROM RelatorioFinanceiro r WHERE r.totalOrcamentos BETWEEN :minimo AND :maximo", 
+                RelatorioFinanceiro.class);
+            query.setParameter("minimo", minimo);
+            query.setParameter("maximo", maximo);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar relatórios financeiros por faixa de total de orçamentos", e);
+            return List.of();
+        }
+    }
+    
+    public List<RelatorioFinanceiro> findByTotalGastosRange(Double minimo, Double maximo) {
+        try {
+            TypedQuery<RelatorioFinanceiro> query = em.createQuery(
+                "SELECT r FROM RelatorioFinanceiro r WHERE r.totalGastos BETWEEN :minimo AND :maximo", 
+                RelatorioFinanceiro.class);
+            query.setParameter("minimo", minimo);
+            query.setParameter("maximo", maximo);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar relatórios financeiros por faixa de total de gastos", e);
+            return List.of();
+        }
+    }
+    
     /**
      * Sobrescreve o método da classe pai para manter compatibilidade
      */

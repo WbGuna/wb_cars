@@ -46,22 +46,6 @@ public class OrdemServico implements Serializable {
     
     private LocalDateTime dataAlteracao;
     
-    public LocalDateTime getDataCadastro() { 
-        return dataCadastro; 
-    }
-    
-    public void setDataCadastro(LocalDateTime dataCadastro) { 
-        this.dataCadastro = dataCadastro; 
-    }
-    
-    public LocalDateTime getDataAlteracao() { 
-        return dataAlteracao; 
-    }
-    
-    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
-        this.dataAlteracao = dataAlteracao; 
-    }
-
     @ManyToMany
     @JoinTable(
         name = "ordem_servico_pecas",
@@ -110,6 +94,22 @@ public class OrdemServico implements Serializable {
     
     public void setValor(Double valor) { 
         this.valor = valor; 
+    }
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
     }
     
     public List<ControleEstoque> getPecas() { 

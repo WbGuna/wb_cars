@@ -60,5 +60,75 @@ public class OrdemServicoDAO extends GenericDAO<OrdemServico> {
         }
     }
     
+    /**
+     * Busca ordens de serviço por atendente
+     * @param atendenteId ID do funcionário atendente
+     * @return Lista de ordens de serviço do atendente
+     */
+    public List<OrdemServico> findByAtendente(Long atendenteId) {
+        try {
+            jakarta.persistence.TypedQuery<OrdemServico> query = em.createQuery(
+                "SELECT o FROM OrdemServico o WHERE o.atendente.id = :atendenteId", OrdemServico.class);
+            query.setParameter("atendenteId", atendenteId);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.severe("Erro ao buscar ordens de serviço por atendente: " + e.getMessage());
+            return List.of();
+        }
+    }
+    
+    /**
+     * Busca ordens de serviço por cliente
+     * @param clienteId ID do cliente
+     * @return Lista de ordens de serviço do cliente
+     */
+    public List<OrdemServico> findByCliente(Long clienteId) {
+        try {
+            jakarta.persistence.TypedQuery<OrdemServico> query = em.createQuery(
+                "SELECT o FROM OrdemServico o WHERE o.cliente.id = :clienteId", OrdemServico.class);
+            query.setParameter("clienteId", clienteId);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.severe("Erro ao buscar ordens de serviço por cliente: " + e.getMessage());
+            return List.of();
+        }
+    }
+    
+    /**
+     * Busca ordens de serviço por descrição
+     * @param descricao Texto a ser buscado na descrição
+     * @return Lista de ordens de serviço que contêm o texto na descrição
+     */
+    public List<OrdemServico> findByDescricao(String descricao) {
+        try {
+            jakarta.persistence.TypedQuery<OrdemServico> query = em.createQuery(
+                "SELECT o FROM OrdemServico o WHERE LOWER(o.descricao) LIKE LOWER(:descricao)", OrdemServico.class);
+            query.setParameter("descricao", "%" + descricao + "%");
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.severe("Erro ao buscar ordens de serviço por descrição: " + e.getMessage());
+            return List.of();
+        }
+    }
+    
+    /**
+     * Busca ordens de serviço por faixa de valor
+     * @param valorMinimo Valor mínimo
+     * @param valorMaximo Valor máximo
+     * @return Lista de ordens de serviço com valores dentro da faixa
+     */
+    public List<OrdemServico> findByValorRange(Double valorMinimo, Double valorMaximo) {
+        try {
+            jakarta.persistence.TypedQuery<OrdemServico> query = em.createQuery(
+                "SELECT o FROM OrdemServico o WHERE o.valor BETWEEN :valorMinimo AND :valorMaximo", OrdemServico.class);
+            query.setParameter("valorMinimo", valorMinimo);
+            query.setParameter("valorMaximo", valorMaximo);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.severe("Erro ao buscar ordens de serviço por faixa de valor: " + e.getMessage());
+            return List.of();
+        }
+    }
+    
     // findByDataCadastroRange herdado de GenericDAO
 }

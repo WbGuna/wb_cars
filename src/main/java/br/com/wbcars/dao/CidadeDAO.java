@@ -1,6 +1,7 @@
 package br.com.wbcars.dao;
 
 import br.com.wbcars.entity.Cidade;
+import br.com.wbcars.enuns.EstadoBrasil;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
 import java.util.logging.Level;
@@ -33,6 +34,30 @@ public class CidadeDAO extends GenericDAO<Cidade> {
             return query.getResultList();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Erro ao buscar cidades por nome: " + nome, e);
+            return List.of();
+        }
+    }
+    
+    public List<Cidade> findByEstado(EstadoBrasil estado) {
+        try {
+            TypedQuery<Cidade> query = em.createQuery(
+                "SELECT c FROM Cidade c WHERE c.estado = :estado", Cidade.class);
+            query.setParameter("estado", estado);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar cidades por estado: " + estado, e);
+            return List.of();
+        }
+    }
+    
+    public List<Cidade> findByPais(String pais) {
+        try {
+            TypedQuery<Cidade> query = em.createQuery(
+                "SELECT c FROM Cidade c WHERE LOWER(c.pais) LIKE LOWER(:pais)", Cidade.class);
+            query.setParameter("pais", "%" + pais + "%");
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar cidades por país: " + pais, e);
             return List.of();
         }
     }

@@ -48,30 +48,6 @@ public class FuncionarioDTO implements Serializable {
 
     public FuncionarioDTO() {}
 
-    public String getLogin() { 
-        return login; 
-    }
-    
-    public void setLogin(String login) { 
-        this.login = login; 
-    }
-    
-    public String getSenha() { 
-        return senha; 
-    }
-    
-    public void setSenha(String senha) { 
-        this.senha = senha; 
-    }
-    
-    public TipoUsuario getPerfil() { 
-        return perfil; 
-    }
-    
-    public void setPerfil(TipoUsuario perfil) { 
-        this.perfil = perfil; 
-    }
-
     public Long getId() { 
         return id; 
     }
@@ -183,6 +159,30 @@ public class FuncionarioDTO implements Serializable {
     public void setStatus(StatusGeral status) { 
         this.status = status; 
     }
+    
+    public String getLogin() { 
+        return login; 
+    }
+    
+    public void setLogin(String login) { 
+        this.login = login; 
+    }
+    
+    public String getSenha() { 
+        return senha; 
+    }
+    
+    public void setSenha(String senha) { 
+        this.senha = senha; 
+    }
+    
+    public TipoUsuario getPerfil() { 
+        return perfil; 
+    }
+    
+    public void setPerfil(TipoUsuario perfil) { 
+        this.perfil = perfil; 
+    }
 
     @Override
 	public int hashCode() {
@@ -216,6 +216,8 @@ public class FuncionarioDTO implements Serializable {
         ", bairro='" + bairro + '\'' +
         ", cidade=" + (cidade != null ? cidade.getNome() : null) +
         ", status=" + (status != null ? status.getDescricao() : null) +
+        ", login='" + login + '\'' +
+        ", perfil=" + (perfil != null ? perfil.getDescricao() : null) +
         ", dataCadastro=" + dataCadastro +
         ", dataAlteracao=" + dataAlteracao +
         '}';

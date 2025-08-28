@@ -1,8 +1,9 @@
 package br.com.wbcars.dao;
 
 import br.com.wbcars.entity.Fornecedor;
+import br.com.wbcars.enuns.StatusGeral;
+import br.com.wbcars.enuns.TipoFornecimento;
 import jakarta.persistence.TypedQuery;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,15 +52,75 @@ public class FornecedorDAO extends GenericDAO<Fornecedor> {
         }
     }
 
-    public List<Fornecedor> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
+    public List<Fornecedor> findByTelefone(String telefone) {
         try {
             TypedQuery<Fornecedor> query = em.createQuery(
-                "SELECT f FROM Fornecedor f WHERE f.dataCadastro BETWEEN :inicio AND :fim", Fornecedor.class);
-            query.setParameter("inicio", inicio);
-            query.setParameter("fim", fim);
+                "SELECT f FROM Fornecedor f WHERE f.telefone LIKE :telefone", Fornecedor.class);
+            query.setParameter("telefone", "%" + telefone + "%");
             return query.getResultList();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Erro ao buscar fornecedores por intervalo de data", e);
+            LOGGER.log(Level.SEVERE, "Erro ao buscar fornecedores por telefone: " + telefone, e);
+            return List.of();
+        }
+    }
+    
+    public List<Fornecedor> findByEmail(String email) {
+        try {
+            TypedQuery<Fornecedor> query = em.createQuery(
+                "SELECT f FROM Fornecedor f WHERE LOWER(f.email) LIKE LOWER(:email)", Fornecedor.class);
+            query.setParameter("email", "%" + email + "%");
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar fornecedores por email: " + email, e);
+            return List.of();
+        }
+    }
+    
+    public List<Fornecedor> findByTipoFornecimento(TipoFornecimento tipoFornecimento) {
+        try {
+            TypedQuery<Fornecedor> query = em.createQuery(
+                "SELECT f FROM Fornecedor f WHERE f.tipoFornecimento = :tipoFornecimento", Fornecedor.class);
+            query.setParameter("tipoFornecimento", tipoFornecimento);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar fornecedores por tipo de fornecimento: " + tipoFornecimento, e);
+            return List.of();
+        }
+    }
+    
+    public List<Fornecedor> findByStatus(StatusGeral status) {
+        try {
+            TypedQuery<Fornecedor> query = em.createQuery(
+                "SELECT f FROM Fornecedor f WHERE f.status = :status", Fornecedor.class);
+            query.setParameter("status", status);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar fornecedores por status: " + status, e);
+            return List.of();
+        }
+    }
+    
+    public List<Fornecedor> findByEndereco(String endereco) {
+        try {
+            TypedQuery<Fornecedor> query = em.createQuery(
+                "SELECT f FROM Fornecedor f WHERE LOWER(f.rua) LIKE LOWER(:endereco) OR LOWER(f.bairro) LIKE LOWER(:endereco)", 
+                Fornecedor.class);
+            query.setParameter("endereco", "%" + endereco + "%");
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar fornecedores por endereço: " + endereco, e);
+            return List.of();
+        }
+    }
+    
+    public List<Fornecedor> findByCidade(Long cidadeId) {
+        try {
+            TypedQuery<Fornecedor> query = em.createQuery(
+                "SELECT f FROM Fornecedor f WHERE f.cidade.id = :cidadeId", Fornecedor.class);
+            query.setParameter("cidadeId", cidadeId);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar fornecedores por cidade: " + cidadeId, e);
             return List.of();
         }
     }

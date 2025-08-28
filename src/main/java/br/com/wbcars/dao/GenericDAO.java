@@ -22,32 +22,18 @@ public abstract class GenericDAO<T extends Serializable> {
         this.em = emf.createEntityManager();
     }
     
-    /**
-     * Fecha o EntityManager associado a este DAO.
-     * Deve ser chamado quando o DAO não for mais necessário.
-     */
     public void close() {
         if (em != null && em.isOpen()) {
             em.close();
         }
     }
     
-    /**
-     * Obtém um EntityManager novo se o atual estiver fechado.
-     * @return EntityManager ativo
-     */
     protected EntityManager getEntityManager() {
         if (em == null || !em.isOpen()) {
             em = emf.createEntityManager();
         }
         return em;
     }
-    
-    /**
-     * Encontra uma entidade pelo ID
-     * @param id ID da entidade
-     * @return Entidade encontrada ou null
-     */
     public T findById(Long id) {
         try {
             return getEntityManager().find(clazz, id);
@@ -57,10 +43,6 @@ public abstract class GenericDAO<T extends Serializable> {
         }
     }
 
-    /**
-     * Encontra todas as entidades
-     * @return Lista de entidades
-     */
     public List<T> findAll() {
         try {
             TypedQuery<T> query = getEntityManager().createQuery("FROM " + clazz.getSimpleName(), clazz);
@@ -71,12 +53,6 @@ public abstract class GenericDAO<T extends Serializable> {
         }
     }
     
-    /**
-     * Encontra entidades por intervalo de data de cadastro
-     * @param inicio Data inicial
-     * @param fim Data final
-     * @return Lista de entidades no intervalo de datas
-     */
     public List<T> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
         try {
             String jpql = "SELECT e FROM " + clazz.getSimpleName() + " e WHERE e.dataCadastro BETWEEN :inicio AND :fim";
@@ -90,11 +66,6 @@ public abstract class GenericDAO<T extends Serializable> {
         }
     }
 
-    /**
-     * Persiste uma nova entidade
-     * @param entity Entidade a ser persistida
-     * @return Entidade persistida ou null em caso de erro
-     */
     public T save(T entity) {
         EntityTransaction tx = null;
         try {
@@ -113,11 +84,6 @@ public abstract class GenericDAO<T extends Serializable> {
         }
     }
 
-    /**
-     * Atualiza uma entidade existente
-     * @param entity Entidade a ser atualizada
-     * @return Entidade atualizada ou null em caso de erro
-     */
     public T update(T entity) {
         EntityTransaction tx = null;
         try {
@@ -136,11 +102,6 @@ public abstract class GenericDAO<T extends Serializable> {
         }
     }
 
-    /**
-     * Remove uma entidade
-     * @param entity Entidade a ser removida
-     * @return true se removido com sucesso, false caso contrário
-     */
     public boolean delete(T entity) {
         EntityTransaction tx = null;
         try {

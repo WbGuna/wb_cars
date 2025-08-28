@@ -51,11 +51,15 @@ public class VendaDAO extends GenericDAO<Venda> {
         }
     }
     
-    /**
-     * Sobrescreve o método da classe pai para manter compatibilidade
-     */
-    @Override
-    public List<Venda> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
-        return super.findByDataCadastroRange(inicio, fim);
+    public List<Venda> findByOrcamento(Long orcamentoId) {
+        try {
+            TypedQuery<Venda> query = em.createQuery(
+                "SELECT v FROM Venda v WHERE v.orcamento.id = :orcamentoId", Venda.class);
+            query.setParameter("orcamentoId", orcamentoId);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar vendas por orçamento: " + orcamentoId, e);
+            return List.of();
+        }
     }
 }

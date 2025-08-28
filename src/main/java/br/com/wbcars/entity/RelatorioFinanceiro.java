@@ -30,22 +30,6 @@ public class RelatorioFinanceiro implements Serializable {
     
     private LocalDateTime dataAlteracao;
     
-    public LocalDateTime getDataCadastro() { 
-        return dataCadastro; 
-    }
-    
-    public void setDataCadastro(LocalDateTime dataCadastro) { 
-        this.dataCadastro = dataCadastro; 
-    }
-    
-    public LocalDateTime getDataAlteracao() { 
-        return dataAlteracao; 
-    }
-    
-    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
-        this.dataAlteracao = dataAlteracao; 
-    }
-
     public RelatorioFinanceiro() {}
 
     public Long getId() { 
@@ -78,6 +62,22 @@ public class RelatorioFinanceiro implements Serializable {
     
     public void setTotalGastos(Double totalGastos) { 
         this.totalGastos = totalGastos; 
+    }
+    
+    public LocalDateTime getDataCadastro() { 
+        return dataCadastro; 
+    }
+    
+    public void setDataCadastro(LocalDateTime dataCadastro) { 
+        this.dataCadastro = dataCadastro; 
+    }
+    
+    public LocalDateTime getDataAlteracao() { 
+        return dataAlteracao; 
+    }
+    
+    public void setDataAlteracao(LocalDateTime dataAlteracao) { 
+        this.dataAlteracao = dataAlteracao; 
     }
 
     @Override

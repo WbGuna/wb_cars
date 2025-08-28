@@ -1,8 +1,8 @@
 package br.com.wbcars.dao;
 
 import br.com.wbcars.entity.UnidadeMedida;
+import br.com.wbcars.enuns.TipoUnidadeMedida;
 import jakarta.persistence.TypedQuery;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,16 +50,15 @@ public class UnidadeMedidaDAO extends GenericDAO<UnidadeMedida> {
             return null;
         }
     }
-
-    public List<UnidadeMedida> findByDataCadastroRange(LocalDateTime inicio, LocalDateTime fim) {
+    
+    public List<UnidadeMedida> findByTipo(TipoUnidadeMedida tipo) {
         try {
             TypedQuery<UnidadeMedida> query = em.createQuery(
-                "SELECT u FROM UnidadeMedida u WHERE u.dataCadastro BETWEEN :inicio AND :fim", UnidadeMedida.class);
-            query.setParameter("inicio", inicio);
-            query.setParameter("fim", fim);
+                "SELECT u FROM UnidadeMedida u WHERE u.tipo = :tipo", UnidadeMedida.class);
+            query.setParameter("tipo", tipo);
             return query.getResultList();
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Erro ao buscar unidades de medida por intervalo de data", e);
+            LOGGER.log(Level.SEVERE, "Erro ao buscar unidades de medida por tipo: " + tipo, e);
             return List.of();
         }
     }

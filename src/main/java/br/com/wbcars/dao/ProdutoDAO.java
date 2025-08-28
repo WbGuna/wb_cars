@@ -25,11 +25,6 @@ public class ProdutoDAO extends GenericDAO<Produto> {
         return instance;
     }
 
-    /**
-     * Busca produtos cujo nome contenha o texto informado
-     * @param nome Texto a ser buscado no nome
-     * @return Lista de produtos que atendem ao critério
-     */
     public List<Produto> findAllByNome(String nome) {
         try {
             TypedQuery<Produto> query = getEntityManager().createQuery(
@@ -41,8 +36,28 @@ public class ProdutoDAO extends GenericDAO<Produto> {
             return List.of();
         }
     }
-
-    // Método findByCodigo removido pois o campo 'codigo' não existe na entidade Produto
     
-    // findByDataCadastroRange removido pois foi movido para GenericDAO
+    public List<Produto> findByFornecedor(Long fornecedorId) {
+        try {
+            TypedQuery<Produto> query = getEntityManager().createQuery(
+                "SELECT p FROM Produto p WHERE p.fornecedor.id = :fornecedorId", Produto.class);
+            query.setParameter("fornecedorId", fornecedorId);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar produtos por fornecedor: " + fornecedorId, e);
+            return List.of();
+        }
+    }
+    
+    public List<Produto> findByUnidadeMedida(Long unidadeMedidaId) {
+        try {
+            TypedQuery<Produto> query = getEntityManager().createQuery(
+                "SELECT p FROM Produto p WHERE p.unidadeMedida.id = :unidadeMedidaId", Produto.class);
+            query.setParameter("unidadeMedidaId", unidadeMedidaId);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar produtos por unidade de medida: " + unidadeMedidaId, e);
+            return List.of();
+        }
+    }
 }

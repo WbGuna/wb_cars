@@ -37,6 +37,18 @@ public class AgendamentoServicoDAO extends GenericDAO<AgendamentoServico> {
             return List.of();
         }
     }
+    
+    public List<AgendamentoServico> findByClienteId(Long clienteId) {
+        try {
+            TypedQuery<AgendamentoServico> query = em.createQuery(
+                "SELECT a FROM AgendamentoServico a WHERE a.cliente.id = :clienteId", AgendamentoServico.class);
+            query.setParameter("clienteId", clienteId);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar agendamentos por ID do cliente: " + clienteId, e);
+            return List.of();
+        }
+    }
 
     public List<AgendamentoServico> findByDataAgendadaRange(LocalDateTime inicio, LocalDateTime fim) {
         try {

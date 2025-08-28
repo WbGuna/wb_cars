@@ -1,6 +1,8 @@
 package br.com.wbcars.dao;
 
 import br.com.wbcars.entity.ContaPagar;
+import br.com.wbcars.enuns.StatusGeral;
+import br.com.wbcars.enuns.TipoContaPagar;
 import jakarta.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,6 +49,56 @@ public class ContaPagarDAO extends GenericDAO<ContaPagar> {
             return query.getResultList();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Erro ao buscar contas a pagar por intervalo de data de vencimento", e);
+            return List.of();
+        }
+    }
+    
+    public List<ContaPagar> findByTipo(TipoContaPagar tipo) {
+        try {
+            TypedQuery<ContaPagar> query = em.createQuery(
+                "SELECT c FROM ContaPagar c WHERE c.tipo = :tipo", ContaPagar.class);
+            query.setParameter("tipo", tipo);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar contas a pagar por tipo: " + tipo, e);
+            return List.of();
+        }
+    }
+    
+    public List<ContaPagar> findByPrazoRange(LocalDateTime inicio, LocalDateTime fim) {
+        try {
+            TypedQuery<ContaPagar> query = em.createQuery(
+                "SELECT c FROM ContaPagar c WHERE c.prazo BETWEEN :inicio AND :fim", ContaPagar.class);
+            query.setParameter("inicio", inicio);
+            query.setParameter("fim", fim);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar contas a pagar por intervalo de prazo", e);
+            return List.of();
+        }
+    }
+    
+    public List<ContaPagar> findByStatus(StatusGeral status) {
+        try {
+            TypedQuery<ContaPagar> query = em.createQuery(
+                "SELECT c FROM ContaPagar c WHERE c.status = :status", ContaPagar.class);
+            query.setParameter("status", status);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar contas a pagar por status: " + status, e);
+            return List.of();
+        }
+    }
+    
+    public List<ContaPagar> findByValorRange(Double valorMinimo, Double valorMaximo) {
+        try {
+            TypedQuery<ContaPagar> query = em.createQuery(
+                "SELECT c FROM ContaPagar c WHERE c.valor BETWEEN :valorMinimo AND :valorMaximo", ContaPagar.class);
+            query.setParameter("valorMinimo", valorMinimo);
+            query.setParameter("valorMaximo", valorMaximo);
+            return query.getResultList();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar contas a pagar por faixa de valor", e);
             return List.of();
         }
     }
