@@ -5,12 +5,10 @@ import br.com.wbcars.dto.FornecedorDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface FornecedorMapper {
-	
-    FornecedorMapper INSTANCE = Mappers.getMapper(FornecedorMapper.class);
     
-    FornecedorDTO toDTO(Fornecedor entity);
+    FornecedorMapper INSTANCE = Mappers.getMapper(FornecedorMapper.class);    FornecedorDTO toDTO(Fornecedor entity);
     
     Fornecedor toEntity(FornecedorDTO dto);
 }

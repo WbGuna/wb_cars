@@ -7,7 +7,23 @@
 
     <display-name>WB Cars System</display-name>
 
-    <!-- Spring Context -->
+    <!-- CDI Weld - Deve vir ANTES do Spring -->
+    <listener>
+        <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
+    </listener>
+    
+    <!-- CDI Configuration -->
+    <context-param>
+        <param-name>org.jboss.weld.environment.servlet.archive.isolation</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>org.jboss.weld.environment.servlet.archive.check</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    
+    <!-- Spring Context - DESABILITADO TEMPORARIAMENTE 
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/applicationContext.xml</param-value>
@@ -16,10 +32,7 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    
-    <listener>
-        <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
-    </listener>
+    -->
 
     <!-- JSF Config -->
     <context-param>

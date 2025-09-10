@@ -5,7 +5,7 @@ import br.com.wbcars.dto.ProdutoDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface ProdutoMapper {
     ProdutoMapper INSTANCE = Mappers.getMapper(ProdutoMapper.class);
     

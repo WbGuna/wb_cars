@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence 
+             https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        
+        <!-- Entities -->
+        <class>br.com.wbcars.entity.AgendamentoServico</class>
+        <class>br.com.wbcars.entity.Cidade</class>
+        <class>br.com.wbcars.entity.Cliente</class>
+        <class>br.com.wbcars.entity.ContaPagar</class>
+        <class>br.com.wbcars.entity.ControleEstoque</class>
+        <class>br.com.wbcars.entity.Fornecedor</class>
+        <class>br.com.wbcars.entity.Funcionario</class>
+        <class>br.com.wbcars.entity.Orcamento</class>
+        <class>br.com.wbcars.entity.OrdemServico</class>
+        <class>br.com.wbcars.entity.Produto</class>
+        <class>br.com.wbcars.entity.RelatorioFinanceiro</class>
+        <class>br.com.wbcars.entity.RelatorioFinanceiroDetalhado</class>
+        <class>br.com.wbcars.entity.UnidadeMedida</class>
+        <class>br.com.wbcars.entity.Veiculo</class>
+        <class>br.com.wbcars.entity.Venda</class>
+        
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        
+        <properties>
+            <!-- Database Connection -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5433/postgres"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="will@123"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            
+            <!-- Hibernate Configuration -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.create_namespaces" value="true"/>
+            <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false"/>
+            
+            <!-- Connection Pool -->
+            <property name="hibernate.connection.pool_size" value="10"/>
+            <property name="hibernate.c3p0.min_size" value="5"/>
+            <property name="hibernate.c3p0.max_size" value="20"/>
+            <property name="hibernate.c3p0.timeout" value="300"/>
+            <property name="hibernate.c3p0.max_statements" value="50"/>
+            <property name="hibernate.c3p0.idle_test_period" value="3000"/>
+            
+            <!-- Envers (Audit) -->
+            <property name="org.hibernate.envers.audit_table_suffix" value="_AUD"/>
+            <property name="org.hibernate.envers.revision_field_name" value="REV"/>
+            <property name="org.hibernate.envers.revision_type_field_name" value="REVTYPE"/>
+            <property name="org.hibernate.envers.store_data_at_delete" value="true"/>
+            <property name="org.hibernate.envers.global_with_modified_flag" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>

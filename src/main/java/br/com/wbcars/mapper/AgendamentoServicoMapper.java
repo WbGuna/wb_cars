@@ -5,12 +5,10 @@ import br.com.wbcars.dto.AgendamentoServicoDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring", uses = {ClienteMapper.class})
+@Mapper(uses = {ClienteMapper.class})
 public interface AgendamentoServicoMapper {
-	
-    AgendamentoServicoMapper INSTANCE = Mappers.getMapper(AgendamentoServicoMapper.class);
     
-    AgendamentoServicoDTO toDTO(AgendamentoServico entity);
+    AgendamentoServicoMapper INSTANCE = Mappers.getMapper(AgendamentoServicoMapper.class);    AgendamentoServicoDTO toDTO(AgendamentoServico entity);
     
     AgendamentoServico toEntity(AgendamentoServicoDTO dto);
 }

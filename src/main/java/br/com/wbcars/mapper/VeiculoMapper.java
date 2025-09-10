@@ -5,9 +5,9 @@ import br.com.wbcars.dto.VeiculoDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface VeiculoMapper {
-	
+    
     VeiculoMapper INSTANCE = Mappers.getMapper(VeiculoMapper.class);
     
     VeiculoDTO toDTO(Veiculo entity);

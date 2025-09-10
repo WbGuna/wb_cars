@@ -5,12 +5,10 @@ import br.com.wbcars.dto.ContaPagarDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface ContaPagarMapper {
-	
-    ContaPagarMapper INSTANCE = Mappers.getMapper(ContaPagarMapper.class);
     
-    ContaPagarDTO toDTO(ContaPagar entity);
+    ContaPagarMapper INSTANCE = Mappers.getMapper(ContaPagarMapper.class);    ContaPagarDTO toDTO(ContaPagar entity);
     
     ContaPagar toEntity(ContaPagarDTO dto);
 }

@@ -179,11 +179,15 @@ public class FuncionarioDAO extends GenericDAO<Funcionario> {
     
     public Funcionario findByLoginAndSenha(String login, String senha) {
         try {
-            TypedQuery<Funcionario> query = getEntityManager().createQuery(
-                "SELECT f FROM Funcionario f WHERE f.login = :login AND f.senha = :senha", Funcionario.class);
-            query.setParameter("login", login);
-            query.setParameter("senha", senha);
-            return query.getSingleResult();
+            // Primeiro busca o funcionário pelo login
+            Funcionario funcionario = findByLogin(login);
+            
+            // Se encontrou o funcionário, verifica a senha usando o método criptografado
+            if (funcionario != null && funcionario.verificarSenha(senha)) {
+                return funcionario;
+            }
+            
+            return null;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Erro ao buscar funcionário por login e senha", e);
             return null;

@@ -5,9 +5,9 @@ import br.com.wbcars.dto.FuncionarioDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface FuncionarioMapper {
-	
+    
     FuncionarioMapper INSTANCE = Mappers.getMapper(FuncionarioMapper.class);
     
     FuncionarioDTO toDTO(Funcionario entity);

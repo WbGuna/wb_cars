@@ -9,6 +9,7 @@ import org.hibernate.envers.Audited;
 import br.com.wbcars.enuns.StatusGeral;
 import br.com.wbcars.enuns.SetorFuncionario;
 import br.com.wbcars.enuns.TipoUsuario;
+import br.com.wbcars.utils.CriptografiaUtil;
 import jakarta.persistence.*;
 
 @Entity
@@ -119,12 +120,36 @@ public class Funcionario implements Serializable {
         this.funcao = funcao; 
     }
     
+    /**
+     * Retorna o CPF/CNPJ descriptografado
+     * @return CPF/CNPJ em texto plano
+     */
     public String getCpfCnpj() { 
+        if (cpfCnpj != null && isBase64(cpfCnpj)) {
+            try {
+                return CriptografiaUtil.descriptografarDocumento(cpfCnpj);
+            } catch (Exception e) {
+                return cpfCnpj; // Se falhar, retorna como está
+            }
+        }
         return cpfCnpj; 
     }
     
+    /**
+     * Define o CPF/CNPJ com criptografia automática
+     * @param cpfCnpj CPF/CNPJ em texto plano que será automaticamente criptografado
+     */
     public void setCpfCnpj(String cpfCnpj) { 
-        this.cpfCnpj = cpfCnpj; 
+        if (cpfCnpj != null && !cpfCnpj.trim().isEmpty()) {
+            // Só criptografa se não estiver já criptografado (não é Base64)
+            if (!isBase64(cpfCnpj.trim())) {
+                this.cpfCnpj = CriptografiaUtil.criptografarDocumento(cpfCnpj.trim());
+            } else {
+                this.cpfCnpj = cpfCnpj; // Já está criptografado
+            }
+        } else {
+            this.cpfCnpj = null;
+        }
     }
     
     public String getTelefone() { 
@@ -187,8 +212,33 @@ public class Funcionario implements Serializable {
         return senha; 
     }
     
+    /**
+     * Define a senha do funcionário com criptografia automática
+     * @param senha Senha em texto plano que será automaticamente criptografada
+     */
     public void setSenha(String senha) { 
-        this.senha = senha; 
+        if (senha != null && !senha.trim().isEmpty()) {
+            // Só criptografa se a senha não estiver já criptografada (não é Base64)
+            if (!isBase64(senha)) {
+                this.senha = CriptografiaUtil.hashSenha(senha.trim());
+            } else {
+                this.senha = senha; // Já está criptografada
+            }
+        } else {
+            this.senha = null;
+        }
+    }
+    
+    /**
+     * Verifica se uma senha em texto plano corresponde à senha armazenada
+     * @param senhaPlana Senha em texto plano para verificação
+     * @return true se a senha corresponde, false caso contrário
+     */
+    public boolean verificarSenha(String senhaPlana) {
+        if (senha == null || senhaPlana == null || senhaPlana.trim().isEmpty()) {
+            return false;
+        }
+        return CriptografiaUtil.verificarSenha(senhaPlana.trim(), senha);
     }
     
     public TipoUsuario getPerfil() { 
@@ -236,5 +286,22 @@ public class Funcionario implements Serializable {
                 ", login='" + login + '\'' +
                 ", perfil=" + (perfil != null ? perfil.getDescricao() : null) +
                 '}';
+    }
+    
+    /**
+     * Método utilitário para verificar se uma string está em formato Base64
+     * @param str String para verificar
+     * @return true se estiver em Base64, false caso contrário
+     */
+    private boolean isBase64(String str) {
+        if (str == null || str.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            // Verifica se tem caracteres Base64 válidos e tamanho apropriado
+            return str.matches("^[A-Za-z0-9+/]*={0,2}$") && str.length() % 4 == 0 && str.length() > 20;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

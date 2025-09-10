@@ -1,21 +1,22 @@
 package br.com.wbcars.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Component;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.annotation.PostConstruct;
+//import jakarta.annotation.PostConstruct;
 import java.util.logging.Logger;
 
-@Component
+// TEMPORARIAMENTE DESABILITADO PARA FOCAR EM CDI PURO
+// @Component
 public class DatabaseConfig {
     
     private static final Logger logger = Logger.getLogger(DatabaseConfig.class.getName());
     
-    @Autowired
+    // @Autowired
     private EntityManagerFactory entityManagerFactory;
     
-    @PostConstruct
+    // @PostConstruct
     public void testConnection() {
         try {
             logger.info("🔧 Testando conexão com PostgreSQL...");

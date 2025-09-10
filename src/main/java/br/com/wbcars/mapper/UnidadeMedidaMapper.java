@@ -5,9 +5,9 @@ import br.com.wbcars.dto.UnidadeMedidaDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface UnidadeMedidaMapper {
-	
+    
     UnidadeMedidaMapper INSTANCE = Mappers.getMapper(UnidadeMedidaMapper.class);
     
     UnidadeMedidaDTO toDTO(UnidadeMedida entity);

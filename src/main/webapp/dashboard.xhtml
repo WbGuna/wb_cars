@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://jakarta.faces.html"
+      xmlns:f="http://jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>WB Cars - Dashboard</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
+    <!-- PrimeFaces Theme -->
+    <h:outputStylesheet library="primefaces" name="theme.css"/>
+    
+    <!-- Custom CSS -->
+    <h:outputStylesheet library="css" name="wbcars.css"/>
+</h:head>
+
+<h:body styleClass="dashboard-container">
+    <!-- Verificação de autenticação -->
+    <f:event type="preRenderView" listener="#{loginBean.verificarLogin()}"/>
+    
+    <!-- Header do Dashboard -->
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">🚗 WB Cars - Sistema de Gestão</h1>
+        
+        <div class="user-section">
+            <div class="user-info">
+                <div style="font-weight: bold;">#{loginBean.nomeFuncionario}</div>
+                <div style="font-size: 14px;">#{loginBean.perfilFuncionario}</div>
+            </div>
+            
+            <h:form>
+                <p:commandButton value="Sair" 
+                               action="#{loginBean.logout()}"
+                               styleClass="logout-btn"
+                               icon="pi pi-sign-out"
+                               immediate="true"/>
+            </h:form>
+        </div>
+    </div>
+    
+    <!-- Painel de Boas-vindas -->
+    <div class="welcome-panel">
+        <h2 style="color: #667eea; margin-bottom: 15px;">🎉 Bem-vindo ao Sistema WB Cars!</h2>
+        <p style="font-size: 18px; color: #666; margin-bottom: 10px;">
+            Sistema integrado de gestão automotiva com segurança avançada
+        </p>
+        <p style="color: #888;">
+            <strong>Usuário Logado:</strong> #{loginBean.nomeFuncionario} | 
+            <strong>Perfil:</strong> #{loginBean.perfilFuncionario} |
+            <strong>Data/Hora:</strong> 
+            <h:outputText value="#{java.time.LocalDateTime.now()}" >
+                <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+            </h:outputText>
+        </p>
+    </div>
+    
+    <!-- Cards de Estatísticas -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon">🚗</div>
+            <div class="stat-number">0</div>
+            <div class="stat-label">Veículos Cadastrados</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-number">0</div>
+            <div class="stat-label">Clientes Ativos</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">🔧</div>
+            <div class="stat-number">0</div>
+            <div class="stat-label">Ordens de Serviço</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-number">R$ 0,00</div>
+            <div class="stat-label">Faturamento Mensal</div>
+        </div>
+    </div>
+    
+    <!-- Painel de Ações Rápidas -->
+    <div class="actions-panel">
+        <h3 class="actions-title">🚀 Ações Rápidas</h3>
+        
+        <h:form>
+            <div class="actions-grid">
+                <p:commandButton value="📋 Novo Cliente" 
+                               styleClass="action-button ui-button-success"
+                               icon="pi pi-user-plus"/>
+                
+                <p:commandButton value="🔧 Nova Ordem Serviço" 
+                               styleClass="action-button ui-button-info"
+                               icon="pi pi-wrench"/>
+                
+                <p:commandButton value="🚗 Cadastrar Veículo" 
+                               styleClass="action-button ui-button-warning"
+                               icon="pi pi-car"/>
+                
+                <p:commandButton value="📊 Relatórios" 
+                               styleClass="action-button ui-button-secondary"
+                               icon="pi pi-chart-bar"/>
+                
+                <p:commandButton value="📦 Estoque" 
+                               styleClass="action-button ui-button-help"
+                               icon="pi pi-box"/>
+                
+                <p:commandButton value="⚙️ Configurações" 
+                               styleClass="action-button"
+                               icon="pi pi-cog"/>
+            </div>
+        </h:form>
+    </div>
+    
+    <!-- Mensagens do Sistema -->
+    <p:messages id="messages" showDetail="true" closable="true" autoUpdate="true"/>
+    
+</h:body>
+</html>

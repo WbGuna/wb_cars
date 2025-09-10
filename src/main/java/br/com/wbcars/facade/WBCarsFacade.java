@@ -4,6 +4,8 @@ import br.com.wbcars.controller.*;
 import br.com.wbcars.dto.*;
 import br.com.wbcars.enuns.*;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,8 +19,9 @@ import java.util.List;
  * 
  * @author WB Cars Team
  */
+@Named
+@ApplicationScoped
 public class WBCarsFacade {
-    private static WBCarsFacade instance;
     
     // Controllers
     private final AgendamentoServicoController agendamentoServicoController;
@@ -37,8 +40,8 @@ public class WBCarsFacade {
     private final VeiculoController veiculoController;
     private final VendaController vendaController;
     
-    private WBCarsFacade() {
-        // Inicializa todos os controllers
+    public WBCarsFacade() {
+        // Inicializa todos os controllers usando Singleton
         this.agendamentoServicoController = AgendamentoServicoController.getInstance();
         this.cidadeController = CidadeController.getInstance();
         this.clienteController = ClienteController.getInstance();
@@ -54,21 +57,6 @@ public class WBCarsFacade {
         this.unidadeMedidaController = UnidadeMedidaController.getInstance();
         this.veiculoController = VeiculoController.getInstance();
         this.vendaController = VendaController.getInstance();
-    }
-    
-    /**
-     * Obtém a instância única da facade (Singleton)
-     * @return Instância da WBCarsFacade
-     */
-    public static WBCarsFacade getInstance() {
-        if (instance == null) {
-            synchronized (WBCarsFacade.class) {
-                if (instance == null) {
-                    instance = new WBCarsFacade();
-                }
-            }
-        }
-        return instance;
     }
     
     // =====================================================================
