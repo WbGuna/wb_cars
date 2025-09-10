@@ -8,23 +8,6 @@
     <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         
-        <!-- Entities -->
-        <class>br.com.wbcars.entity.AgendamentoServico</class>
-        <class>br.com.wbcars.entity.Cidade</class>
-        <class>br.com.wbcars.entity.Cliente</class>
-        <class>br.com.wbcars.entity.ContaPagar</class>
-        <class>br.com.wbcars.entity.ControleEstoque</class>
-        <class>br.com.wbcars.entity.Fornecedor</class>
-        <class>br.com.wbcars.entity.Funcionario</class>
-        <class>br.com.wbcars.entity.Orcamento</class>
-        <class>br.com.wbcars.entity.OrdemServico</class>
-        <class>br.com.wbcars.entity.Produto</class>
-        <class>br.com.wbcars.entity.RelatorioFinanceiro</class>
-        <class>br.com.wbcars.entity.RelatorioFinanceiroDetalhado</class>
-        <class>br.com.wbcars.entity.UnidadeMedida</class>
-        <class>br.com.wbcars.entity.Veiculo</class>
-        <class>br.com.wbcars.entity.Venda</class>
-        
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         
         <properties>

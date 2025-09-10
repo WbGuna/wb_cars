@@ -231,6 +231,11 @@
                 <version>3.11.0</version>
                 <configuration>
                     <release>17</release>
+                    <!-- Disable annotation processing to avoid Envers metamodel conflicts -->
+                    <proc>none</proc>
+                    <compilerArgs>
+                        <arg>-proc:none</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             

@@ -26,8 +26,42 @@
     
     <!-- Header do Dashboard -->
     <div class="dashboard-header">
+        <!-- Título à esquerda -->
         <h1 class="dashboard-title">🚗 WB Cars - Sistema de Gestão</h1>
         
+        <!-- Menu no centro -->
+        <div class="dashboard-menu-form">
+            <h:form>
+                <p:menubar styleClass="dashboard-menu">
+                    <p:submenu label="📋 Cadastros" icon="pi pi-file">
+                        <p:menuitem value="🚗 Veículos" icon="pi pi-car"/>
+                        <p:menuitem value="👥 Clientes" icon="pi pi-users"/>
+                        <p:menuitem value="👤 Funcionários" icon="pi pi-user"/>
+                        <p:menuitem value="🏭 Fornecedores" icon="pi pi-building"/>
+                        <p:menuitem value="📦 Produtos" icon="pi pi-box"/>
+                        <p:menuitem value="🏙️ Cidades" icon="pi pi-map"/>
+                        <p:menuitem value="📏 Unidades" icon="pi pi-calculator"/>
+                        <p:menuitem value="👤 Usuários" icon="pi pi-user-plus"/>
+                    </p:submenu>
+                    
+                    <p:submenu label="⚙️ Operações" icon="pi pi-cog">
+                        <p:menuitem value="📅 Agendamentos" icon="pi pi-calendar"/>
+                        <p:menuitem value="🔧 Ordens de Serviço" icon="pi pi-wrench"/>
+                        <p:menuitem value="📄 Orçamentos" icon="pi pi-file"/>
+                        <p:menuitem value="💰 Vendas" icon="pi pi-shopping-cart"/>
+                        <p:menuitem value="📦 Estoque" icon="pi pi-inbox"/>
+                    </p:submenu>
+                    
+                    <p:submenu label="💰 Financeiro" icon="pi pi-dollar">
+                        <p:menuitem value="💳 Contas a Pagar" icon="pi pi-credit-card"/>
+                        <p:menuitem value="📊 Relatórios" icon="pi pi-chart-bar"/>
+                        <p:menuitem value="📈 Rel. Detalhados" icon="pi pi-chart-line"/>
+                    </p:submenu>
+                </p:menubar>
+            </h:form>
+        </div>
+        
+        <!-- Informações do usuário e botão sair à direita -->
         <div class="user-section">
             <div class="user-info">
                 <div style="font-weight: bold;">#{loginBean.nomeFuncionario}</div>
@@ -45,54 +79,50 @@
     </div>
     
     <!-- Painel de Boas-vindas -->
-    <div class="welcome-panel">
-        <h2 style="color: #667eea; margin-bottom: 15px;">🎉 Bem-vindo ao Sistema WB Cars!</h2>
-        <p style="font-size: 18px; color: #666; margin-bottom: 10px;">
-            Sistema integrado de gestão automotiva com segurança avançada
-        </p>
-        <p style="color: #888;">
-            <strong>Usuário Logado:</strong> #{loginBean.nomeFuncionario} | 
-            <strong>Perfil:</strong> #{loginBean.perfilFuncionario} |
-            <strong>Data/Hora:</strong> 
-            <h:outputText value="#{java.time.LocalDateTime.now()}" >
-                <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
-            </h:outputText>
-        </p>
-    </div>
+    <p:panel styleClass="welcome-panel">
+        <h:outputText value="🎉 Bem-vindo ao Sistema WB Cars!" style="color: #667eea; margin-bottom: 15px; font-size: 24px; font-weight: 700;"/>
+        <h:outputText value="Sistema integrado de gestão automotiva com segurança avançada" 
+                     style="font-size: 18px; color: #666; margin-bottom: 10px; display: block;"/>
+        <h:outputText value="Usuário Logado: #{loginBean.nomeFuncionario} | Perfil: #{loginBean.perfilFuncionario} | Data/Hora: " 
+                     style="color: #888; display: inline;"/>
+        <h:outputText value="#{java.time.LocalDateTime.now()}" style="color: #888;">
+            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+        </h:outputText>
+    </p:panel>
     
     <!-- Cards de Estatísticas -->
-    <div class="stats-container">
-        <div class="stat-card">
-            <div class="stat-icon">🚗</div>
-            <div class="stat-number">0</div>
-            <div class="stat-label">Veículos Cadastrados</div>
-        </div>
+    <p:panelGrid columns="4" styleClass="stats-container" layout="grid">
+        <p:panel styleClass="stat-card">
+            <h:outputText value="🚗" styleClass="stat-icon"/>
+            <h:outputText value="0" styleClass="stat-number"/>
+            <h:outputText value="Veículos Cadastrados" styleClass="stat-label"/>
+        </p:panel>
         
-        <div class="stat-card">
-            <div class="stat-icon">👥</div>
-            <div class="stat-number">0</div>
-            <div class="stat-label">Clientes Ativos</div>
-        </div>
+        <p:panel styleClass="stat-card">
+            <h:outputText value="👥" styleClass="stat-icon"/>
+            <h:outputText value="0" styleClass="stat-number"/>
+            <h:outputText value="Clientes Ativos" styleClass="stat-label"/>
+        </p:panel>
         
-        <div class="stat-card">
-            <div class="stat-icon">🔧</div>
-            <div class="stat-number">0</div>
-            <div class="stat-label">Ordens de Serviço</div>
-        </div>
+        <p:panel styleClass="stat-card">
+            <h:outputText value="🔧" styleClass="stat-icon"/>
+            <h:outputText value="0" styleClass="stat-number"/>
+            <h:outputText value="Ordens de Serviço" styleClass="stat-label"/>
+        </p:panel>
         
-        <div class="stat-card">
-            <div class="stat-icon">💰</div>
-            <div class="stat-number">R$ 0,00</div>
-            <div class="stat-label">Faturamento Mensal</div>
-        </div>
-    </div>
+        <p:panel styleClass="stat-card">
+            <h:outputText value="💰" styleClass="stat-icon"/>
+            <h:outputText value="R$ 0,00" styleClass="stat-number"/>
+            <h:outputText value="Faturamento Mensal" styleClass="stat-label"/>
+        </p:panel>
+    </p:panelGrid>
     
     <!-- Painel de Ações Rápidas -->
-    <div class="actions-panel">
-        <h3 class="actions-title">🚀 Ações Rápidas</h3>
+    <p:panel styleClass="actions-panel">
+        <h:outputText value="🚀 Ações Rápidas" styleClass="actions-title"/>
         
         <h:form>
-            <div class="actions-grid">
+            <p:panelGrid columns="3" styleClass="actions-grid" layout="grid">
                 <p:commandButton value="📋 Novo Cliente" 
                                styleClass="action-button ui-button-success"
                                icon="pi pi-user-plus"/>
@@ -116,9 +146,9 @@
                 <p:commandButton value="⚙️ Configurações" 
                                styleClass="action-button"
                                icon="pi pi-cog"/>
-            </div>
+            </p:panelGrid>
         </h:form>
-    </div>
+    </p:panel>
     
     <!-- Mensagens do Sistema -->
     <p:messages id="messages" showDetail="true" closable="true" autoUpdate="true"/>
