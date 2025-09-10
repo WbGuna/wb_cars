@@ -144,6 +144,37 @@ public class LoginBean implements Serializable {
     }
     
     /**
+     * Método para verificar login nas páginas protegidas
+     * Se não estiver logado, redireciona para a página de login
+     */
+    public void verificarLogin() {
+        try {
+            if (!isLogado()) {
+                LOGGER.warning("Acesso negado - usuário não autenticado");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro durante verificação de login", e);
+        }
+    }
+    
+    /**
+     * Retorna o nome do funcionário logado
+     */
+    public String getNomeFuncionario() {
+        return funcionarioLogado != null ? funcionarioLogado.getNome() : "Usuário não identificado";
+    }
+    
+    /**
+     * Retorna o perfil do funcionário logado
+     */
+    public String getPerfilFuncionario() {
+        return funcionarioLogado != null && funcionarioLogado.getPerfil() != null 
+            ? funcionarioLogado.getPerfil().getDescricao() 
+            : "Perfil não definido";
+    }
+    
+    /**
      * Adiciona mensagem de erro
      */
     private void adicionarMensagemErro(String mensagem) {

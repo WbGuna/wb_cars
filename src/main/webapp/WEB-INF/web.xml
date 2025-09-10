@@ -70,6 +70,17 @@
         <param-name>primefaces.DISABLE_UPLOAD_CLEANUP_LISTENER</param-name>
         <param-value>true</param-value>
     </context-param>
+    
+    <!-- Cache de recursos CSS/JS -->
+    <context-param>
+        <param-name>jakarta.faces.RESOURCE_EXCLUDES</param-name>
+        <param-value>.class .jsp .jspx .properties .xhtml</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>jakarta.faces.CLIENT_WINDOW_MODE</param-name>
+        <param-value>none</param-value>
+    </context-param>
 
     <!-- JSF Servlet -->
     <servlet>

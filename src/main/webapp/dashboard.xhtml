@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://jakarta.faces.html"
-      xmlns:f="http://jakarta.faces.core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <title>WB Cars - Dashboard</title>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <f:facet name="first">
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>WB Cars - Dashboard</title>
+    </f:facet>
     
-    <!-- PrimeFaces Theme -->
-    <h:outputStylesheet library="primefaces" name="theme.css"/>
+    <!-- Custom CSS com parâmetro para evitar cache -->
+    <h:outputStylesheet library="css" name="wbcars.css">
+        <f:param name="v" value="#{java.time.LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC)}"/>
+    </h:outputStylesheet>
     
-    <!-- Custom CSS -->
-    <h:outputStylesheet library="css" name="wbcars.css"/>
+   
 </h:head>
 
 <h:body styleClass="dashboard-container">

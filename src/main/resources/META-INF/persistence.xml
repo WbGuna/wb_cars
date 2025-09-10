@@ -50,12 +50,20 @@
             <property name="hibernate.c3p0.max_statements" value="50"/>
             <property name="hibernate.c3p0.idle_test_period" value="3000"/>
             
-            <!-- Envers (Audit) -->
+            <!-- Envers (Audit) - SIMPLIFICADO -->
             <property name="org.hibernate.envers.audit_table_suffix" value="_AUD"/>
             <property name="org.hibernate.envers.revision_field_name" value="REV"/>
             <property name="org.hibernate.envers.revision_type_field_name" value="REVTYPE"/>
-            <property name="org.hibernate.envers.store_data_at_delete" value="true"/>
-            <property name="org.hibernate.envers.global_with_modified_flag" value="true"/>
+            
+            <!-- DESABILITA METAMODEL - Evita conflito Jakarta EE 10 -->
+            <property name="hibernate.jpa.metamodel.generation" value="disabled"/>
+            <property name="hibernate.jpa.static_metamodel_population" value="disabled"/>
+            <property name="hibernate.envers.autoRegisterListeners" value="false"/>
+            
+            <!-- Configuração específica para Jakarta EE 10 -->
+            <property name="hibernate.jpa.compliance.query" value="false"/>
+            <property name="hibernate.jpa.compliance.transaction" value="false"/>
+            <property name="hibernate.jpa.compliance.list" value="false"/>
         </properties>
     </persistence-unit>
 </persistence>
