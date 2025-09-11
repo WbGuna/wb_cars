@@ -16,28 +16,29 @@
             <h:form>
                 <p:menubar styleClass="dashboard-menu">
                     <p:submenu label="📋 Cadastros" icon="pi pi-file">
-                        <p:menuitem value="🚗 Veículos" icon="pi pi-car"/>
-                        <p:menuitem value="👥 Clientes" icon="pi pi-users"/>
-                        <p:menuitem value="👤 Funcionários" icon="pi pi-user"/>
-                        <p:menuitem value="🏭 Fornecedores" icon="pi pi-building"/>
-                        <p:menuitem value="📦 Produtos" icon="pi pi-box"/>
-                        <p:menuitem value="🏙️ Cidades" icon="pi pi-map"/>
-                        <p:menuitem value="📏 Unidades" icon="pi pi-calculator"/>
-                        <p:menuitem value="👤 Usuários" icon="pi pi-user-plus"/>
+                        <p:menuitem value="🚗 Veículos" icon="pi pi-car" action="#{headerBean.navegarVeiculos}"/>
+                        <p:menuitem value="👥 Clientes" icon="pi pi-users" action="#{headerBean.navegarClientes}"/>
+                        <p:menuitem value="👤 Funcionários" icon="pi pi-user" action="#{headerBean.navegarFuncionarios}"/>
+                        <p:menuitem value="🏭 Fornecedores" icon="pi pi-building" action="#{headerBean.navegarFornecedores}"/>
+                        <p:menuitem value="📦 Produtos" icon="pi pi-box" action="#{headerBean.navegarProdutos}"/>
+                        <p:menuitem value="🏙️ Cidades" icon="pi pi-map" action="#{headerBean.navegarCidades}"/>
+                        <p:menuitem value="📏 Unidades" icon="pi pi-calculator" action="#{headerBean.navegarUnidades}"/>
+                        <p:menuitem value="👤 Usuários" icon="pi pi-user-plus" action="#{headerBean.navegarUsuarios}"/>
                     </p:submenu>
                     
                     <p:submenu label="⚙️ Operações" icon="pi pi-cog">
-                        <p:menuitem value="📅 Agendamentos" icon="pi pi-calendar"/>
-                        <p:menuitem value="🔧 OS" icon="pi pi-wrench"/>
-                        <p:menuitem value="📄 Orçamentos" icon="pi pi-file"/>
-                        <p:menuitem value="💰 Vendas" icon="pi pi-shopping-cart"/>
-                        <p:menuitem value="📦 Estoque" icon="pi pi-inbox"/>
+                        <p:menuitem value="🏠 Início" icon="pi pi-home" action="#{headerBean.navegarInicio}"/>
+                        <p:menuitem value="📅 Agendamentos" icon="pi pi-calendar" action="#{headerBean.navegarAgendamentos}"/>
+                        <p:menuitem value="🔧 OS" icon="pi pi-wrench" action="#{headerBean.navegarOS}"/>
+                        <p:menuitem value="📄 Orçamentos" icon="pi pi-file" action="#{headerBean.navegarOrcamentos}"/>
+                        <p:menuitem value="💰 Vendas" icon="pi pi-shopping-cart" action="#{headerBean.navegarVendas}"/>
+                        <p:menuitem value="📦 Estoque" icon="pi pi-inbox" action="#{headerBean.navegarEstoque}"/>
                     </p:submenu>
                     
                     <p:submenu label="💰 Financeiro" icon="pi pi-dollar">
-                        <p:menuitem value="💳 Contas a Pagar" icon="pi pi-credit-card"/>
-                        <p:menuitem value="📊 Relatórios" icon="pi pi-chart-bar"/>
-                        <p:menuitem value="📈 Rel. Detalhados" icon="pi pi-chart-line"/>
+                        <p:menuitem value="💳 Contas a Pagar" icon="pi pi-credit-card" action="#{headerBean.navegarContasPagar}"/>
+                        <p:menuitem value="📊 Relatórios" icon="pi pi-chart-bar" action="#{headerBean.navegarRelatorios}"/>
+                        <p:menuitem value="📈 Rel. Detalhados" icon="pi pi-chart-line" action="#{headerBean.navegarRelDetalhados}"/>
                     </p:submenu>
                 </p:menubar>
             </h:form>
@@ -46,13 +47,13 @@
         <!-- Informações do usuário e botão sair à direita -->
         <div class="user-section">
             <div class="user-info">
-                <div style="font-weight: bold;">#{loginBean.nomeFuncionario}</div>
-                <div style="font-size: 14px;">#{loginBean.perfilFuncionario}</div>
+                <div style="font-weight: bold;">#{headerBean.nomeFuncionario}</div>
+                <div style="font-size: 14px;">#{headerBean.perfilFuncionario}</div>
             </div>
             
             <h:form>
                 <p:commandButton value="Sair" 
-                               action="#{loginBean.logout()}"
+                               action="#{headerBean.logout}"
                                styleClass="logout-btn"
                                icon="pi pi-sign-out"
                                immediate="true"/>
