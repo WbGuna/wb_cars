@@ -6,27 +6,162 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <f:facet name="first">
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>WB Cars - Veículos</title>
-    </f:facet>
-    
-    <!-- Custom CSS com parâmetro para evitar cache -->
-    <h:outputStylesheet library="css" name="wbcars.css">
-        <f:param name="v" value="#{java.time.LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC)}"/>
-    </h:outputStylesheet>
+    <title>WB Cars - Veículos</title>
+    <h:outputStylesheet library="css" name="wbcars.css" />
 </h:head>
 
 <h:body styleClass="dashboard-container">
-    <!-- Verificação de autenticação -->
     <f:event type="preRenderView" listener="#{veiculosBean.headerBean.verificarLogin()}"/>
-    
-    <!-- Inicialização do bean da página -->
     <f:event type="preRenderView" listener="#{veiculosBean.init()}"/>
-    
+
     <ui:include src="/componentes/header.xhtml"/>
-    <div class="dashboard-title" style="text-align:center; margin: 20px 0; font-size:28px; font-weight:800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🚗 Veículos</div>
-    
+    <div class="dashboard-title" style="text-align:center; margin: 20px 0; font-size:28px; font-weight:800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+        🚗 Veículos
+    </div>
+
+    <!-- FILTROS -->
+    <div class="welcome-panel">
+        <h:form id="formFiltros">
+            <p:panelGrid columns="4" style="width: 100%; margin-bottom: 10px;">
+                <h:panelGroup>
+                    <p:outputLabel value="Campo: " for="campoBusca" style="margin-right: 5px;" />
+                    <p:selectOneMenu id="campoBusca" value="#{veiculosBean.campoBusca}" style="width: 180px;">
+                        <f:selectItem itemLabel="Selecione a coluna..." itemValue="" />
+                        <f:selectItem itemLabel="ID" itemValue="id" />
+                        <f:selectItem itemLabel="Modelo" itemValue="modelo" />
+                        <f:selectItem itemLabel="Marca" itemValue="marca" />
+                        <f:selectItem itemLabel="Placa" itemValue="placa" />
+                        <f:selectItem itemLabel="Kilometragem" itemValue="kilometragem" />
+                        <f:selectItem itemLabel="Data Cadastro" itemValue="dataCadastro" />
+                        <f:selectItem itemLabel="Data Alteração" itemValue="dataAlteracao" />
+                    </p:selectOneMenu>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:outputLabel value="Valor: " for="valorBusca" style="margin-right: 5px;" />
+                    <p:inputText id="valorBusca" value="#{veiculosBean.valorBusca}" placeholder="Digite o valor para buscar..." style="width: 180px;" />
+                </h:panelGroup>
+                <p:commandButton value="Buscar"
+                               action="#{veiculosBean.buscarVeiculos}"
+                               update=":formDados:tabelaVeiculos :mensagens"
+                               process="@form"
+                               styleClass="ui-button-success" />
+                <p:commandButton value="Limpar"
+                               action="#{veiculosBean.limparFiltros}"
+                               update=":formFiltros :formDados:tabelaVeiculos :mensagens"
+                               process="@this"
+                               styleClass="ui-button-secondary" />
+            </p:panelGrid>
+            <div style="text-align: center; margin-top: 10px;">
+                <p:commandButton value="Novo Veículo"
+                               action="#{veiculosBean.abrirDialogNovoVeiculo}"
+                               update="formDialogs:dialogCadastro"
+                               oncomplete="PF('dialogCadastro').show()"
+                               styleClass="ui-button-info" />
+            </div>
+        </h:form>
+    </div>
+
+    <!-- MENSAGENS DE FEEDBACK -->
+    <p:messages id="mensagens" showDetail="true" closable="true" style="margin: 10px 0;" />
+
+    <!-- GRID -->
+    <div class="actions-panel">
+        <h:form id="formDados">
+            <p:dataTable id="tabelaVeiculos"
+                       value="#{veiculosBean.veiculos}"
+                       var="veiculo"
+                       paginator="true"
+                       rows="10"
+                       sortMode="multiple"
+                       reflow="true"
+                       emptyMessage="Nenhum veículo encontrado"
+                       styleClass="ui-datatable-striped">
+                <p:column headerText="ID" sortBy="#{veiculo.id}" width="8%">
+                    <h:outputText value="#{veiculo.id}" />
+                </p:column>
+                <p:column headerText="Modelo" sortBy="#{veiculo.modelo}" width="15%">
+                    <h:outputText value="#{veiculo.modelo}" />
+                </p:column>
+                <p:column headerText="Marca" sortBy="#{veiculo.marca}" width="15%">
+                    <h:outputText value="#{veiculo.marca}" />
+                </p:column>
+                <p:column headerText="Placa" sortBy="#{veiculo.placa}" width="10%">
+                    <h:outputText value="#{veiculo.placa}" />
+                </p:column>
+                <p:column headerText="Kilometragem" sortBy="#{veiculo.kilometragem}" width="10%">
+                    <h:outputText value="#{veiculo.kilometragem}" />
+                </p:column>
+                <p:column headerText="Data Cadastro" sortBy="#{veiculo.dataCadastro}" width="12%">
+                    <h:outputText value="#{veiculo.dataCadastroFormatado}" />
+                </p:column>
+                <p:column headerText="Data Alteração" sortBy="#{veiculo.dataAlteracao}" width="12%">
+                    <h:outputText value="#{veiculo.dataAlteracaoFormatado}" />
+                </p:column>
+                <p:column headerText="Ações" exportable="false" width="18%">
+                    <p:commandButton icon="pi pi-pencil"
+                                   action="#{veiculosBean.prepararEdicao(veiculo)}"
+                                   update="formDialogs:dialogEdicao"
+                                   oncomplete="PF('dialogEdicao').show()"
+                                   styleClass="ui-button-warning"
+                                   style="margin-right: 5px;" />
+                    <p:commandButton icon="pi pi-trash"
+                                   action="#{veiculosBean.prepararExclusao(veiculo)}"
+                                   update="formDialogs:confirmacaoExclusao"
+                                   oncomplete="PF('confirmacaoExclusao').show()"
+                                   styleClass="ui-button-danger" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </div>
+
+    <!-- DIALOGS -->
+    <h:form id="formDialogs">
+        <p:dialog id="dialogCadastro" widgetVar="dialogCadastro" header="Novo Veículo" modal="true" resizable="false" width="500" height="400">
+            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+                <p:outputLabel for="novoModelo" value="Modelo*:" />
+                <p:inputText id="novoModelo" value="#{veiculosBean.novoVeiculo.modelo}" required="true" requiredMessage="Modelo é obrigatório" styleClass="form-control" />
+                <p:outputLabel for="novoMarca" value="Marca*:" />
+                <p:inputText id="novoMarca" value="#{veiculosBean.novoVeiculo.marca}" required="true" requiredMessage="Marca é obrigatória" styleClass="form-control" />
+                <p:outputLabel for="novoPlaca" value="Placa*:" />
+                <p:inputText id="novoPlaca" value="#{veiculosBean.novoVeiculo.placa}" required="true" requiredMessage="Placa é obrigatória" styleClass="form-control" />
+                <p:outputLabel for="novoKm" value="Kilometragem:" />
+                <p:inputText id="novoKm" value="#{veiculosBean.novoVeiculo.kilometragem}" styleClass="form-control" />
+                <p:outputLabel for="novoObs" value="Observação:" />
+                <p:inputTextarea id="novoObs" value="#{veiculosBean.novoVeiculo.observacao}" styleClass="form-control" />
+            </p:panelGrid>
+            <p:messages showDetail="true" closable="true" />
+            <f:facet name="footer">
+                <p:commandButton value="Salvar" action="#{veiculosBean.salvarVeiculo}" update="formDados" oncomplete="PF('dialogCadastro').hide()" styleClass="ui-button-success" />
+                <p:commandButton value="Cancelar" onclick="PF('dialogCadastro').hide()" type="button" styleClass="ui-button-secondary" />
+            </f:facet>
+        </p:dialog>
+        <p:dialog id="dialogEdicao" widgetVar="dialogEdicao" header="Editar Veículo" modal="true" resizable="false" width="500" height="400">
+            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8" rendered="#{veiculosBean.veiculoSelecionado != null}">
+                <p:outputLabel for="editarModelo" value="Modelo*:" />
+                <p:inputText id="editarModelo" value="#{veiculosBean.veiculoSelecionado.modelo}" required="true" requiredMessage="Modelo é obrigatório" styleClass="form-control" />
+                <p:outputLabel for="editarMarca" value="Marca*:" />
+                <p:inputText id="editarMarca" value="#{veiculosBean.veiculoSelecionado.marca}" required="true" requiredMessage="Marca é obrigatória" styleClass="form-control" />
+                <p:outputLabel for="editarPlaca" value="Placa*:" />
+                <p:inputText id="editarPlaca" value="#{veiculosBean.veiculoSelecionado.placa}" required="true" requiredMessage="Placa é obrigatória" styleClass="form-control" />
+                <p:outputLabel for="editarKm" value="Kilometragem:" />
+                <p:inputText id="editarKm" value="#{veiculosBean.veiculoSelecionado.kilometragem}" styleClass="form-control" />
+                <p:outputLabel for="editarObs" value="Observação:" />
+                <p:inputTextarea id="editarObs" value="#{veiculosBean.veiculoSelecionado.observacao}" styleClass="form-control" />
+            </p:panelGrid>
+            <p:messages showDetail="true" closable="true" />
+            <f:facet name="footer">
+                <p:commandButton value="Atualizar" action="#{veiculosBean.editarVeiculo}" process="formDialogs:dialogEdicao" update="formDados :mensagens" oncomplete="if (!args.validationFailed) PF('dialogEdicao').hide()" styleClass="ui-button-success" />
+                <p:commandButton value="Cancelar" onclick="PF('dialogEdicao').hide()" type="button" styleClass="ui-button-secondary" />
+            </f:facet>
+        </p:dialog>
+        <p:dialog id="confirmacaoExclusao" widgetVar="confirmacaoExclusao" header="Confirmar Exclusão" modal="true" resizable="false" width="400" height="200">
+            <p:panelGrid columns="1" style="text-align: center; margin: 10px 0;">
+                <h:outputText value="Esta ação não pode ser desfeita!" style="color: #d32f2f; font-weight: bold;" />
+                <h:outputText value="Veículo: #{veiculosBean.veiculoSelecionado.modelo}" rendered="#{veiculosBean.veiculoSelecionado != null}" style="font-weight: bold; margin-top: 10px;" />
+            </p:panelGrid>
+            <p:commandButton id="confirmar" value="Sim, Excluir" action="#{veiculosBean.excluirVeiculo}" process="@this" update="formDados :mensagens" oncomplete="PF('confirmacaoExclusao').hide()" styleClass="ui-button-danger" icon="pi pi-check" />
+            <p:commandButton id="cancelar" value="Cancelar" onclick="PF('confirmacaoExclusao').hide(); return false;" process="@none" type="button" styleClass="ui-button-secondary" icon="pi pi-times" />
+        </p:dialog>
+    </h:form>
 </h:body>
 </html>

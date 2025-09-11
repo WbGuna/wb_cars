@@ -4,7 +4,20 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import java.time.format.DateTimeFormatter;
+
 public class VeiculoDTO implements Serializable {
+    public String getDataCadastroFormatado() {
+        if (dataCadastro == null) return "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dataCadastro.format(formatter);
+    }
+
+    public String getDataAlteracaoFormatado() {
+        if (dataAlteracao == null) return "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dataAlteracao.format(formatter);
+    }
 
 	private static final long serialVersionUID = 6833651539591464563L;
 	

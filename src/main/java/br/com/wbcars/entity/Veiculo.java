@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "veiculo")
@@ -27,14 +28,18 @@ public class Veiculo implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "veiculo_seq")
     private Long id;
 
+    @Column(length = 60)
     private String modelo;
     
+    @Column(length = 40)
     private String marca;
     
+    @Column(length = 10)
     private String placa;
     
     private Integer kilometragem;
     
+    @Column(length = 255)
     private String observacao;
     
     private LocalDateTime dataCadastro;
