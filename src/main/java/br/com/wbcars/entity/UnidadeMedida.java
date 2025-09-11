@@ -24,9 +24,21 @@ public class UnidadeMedida implements Serializable {
     @Enumerated(EnumType.STRING)
     private TipoUnidadeMedida tipo;
     
+    @Column(name = "data_cadastro")
     private LocalDateTime dataCadastro;
     
+    @Column(name = "data_alteracao")
     private LocalDateTime dataAlteracao;
+    
+    @PrePersist
+    protected void onCreate() {
+        dataCadastro = LocalDateTime.now();
+    }
+    
+    @PreUpdate
+    protected void onUpdate() {
+        dataAlteracao = LocalDateTime.now();
+    }
     
     public UnidadeMedida() {}
 

@@ -12,7 +12,7 @@
         
         <properties>
             <!-- Database Connection -->
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5433/postgres"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5433/postgres?currentSchema=public"/>
             <property name="jakarta.persistence.jdbc.user" value="postgres"/>
             <property name="jakarta.persistence.jdbc.password" value="will@123"/>
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
@@ -24,6 +24,7 @@
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.hbm2ddl.create_namespaces" value="true"/>
             <property name="hibernate.temp.use_jdbc_metadata_defaults" value="false"/>
+            <property name="hibernate.default_schema" value="public"/>
             
             <!-- Connection Pool -->
             <property name="hibernate.connection.pool_size" value="10"/>

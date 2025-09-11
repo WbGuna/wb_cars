@@ -17,6 +17,10 @@ public class UnidadeMedidaDTO implements Serializable {
     private LocalDateTime dataCadastro;
     
     private LocalDateTime dataAlteracao;
+    
+    // Campos String para exibição
+    private String dataCadastroFormatada;
+    private String dataAlteracaoFormatada;
 
     public UnidadeMedidaDTO() {}
 
@@ -50,6 +54,22 @@ public class UnidadeMedidaDTO implements Serializable {
     
     public void setDataAlteracao(LocalDateTime dataAlteracao) { 
     	this.dataAlteracao = dataAlteracao; 
+    }
+    
+    public String getDataCadastroFormatada() {
+        return dataCadastroFormatada;
+    }
+    
+    public void setDataCadastroFormatada(String dataCadastroFormatada) {
+        this.dataCadastroFormatada = dataCadastroFormatada;
+    }
+    
+    public String getDataAlteracaoFormatada() {
+        return dataAlteracaoFormatada;
+    }
+    
+    public void setDataAlteracaoFormatada(String dataAlteracaoFormatada) {
+        this.dataAlteracaoFormatada = dataAlteracaoFormatada;
     }
 
     @Override

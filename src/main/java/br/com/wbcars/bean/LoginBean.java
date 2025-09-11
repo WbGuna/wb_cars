@@ -213,7 +213,8 @@ public class LoginBean implements Serializable {
     /**
      * Adiciona mensagem informativa
      */
-    private void adicionarMensagemInfo(String mensagem) {
+    @SuppressWarnings("unused")
+	private void adicionarMensagemInfo(String mensagem) {
         FacesContext.getCurrentInstance().addMessage(null, 
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", mensagem));
     }

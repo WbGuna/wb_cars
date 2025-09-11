@@ -6,30 +6,203 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <f:facet name="first">
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>WB Cars - Unidades</title>
-    </f:facet>
-    
-    <!-- Custom CSS com parâmetro para evitar cache -->
-    <h:outputStylesheet library="css" name="wbcars.css">
-        <f:param name="v" value="#{java.time.LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC)}"/>
-    </h:outputStylesheet>
+    <title>WB Cars - Unidades de Medida</title>
+    <h:outputStylesheet library="css" name="wbcars.css" />
 </h:head>
 
 <h:body styleClass="dashboard-container">
-    <!-- Verificação de autenticação -->
-    <f:event type="preRenderView" listener="#{unidadesBean.headerBean.verificarLogin()}"/>
-    
-    <!-- Inicialização do bean da página -->
     <f:event type="preRenderView" listener="#{unidadesBean.init()}"/>
     
-    <!-- Header componentizado -->
     <ui:include src="/componentes/header.xhtml"/>
     
-    <!-- Título da página -->
-    <h1 style="text-align: center; margin: 20px 0;">📏 Unidades</h1>
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Unidades de Medida</h1>
+    </div>
+    
+    <!-- FILTROS -->
+    <div class="welcome-panel">
+        <h:form id="formFiltros">
+            <div class="row">
+                <div class="col-md-9">
+                    <!-- Espaço reservado para filtros futuros -->
+                </div>
+                <div class="col-md-3">
+                    <p:commandButton value="Nova Unidade"
+                                   action="#{unidadesBean.abrirDialogNovaUnidade}"
+                                   update="formDialogs:dialogCadastro"
+                                   oncomplete="PF('dialogCadastro').show()"
+                                   styleClass="ui-button-info" />
+                </div>
+            </div>
+        </h:form>
+    </div>
+    
+    <!-- MENSAGENS DE FEEDBACK -->
+    <p:messages id="mensagens" showDetail="true" closable="true" style="margin: 10px 0;" />
+    
+    <!-- GRID -->
+    <div class="actions-panel">
+        <h:form id="formDados">
+            <p:dataTable id="tabelaUnidades"
+                       value="#{unidadesBean.unidades}"
+                       var="unidade"
+                       paginator="true"
+                       rows="10"
+                       sortMode="multiple"
+                       reflow="true"
+                       emptyMessage="Nenhuma unidade de medida encontrada"
+                       styleClass="ui-datatable-striped">
+                
+                <p:column headerText="ID" sortBy="#{unidade.id}" width="10%">
+                    <h:outputText value="#{unidade.id}" />
+                </p:column>
+                
+                <p:column headerText="Tipo" sortBy="#{unidade.tipo}" width="30%">
+                    <h:outputText value="#{unidade.tipo.descricao}" />
+                </p:column>
+                
+                <p:column headerText="Data Cadastro" sortBy="#{unidade.dataCadastro}" width="25%">
+                    <h:outputText value="#{unidade.dataCadastroFormatada}" rendered="#{unidade.dataCadastro != null}" />
+                    <h:outputText value="-" rendered="#{unidade.dataCadastro == null}" />
+                </p:column>
+                
+                <p:column headerText="Data Alteração" sortBy="#{unidade.dataAlteracao}" width="25%">
+                    <h:outputText value="#{unidade.dataAlteracaoFormatada}" rendered="#{unidade.dataAlteracao != null}" />
+                    <h:outputText value="-" rendered="#{unidade.dataAlteracao == null}" />
+                </p:column>
+                
+                <p:column headerText="Ações" exportable="false" width="10%">
+                    <p:commandButton icon="pi pi-pencil"
+                                   title="Editar"
+                                   action="#{unidadesBean.prepararEdicao(unidade)}"
+                                   update="formDialogs:dialogEdicao"
+                                   oncomplete="PF('dialogEdicao').show()"
+                                   styleClass="ui-button-warning"
+                                   style="margin-right: 5px;">
+                    </p:commandButton>
+                    
+                    <p:commandButton icon="pi pi-trash"
+                                   title="Excluir"
+                                   styleClass="ui-button-danger"
+                                   action="#{unidadesBean.prepararExclusao(unidade)}"
+                                   oncomplete="PF('confirmacaoExclusao').show()"
+                                   update="@none">
+                    </p:commandButton>
+                </p:column>
+                
+            </p:dataTable>
+        </h:form>
+    </div>
+    
+    <!-- DIALOGS -->
+    <h:form id="formDialogs">
+        <p:dialog id="dialogCadastro" 
+                  widgetVar="dialogCadastro" 
+                  header="Nova Unidade de Medida" 
+                  modal="true"
+                  width="500"
+                  height="300"
+                  closable="true">
+            
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel value="Tipo de Unidade:" />
+                <p:selectOneMenu value="#{unidadesBean.novaUnidade.tipo}" 
+                               required="true"
+                               requiredMessage="Tipo de unidade é obrigatório">
+                    <f:selectItem itemLabel="Selecione um tipo..." itemValue="#{null}" />
+                    <f:selectItems value="#{unidadesBean.tiposUnidade}" 
+                                 var="tipo" 
+                                 itemLabel="#{tipo.descricao}" 
+                                 itemValue="#{tipo}" />
+                </p:selectOneMenu>
+            </h:panelGrid>
+            
+            <p:messages showDetail="true" closable="true" />
+            
+            <f:facet name="footer">
+                <p:commandButton value="Salvar" 
+                               action="#{unidadesBean.salvarUnidade}"
+                               update="formDados"
+                               oncomplete="PF('dialogCadastro').hide()"
+                               styleClass="ui-button-success" />
+                <p:commandButton value="Cancelar" 
+                               onclick="PF('dialogCadastro').hide()" 
+                               type="button"
+                               styleClass="ui-button-secondary" />
+            </f:facet>
+            
+        </p:dialog>
+        
+        <p:dialog id="dialogEdicao" 
+                  widgetVar="dialogEdicao" 
+                  header="Editar Unidade de Medida" 
+                  modal="true"
+                  width="500"
+                  height="300"
+                  closable="true">
+            
+            <h:panelGrid columns="2" cellpadding="5" rendered="#{unidadesBean.unidadeSelecionada != null}">
+                <h:outputLabel value="Tipo de Unidade:" />
+                <p:selectOneMenu value="#{unidadesBean.unidadeSelecionada.tipo}" 
+                               required="true"
+                               requiredMessage="Tipo de unidade é obrigatório">
+                    <f:selectItem itemLabel="Selecione um tipo..." itemValue="#{null}" />
+                    <f:selectItems value="#{unidadesBean.tiposUnidade}" 
+                                 var="tipo" 
+                                 itemLabel="#{tipo.descricao}" 
+                                 itemValue="#{tipo}" />
+                </p:selectOneMenu>
+            </h:panelGrid>
+            
+            <p:messages showDetail="true" closable="true" />
+            
+            <f:facet name="footer">
+                <p:commandButton value="Atualizar" 
+                               action="#{unidadesBean.editarUnidade}"
+                               process="formDialogs:dialogEdicao"
+                               update="formDados :mensagens"
+                               oncomplete="if (!args.validationFailed) PF('dialogEdicao').hide()"
+                               styleClass="ui-button-success" />
+                <p:commandButton value="Cancelar" 
+                               onclick="PF('dialogEdicao').hide()" 
+                               type="button"
+                               styleClass="ui-button-secondary" />
+            </f:facet>
+            
+        </p:dialog>
+        
+        <!-- Dialog de Confirmação de Exclusão -->
+        <p:confirmDialog id="confirmacaoExclusao"
+                        widgetVar="confirmacaoExclusao"
+                        header="Confirmação de Exclusão"
+                        message="Tem certeza que deseja excluir esta unidade de medida?"
+                        icon="pi pi-exclamation-triangle"
+                        width="400"
+                        closable="false">
+            
+            <p:panelGrid columns="1" style="text-align: center; margin: 10px 0;">
+                <h:outputText value="Esta ação não pode ser desfeita!" 
+                             style="color: #d32f2f; font-weight: bold;" />
+                <h:outputText value="Tipo: #{unidadesBean.unidadeSelecionada.tipo.descricao}" 
+                             rendered="#{unidadesBean.unidadeSelecionada != null}"
+                             style="font-weight: bold; margin-top: 10px;" />
+            </p:panelGrid>
+            
+            <p:commandButton id="confirmar" value="Sim, Excluir" 
+                           action="#{unidadesBean.excluirUnidade}"
+                           process="@this"
+                           update="formDados :mensagens"
+                           oncomplete="PF('confirmacaoExclusao').hide()"
+                           styleClass="ui-button-danger"
+                           icon="pi pi-check" />
+            <p:commandButton id="cancelar" value="Cancelar" 
+                           onclick="PF('confirmacaoExclusao').hide(); return false;"
+                           process="@none"
+                           type="button"
+                           styleClass="ui-button-secondary"
+                           icon="pi pi-times" />
+        </p:confirmDialog>
+    </h:form>
     
 </h:body>
 </html>
