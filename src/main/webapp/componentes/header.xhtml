@@ -15,30 +15,30 @@
         <div class="dashboard-menu-form">
             <h:form>
                 <p:menubar styleClass="dashboard-menu">
-                    <p:submenu label="📋 Cadastros" icon="pi pi-file">
-                        <p:menuitem value="🚗 Veículos" icon="pi pi-car" action="#{headerBean.navegarVeiculos}"/>
-                        <p:menuitem value="👥 Clientes" icon="pi pi-users" action="#{headerBean.navegarClientes}"/>
-                        <p:menuitem value="👤 Funcionários" icon="pi pi-user" action="#{headerBean.navegarFuncionarios}"/>
-                        <p:menuitem value="🏭 Fornecedores" icon="pi pi-building" action="#{headerBean.navegarFornecedores}"/>
-                        <p:menuitem value="📦 Produtos" icon="pi pi-box" action="#{headerBean.navegarProdutos}"/>
-                        <p:menuitem value="🏙️ Cidades" icon="pi pi-map" action="#{headerBean.navegarCidades}"/>
-                        <p:menuitem value="📏 Unidades" icon="pi pi-calculator" action="#{headerBean.navegarUnidades}"/>
-                        <p:menuitem value="👤 Usuários" icon="pi pi-user-plus" action="#{headerBean.navegarUsuarios}"/>
+                    <p:submenu label="📋 Cadastros">
+                        <p:menuitem value="🚗 Veículos" outcome="/paginas/veiculos"/>
+                        <p:menuitem value="👥 Clientes" outcome="/paginas/clientes"/>
+                        <p:menuitem value="👤 Funcionários" outcome="/paginas/funcionarios"/>
+                        <p:menuitem value="🏭 Fornecedores" outcome="/paginas/fornecedores"/>
+                        <p:menuitem value="📦 Produtos" outcome="/paginas/produtos"/>
+                        <p:menuitem value="🏙️ Cidades"  outcome="/paginas/cidades"/>
+                        <p:menuitem value="📏 Unidades" outcome="/paginas/unidades"/>
+                        <p:menuitem value="👤 Usuários" outcome="/paginas/usuarios"/>
                     </p:submenu>
                     
-                    <p:submenu label="⚙️ Operações" icon="pi pi-cog">
-                        <p:menuitem value="🏠 Início" icon="pi pi-home" action="#{headerBean.navegarInicio}"/>
-                        <p:menuitem value="📅 Agendamentos" icon="pi pi-calendar" action="#{headerBean.navegarAgendamentos}"/>
-                        <p:menuitem value="🔧 OS" icon="pi pi-wrench" action="#{headerBean.navegarOS}"/>
-                        <p:menuitem value="📄 Orçamentos" icon="pi pi-file" action="#{headerBean.navegarOrcamentos}"/>
-                        <p:menuitem value="💰 Vendas" icon="pi pi-shopping-cart" action="#{headerBean.navegarVendas}"/>
-                        <p:menuitem value="📦 Estoque" icon="pi pi-inbox" action="#{headerBean.navegarEstoque}"/>
+                    <p:submenu label="⚙️ Operações">
+                        <p:menuitem value="🏠 Início" outcome="/dashboard"/>
+                        <p:menuitem value="📅 Agendamentos" outcome="/paginas/agendamentos"/>
+                        <p:menuitem value="🔧 OS" outcome="/paginas/ordemDeServico"/>
+                        <p:menuitem value="📄 Orçamentos" outcome="/paginas/orcamentos"/>
+                        <p:menuitem value="💰 Vendas" outcome="/paginas/vendas"/>
+                        <p:menuitem value="📦 Estoque" outcome="/paginas/estoque"/>
                     </p:submenu>
                     
-                    <p:submenu label="💰 Financeiro" icon="pi pi-dollar">
-                        <p:menuitem value="💳 Contas a Pagar" icon="pi pi-credit-card" action="#{headerBean.navegarContasPagar}"/>
-                        <p:menuitem value="📊 Relatórios" icon="pi pi-chart-bar" action="#{headerBean.navegarRelatorios}"/>
-                        <p:menuitem value="📈 Rel. Detalhados" icon="pi pi-chart-line" action="#{headerBean.navegarRelDetalhados}"/>
+                    <p:submenu label="💰 Financeiro">
+                        <p:menuitem value="💳 Contas a Pagar" outcome="/paginas/contasPagar"/>
+                        <p:menuitem value="📊 Relatórios" outcome="/paginas/relatorios"/>
+                        <p:menuitem value="📈 Rel. Detalhados" outcome="/paginas/relDetalhados"/>
                     </p:submenu>
                 </p:menubar>
             </h:form>

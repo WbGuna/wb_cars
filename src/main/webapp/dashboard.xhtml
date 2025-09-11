@@ -24,6 +24,9 @@
     <!-- Verificação de autenticação -->
     <f:event type="preRenderView" listener="#{loginBean.verificarLogin()}"/>
     
+    <!-- Inicialização do bean da página -->
+    <f:event type="preRenderView" listener="#{dashboardBean.init()}"/>
+    
     <!-- Header componentizado -->
     <ui:include src="/componentes/header.xhtml"/>
     

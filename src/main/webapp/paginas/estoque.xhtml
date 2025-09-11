@@ -20,7 +20,10 @@
 
 <h:body styleClass="dashboard-container">
     <!-- Verificação de autenticação -->
-    <f:event type="preRenderView" listener="#{loginBean.verificarLogin()}"/>
+    <f:event type="preRenderView" listener="#{estoqueBean.headerBean.verificarLogin()}"/>
+    
+    <!-- Inicialização do bean da página -->
+    <f:event type="preRenderView" listener="#{estoqueBean.init()}"/>
     
     <!-- Header componentizado -->
     <ui:include src="/componentes/header.xhtml"/>

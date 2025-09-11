@@ -12,10 +12,10 @@ import jakarta.inject.Named;
  */
 @Named
 @ViewScoped
-public class OSBean implements Serializable {
+public class OrdemDeServicoBean implements Serializable {
     
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = Logger.getLogger(OSBean.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(OrdemDeServicoBean.class.getName());
     
     @Inject
     private HeaderBean headerBean;

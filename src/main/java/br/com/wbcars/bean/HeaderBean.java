@@ -3,7 +3,7 @@ package br.com.wbcars.bean;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
-import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
@@ -11,7 +11,7 @@ import jakarta.inject.Named;
  * Bean responsável pela navegação e controle do header do sistema
  */
 @Named
-@SessionScoped
+@ViewScoped
 public class HeaderBean implements Serializable {
     
     private static final long serialVersionUID = 1L;
@@ -21,27 +21,27 @@ public class HeaderBean implements Serializable {
     private LoginBean loginBean;
     
     // Constantes para navegação - Cadastros
-    private static final String VEICULOS = "paginas/veiculos";
-    private static final String CLIENTES = "paginas/clientes";
-    private static final String FUNCIONARIOS = "paginas/funcionarios";
-    private static final String FORNECEDORES = "paginas/fornecedores";
-    private static final String PRODUTOS = "paginas/produtos";
-    private static final String CIDADES = "paginas/cidades";
-    private static final String UNIDADES = "paginas/unidades";
-    private static final String USUARIOS = "paginas/usuarios";
+    private static final String VEICULOS = "paginas/veiculos?faces-redirect=true";
+    private static final String CLIENTES = "paginas/clientes?faces-redirect=true";
+    private static final String FUNCIONARIOS = "paginas/funcionarios?faces-redirect=true";
+    private static final String FORNECEDORES = "paginas/fornecedores?faces-redirect=true";
+    private static final String PRODUTOS = "paginas/produtos?faces-redirect=true";
+    private static final String CIDADES = "paginas/cidades?faces-redirect=true";
+    private static final String UNIDADES = "paginas/unidades?faces-redirect=true";
+    private static final String USUARIOS = "paginas/usuarios?faces-redirect=true";
     
     // Constantes para navegação - Operações
-    private static final String DASHBOARD = "dashboard";
-    private static final String AGENDAMENTOS = "paginas/agendamentos";
-    private static final String OS = "paginas/os";
-    private static final String ORCAMENTOS = "paginas/orcamentos";
-    private static final String VENDAS = "paginas/vendas";
-    private static final String ESTOQUE = "paginas/estoque";
+    private static final String DASHBOARD = "dashboard?faces-redirect=true";
+    private static final String AGENDAMENTOS = "paginas/agendamentos?faces-redirect=true";
+    private static final String ORDEM_SERVICO = "paginas/ordemDeServico?faces-redirect=true";
+    private static final String ORCAMENTOS = "paginas/orcamentos?faces-redirect=true";
+    private static final String VENDAS = "paginas/vendas?faces-redirect=true";
+    private static final String ESTOQUE = "paginas/estoque?faces-redirect=true";
     
     // Constantes para navegação - Financeiro
-    private static final String CONTAS_PAGAR = "paginas/contasPagar";
-    private static final String RELATORIOS = "paginas/relatorios";
-    private static final String REL_DETALHADOS = "paginas/relDetalhados";
+    private static final String CONTAS_PAGAR = "paginas/contasPagar?faces-redirect=true";
+    private static final String RELATORIOS = "paginas/relatorios?faces-redirect=true";
+    private static final String REL_DETALHADOS = "paginas/relDetalhados?faces-redirect=true";
     
     // Métodos de navegação - Cadastros
     public String navegarVeiculos() {
@@ -97,7 +97,7 @@ public class HeaderBean implements Serializable {
     
     public String navegarOS() {
         LOGGER.info("Navegando para Ordens de Serviço");
-        return OS;
+        return ORDEM_SERVICO;
     }
     
     public String navegarOrcamentos() {
@@ -143,5 +143,10 @@ public class HeaderBean implements Serializable {
     public String logout() {
         LOGGER.info("Executando logout via HeaderBean");
         return loginBean.logout();
+    }
+    
+    // Método para verificar login (delegando para LoginBean)
+    public void verificarLogin() {
+        loginBean.verificarLogin();
     }
 }
