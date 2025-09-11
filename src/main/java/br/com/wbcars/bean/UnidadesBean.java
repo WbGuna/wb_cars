@@ -14,10 +14,14 @@ import org.primefaces.PrimeFaces;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Named("unidadesBean")
 @ViewScoped
@@ -36,6 +40,10 @@ public class UnidadesBean implements Serializable {
     // Objetos para CRUD
     private UnidadeMedidaDTO novaUnidade;
     private UnidadeMedidaDTO unidadeSelecionada;
+    
+    // Campos para busca/filtro
+    private String campoBusca;
+    private String valorBusca;
 
     @PostConstruct
     public void init() {
@@ -63,6 +71,115 @@ public class UnidadesBean implements Serializable {
     
     public void carregarTiposUnidade() {
         tiposUnidade = List.of(TipoUnidadeMedida.values());
+    }
+    
+    public void buscarUnidades() {
+        try {
+            if (campoBusca == null || campoBusca.trim().isEmpty()) {
+                adicionarMensagemAviso("Selecione uma coluna para buscar");
+                return;
+            }
+            
+            if (valorBusca == null || valorBusca.trim().isEmpty()) {
+                adicionarMensagemAviso("Digite um valor para buscar");
+                return;
+            }
+            
+            LOGGER.info("Buscando unidades - Campo: " + campoBusca + ", Valor: " + valorBusca);
+            
+            switch (campoBusca) {
+                case "id":
+                    try {
+                        Long id = Long.parseLong(valorBusca.trim());
+                        UnidadeMedidaDTO unidade = facade.findUnidadeMedidaById(id);
+                        unidades = unidade != null ? List.of(unidade) : new ArrayList<>();
+                    } catch (NumberFormatException e) {
+                        adicionarMensagemErro("Erro: Para o campo 'ID' digite apenas números. Exemplo: 1, 2, 3");
+                        return;
+                    }
+                    break;
+                    
+                case "tipo":
+                    try {
+                        TipoUnidadeMedida tipo = TipoUnidadeMedida.valueOf(valorBusca.trim().toUpperCase());
+                        unidades = facade.findAllUnidadeMedidas().stream()
+                                .filter(u -> u.getTipo() == tipo)
+                                .collect(Collectors.toList());
+                    } catch (IllegalArgumentException e) {
+                        adicionarMensagemErro("Erro: Para o campo 'Tipo' use valores válidos. Exemplos: QUILOGRAMA, LITRO, METRO, UNIDADE, QUILOMETRO");
+                        return;
+                    }
+                    break;
+                    
+                case "dataCadastro":
+                    try {
+                        LocalDate dataBusca = parseDataBusca(valorBusca.trim());
+                        unidades = facade.findAllUnidadeMedidas().stream()
+                                .filter(u -> u.getDataCadastro() != null && 
+                                           u.getDataCadastro().toLocalDate().equals(dataBusca))
+                                .collect(Collectors.toList());
+                    } catch (Exception e) {
+                        adicionarMensagemErro("Erro: Para 'Data Cadastro' use formato: dd/MM/yyyy. Exemplo: 11/09/2025");
+                        return;
+                    }
+                    break;
+                    
+                case "dataAlteracao":
+                    try {
+                        LocalDate dataBusca = parseDataBusca(valorBusca.trim());
+                        unidades = facade.findAllUnidadeMedidas().stream()
+                                .filter(u -> u.getDataAlteracao() != null && 
+                                           u.getDataAlteracao().toLocalDate().equals(dataBusca))
+                                .collect(Collectors.toList());
+                    } catch (Exception e) {
+                        adicionarMensagemErro("Erro: Para 'Data Alteração' use formato: dd/MM/yyyy. Exemplo: 11/09/2025");
+                        return;
+                    }
+                    break;
+                    
+                default:
+                    adicionarMensagemErro("Campo de busca inválido: " + campoBusca);
+                    return;
+            }
+            
+            LOGGER.info("Busca concluída - " + unidades.size() + " registros encontrados");
+            if (unidades.isEmpty()) {
+                adicionarMensagemAviso("Nenhum registro encontrado para os critérios informados");
+            } else {
+                adicionarMensagemSucesso("Busca realizada com sucesso! " + unidades.size() + " registro(s) encontrado(s)");
+            }
+            
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro na busca", e);
+            adicionarMensagemErro("Erro ao realizar busca: " + e.getMessage());
+        }
+    }
+    
+    public void limparFiltros() {
+        campoBusca = null;
+        valorBusca = null;
+        carregarUnidades();
+        adicionarMensagemSucesso("Filtros limpos - Exibindo todos os registros");
+        LOGGER.info("Filtros limpos pelo usuário");
+    }
+    
+    private LocalDate parseDataBusca(String dataStr) throws Exception {
+        // Formato brasileiro: dd/MM/yyyy
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        try {
+            return LocalDate.parse(dataStr, formatter);
+        } catch (DateTimeParseException e) {
+            // Tenta outros formatos
+            try {
+                // Formato: dd-MM-yyyy
+                DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                return LocalDate.parse(dataStr, formatter2);
+            } catch (DateTimeParseException e2) {
+                // Formato: yyyy-MM-dd
+                DateTimeFormatter formatter3 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                return LocalDate.parse(dataStr, formatter3);
+            }
+        }
     }
     
     // ========== DIALOGS ==========
@@ -220,5 +337,21 @@ public class UnidadesBean implements Serializable {
     
     public void setUnidadeSelecionada(UnidadeMedidaDTO unidadeSelecionada) {
         this.unidadeSelecionada = unidadeSelecionada;
+    }
+    
+    public String getCampoBusca() {
+        return campoBusca;
+    }
+    
+    public void setCampoBusca(String campoBusca) {
+        this.campoBusca = campoBusca;
+    }
+    
+    public String getValorBusca() {
+        return valorBusca;
+    }
+    
+    public void setValorBusca(String valorBusca) {
+        this.valorBusca = valorBusca;
     }
 }

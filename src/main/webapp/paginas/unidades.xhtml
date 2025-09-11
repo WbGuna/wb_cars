@@ -11,7 +11,6 @@
 </h:head>
 
 <h:body styleClass="dashboard-container">
-    <f:event type="preRenderView" listener="#{unidadesBean.init()}"/>
     
     <ui:include src="/componentes/header.xhtml"/>
     
@@ -22,17 +21,43 @@
     <!-- FILTROS -->
     <div class="welcome-panel">
         <h:form id="formFiltros">
-            <div class="row">
-                <div class="col-md-9">
-                    <!-- Espaço reservado para filtros futuros -->
-                </div>
-                <div class="col-md-3">
-                    <p:commandButton value="Nova Unidade"
-                                   action="#{unidadesBean.abrirDialogNovaUnidade}"
-                                   update="formDialogs:dialogCadastro"
-                                   oncomplete="PF('dialogCadastro').show()"
-                                   styleClass="ui-button-info" />
-                </div>
+            <p:panelGrid columns="4" style="width: 100%; margin-bottom: 10px;">
+                <h:panelGroup>
+                    <p:outputLabel value="Campo: " for="campoBusca" style="margin-right: 5px;" />
+                    <p:selectOneMenu id="campoBusca" value="#{unidadesBean.campoBusca}" style="width: 180px;">
+                        <f:selectItem itemLabel="Selecione a coluna..." itemValue="" />
+                        <f:selectItem itemLabel="ID" itemValue="id" />
+                        <f:selectItem itemLabel="Tipo" itemValue="tipo" />
+                        <f:selectItem itemLabel="Data Cadastro" itemValue="dataCadastro" />
+                        <f:selectItem itemLabel="Data Alteração" itemValue="dataAlteracao" />
+                    </p:selectOneMenu>
+                </h:panelGroup>
+                
+                <h:panelGroup>
+                    <p:outputLabel value="Valor: " for="valorBusca" style="margin-right: 5px;" />
+                    <p:inputText id="valorBusca" value="#{unidadesBean.valorBusca}" 
+                               placeholder="Digite o valor para buscar..." style="width: 180px;" />
+                </h:panelGroup>
+                
+                <p:commandButton value="Buscar"
+                               action="#{unidadesBean.buscarUnidades}"
+                               update=":formDados:tabelaUnidades :mensagens"
+                               process="@form"
+                               styleClass="ui-button-success" />
+                
+                <p:commandButton value="Limpar"
+                               action="#{unidadesBean.limparFiltros}"
+                               update=":formFiltros :formDados:tabelaUnidades :mensagens"
+                               process="@this"
+                               styleClass="ui-button-secondary" />
+            </p:panelGrid>
+            
+            <div style="text-align: center; margin-top: 10px;">
+                <p:commandButton value="Nova Unidade"
+                               action="#{unidadesBean.abrirDialogNovaUnidade}"
+                               update="formDialogs:dialogCadastro"
+                               oncomplete="PF('dialogCadastro').show()"
+                               styleClass="ui-button-info" />
             </div>
         </h:form>
     </div>
