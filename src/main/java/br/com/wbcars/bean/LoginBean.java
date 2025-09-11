@@ -1,5 +1,6 @@
 package br.com.wbcars.bean;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +12,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Bean responsável pelo controle de autenticação do sistema WB Cars
@@ -119,21 +121,39 @@ public class LoginBean implements Serializable {
     public String logout() {
         LOGGER.info("Fazendo logout do usuário: " + (funcionarioLogado != null ? funcionarioLogado.getNome() : "desconhecido"));
         
-        // Limpa as informações da sessão
-        funcionarioLogado = null;
-        logado = false;
-        limparCampos();
-        
-        // Invalida a sessão
         try {
-            FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+            FacesContext context = FacesContext.getCurrentInstance();
+            
+            // Limpa as informações da sessão ANTES de invalidar
+            funcionarioLogado = null;
+            logado = false;
+            limparCampos();
+            
+            // Invalida a sessão completamente
+            context.getExternalContext().invalidateSession();
+            
+            // Força headers para evitar cache
+            HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.setHeader("Pragma", "no-cache");
+            response.setHeader("Expires", "0");
+            
+            // Força redirecionamento imediato para nova sessão
+            String contextPath = context.getExternalContext().getRequestContextPath();
+            context.getExternalContext().redirect(contextPath + "/index.xhtml");
+            context.responseComplete();
+            
+            LOGGER.info("Logout executado com sucesso - redirecionamento forçado");
+            
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Erro ao redirecionar após logout", e);
+            return "index?faces-redirect=true";
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Erro ao invalidar sessão", e);
+            LOGGER.log(Level.WARNING, "Erro durante logout", e);
+            return "index?faces-redirect=true";
         }
         
-        adicionarMensagemInfo("Logout realizado com sucesso");
-        
-        return "index?faces-redirect=true";
+        return null; // Não retorna string pois já fez redirect
     }
     
     /**

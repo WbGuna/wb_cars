@@ -53,10 +53,11 @@
             
             <h:form>
                 <p:commandButton value="Sair" 
-                               action="#{headerBean.logout}"
+                               action="#{headerBean.logout()}"
                                styleClass="logout-btn"
                                icon="pi pi-sign-out"
-                               immediate="true"/>
+                               immediate="true"
+                               ajax="false"/>
             </h:form>
         </div>
     </div>
