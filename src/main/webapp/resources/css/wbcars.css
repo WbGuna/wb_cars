@@ -637,6 +637,7 @@ body {
 /* ===== Z-INDEX FIX - MENU DROPDOWN ===== */
 
 /* Dashboard header sempre no topo */
+/* Dashboard header abaixo do menu */
 .dashboard-header {
     position: relative !important;
     z-index: 100 !important;
@@ -669,6 +670,12 @@ body {
 }
 
 /* PrimeFaces Menu Global Override */
+.dashboard-header .dashboard-menu {
+    z-index: 9999 !important;
+}
+.ui-menu, .ui-menubar, .ui-menu-panel {
+    z-index: 9999 !important;
+}
 .ui-widget-overlay {
     z-index: 999 !important;
 }

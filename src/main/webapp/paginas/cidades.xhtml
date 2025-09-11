@@ -6,30 +6,225 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <f:facet name="first">
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>WB Cars - Cidades</title>
-    </f:facet>
-    
-    <!-- Custom CSS com parâmetro para evitar cache -->
-    <h:outputStylesheet library="css" name="wbcars.css">
-        <f:param name="v" value="#{java.time.LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC)}"/>
-    </h:outputStylesheet>
+    <title>WB Cars - Cadastro de Cidades</title>
+    <h:outputStylesheet library="css" name="wbcars.css" />
 </h:head>
 
 <h:body styleClass="dashboard-container">
-    <!-- Verificação de autenticação -->
-    <f:event type="preRenderView" listener="#{cidadesBean.headerBean.verificarLogin()}"/>
     
-    <!-- Inicialização do bean da página -->
-    <f:event type="preRenderView" listener="#{cidadesBean.init()}"/>
-    
-    <!-- Header componentizado -->
     <ui:include src="/componentes/header.xhtml"/>
     
-    <!-- Título da página -->
-    <h1 style="text-align: center; margin: 20px 0;">🏙️ Cidades</h1>
+        <div class="dashboard-title" style="text-align:center; margin: 20px 0; font-size:28px; font-weight:800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            Cadastro de Cidades
+        </div>
     
+    <!-- FILTROS -->
+    <div class="welcome-panel">
+        <h:form id="formFiltros">
+            <p:panelGrid columns="4" style="width: 100%; margin-bottom: 10px;">
+                <h:panelGroup>
+                    <p:outputLabel value="Campo: " for="campoBusca" style="margin-right: 5px;" />
+                    <p:selectOneMenu id="campoBusca" value="#{cidadesBean.campoBusca}" style="width: 180px;">
+                        <f:selectItem itemLabel="Selecione a coluna..." itemValue="" />
+                        <f:selectItem itemLabel="ID" itemValue="id" />
+                        <f:selectItem itemLabel="Nome" itemValue="nome" />
+                        <f:selectItem itemLabel="Estado" itemValue="estado" />
+                        <f:selectItem itemLabel="País" itemValue="pais" />
+                        <f:selectItem itemLabel="Data Cadastro" itemValue="dataCadastro" />
+                        <f:selectItem itemLabel="Data Alteração" itemValue="dataAlteracao" />
+                    </p:selectOneMenu>
+                </h:panelGroup>
+                
+                <h:panelGroup>
+                    <p:outputLabel value="Valor: " for="valorBusca" style="margin-right: 5px;" />
+                    <p:inputText id="valorBusca" value="#{cidadesBean.valorBusca}" 
+                               placeholder="Digite o valor para buscar..." style="width: 180px;" />
+                </h:panelGroup>
+                
+                <p:commandButton value="Buscar"
+                               action="#{cidadesBean.buscarCidades}"
+                               update=":formDados:tabelaCidades :mensagens"
+                               process="@form"
+                               styleClass="ui-button-success" />
+                
+                <p:commandButton value="Limpar"
+                               action="#{cidadesBean.limparFiltros}"
+                               update=":formFiltros :formDados:tabelaCidades :mensagens"
+                               process="@this"
+                               styleClass="ui-button-secondary" />
+            </p:panelGrid>
+            
+            <div style="text-align: center; margin-top: 10px;">
+                <p:commandButton value="Nova Cidade"
+                               action="#{cidadesBean.abrirDialogNovaCidade}"
+                               update="formDialogs:dialogCadastro"
+                               oncomplete="PF('dialogCadastro').show()"
+                               styleClass="ui-button-info" />
+            </div>
+        </h:form>
+    </div>
+    
+    <!-- MENSAGENS DE FEEDBACK -->
+    <p:messages id="mensagens" showDetail="true" closable="true" style="margin: 10px 0;" />
+    
+    <!-- GRID -->
+    <div class="actions-panel">
+        <h:form id="formDados">
+            <p:dataTable id="tabelaCidades"
+                       value="#{cidadesBean.cidades}"
+                       var="cidade"
+                       paginator="true"
+                       rows="10"
+                       sortMode="multiple"
+                       reflow="true"
+                       emptyMessage="Nenhuma cidade encontrada"
+                       styleClass="ui-datatable-striped">
+                
+                <p:column headerText="ID" sortBy="#{cidade.id}" width="10%">
+                    <h:outputText value="#{cidade.id}" />
+                </p:column>
+                
+                <p:column headerText="Nome" sortBy="#{cidade.nome}" width="25%">
+                    <h:outputText value="#{cidade.nome}" />
+                </p:column>
+                
+                <p:column headerText="Estado" sortBy="#{cidade.estado}" width="10%">
+                    <h:outputText value="#{cidade.estado}" />
+                </p:column>
+                
+                <p:column headerText="País" sortBy="#{cidade.pais}" width="20%">
+                    <h:outputText value="#{cidade.pais}" />
+                </p:column>
+                
+                <p:column headerText="Data Cadastro" sortBy="#{cidade.dataCadastro}" width="15%">
+                    <h:outputText value="#{cidade.dataCadastroFormatada}" />
+                </p:column>
+                
+                <p:column headerText="Data Alteração" sortBy="#{cidade.dataAlteracao}" width="15%">
+                    <h:outputText value="#{cidade.dataAlteracaoFormatada}" />
+                </p:column>
+                
+                <p:column headerText="Ações" exportable="false" width="15%">
+                    <p:commandButton icon="pi pi-pencil"
+                                   action="#{cidadesBean.prepararEdicao(cidade)}"
+                                   update="formDialogs:dialogEdicao"
+                                   oncomplete="PF('dialogEdicao').show()"
+                                   styleClass="ui-button-warning"
+                                   style="margin-right: 5px;" />
+                    
+                    <p:commandButton icon="pi pi-trash"
+                                   action="#{cidadesBean.prepararExclusao(cidade)}"
+                                   update="formDialogs:confirmacaoExclusao"
+                                   oncomplete="PF('confirmacaoExclusao').show()"
+                                   styleClass="ui-button-danger" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </div>
+    
+    <!-- DIALOGS -->
+    <h:form id="formDialogs">
+            <p:dialog id="dialogCadastro" widgetVar="dialogCadastro" 
+                      header="Nova Cidade" modal="true" resizable="false" 
+                      width="500" height="400">
+                
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+                    
+                    <p:outputLabel for="novoNome" value="Nome*:" />
+                    <p:inputText id="novoNome" value="#{cidadesBean.novaCidade.nome}" 
+                                 required="true" requiredMessage="Nome é obrigatório"
+                                 styleClass="form-control" />
+                    
+                    <p:outputLabel for="novoEstado" value="Estado*:" />
+                    <p:selectOneMenu id="novoEstado" value="#{cidadesBean.novaCidade.estado}" 
+                                     required="true" requiredMessage="Estado é obrigatório"
+                                     styleClass="form-control">
+                        <f:selectItem itemLabel="-- Selecione --" itemValue="" />
+                        <f:selectItems value="#{cidadesBean.estados}" var="estado" 
+                                      itemLabel="#{estado}" itemValue="#{estado}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel for="novoPais" value="País:" />
+                    <p:inputText id="novoPais" value="#{cidadesBean.novaCidade.pais}" 
+                                 styleClass="form-control" />
+                </p:panelGrid>
+                
+                <p:messages showDetail="true" closable="true" />
+                <f:facet name="footer">
+                    <p:commandButton value="Salvar"
+                                     action="#{cidadesBean.salvarCidade}"
+                                     update="formDados"
+                                     oncomplete="PF('dialogCadastro').hide()"
+                                     styleClass="ui-button-success" />
+                    <p:commandButton value="Cancelar"
+                                     onclick="PF('dialogCadastro').hide()"
+                                     type="button"
+                                     styleClass="ui-button-secondary" />
+                </f:facet>
+            </p:dialog>
+
+            <!-- Dialog Editar Cidade -->
+            <p:dialog id="dialogEdicao" widgetVar="dialogEdicao" 
+                      header="Editar Cidade" modal="true" resizable="false" 
+                      width="500" height="400">
+                
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8" rendered="#{cidadesBean.cidadeSelecionada != null}">
+                    <p:outputLabel for="editarNome" value="Nome*:" />
+                    <p:inputText id="editarNome" value="#{cidadesBean.cidadeSelecionada.nome}" 
+                                 required="true" requiredMessage="Nome é obrigatório"
+                                 styleClass="form-control" />
+                    <p:outputLabel for="editarEstado" value="Estado*:" />
+                    <p:selectOneMenu id="editarEstado" value="#{cidadesBean.cidadeSelecionada.estado}" 
+                                     required="true" requiredMessage="Estado é obrigatório"
+                                     styleClass="form-control">
+                        <f:selectItem itemLabel="-- Selecione --" itemValue="" />
+                        <f:selectItems value="#{cidadesBean.estados}" var="estado" 
+                                      itemLabel="#{estado}" itemValue="#{estado}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="editarPais" value="País:" />
+                    <p:inputText id="editarPais" value="#{cidadesBean.cidadeSelecionada.pais}" 
+                                 styleClass="form-control" />
+                </p:panelGrid>
+                
+                <p:messages showDetail="true" closable="true" />
+                <f:facet name="footer">
+                    <p:commandButton value="Atualizar"
+                                     action="#{cidadesBean.editarCidade}"
+                                     process="formDialogs:dialogEdicao"
+                                     update="formDados :mensagens"
+                                     oncomplete="if (!args.validationFailed) PF('dialogEdicao').hide()"
+                                     styleClass="ui-button-success" />
+                    <p:commandButton value="Cancelar"
+                                     onclick="PF('dialogEdicao').hide()"
+                                     type="button"
+                                     styleClass="ui-button-secondary" />
+                </f:facet>
+            </p:dialog>
+
+            <!-- Dialog Confirmar Exclusão -->
+            <p:dialog id="confirmacaoExclusao" widgetVar="confirmacaoExclusao" 
+                      header="Confirmar Exclusão" modal="true" resizable="false" 
+                      width="400" height="200">
+                
+                <p:panelGrid columns="1" style="text-align: center; margin: 10px 0;">
+                    <h:outputText value="Esta ação não pode ser desfeita!" style="color: #d32f2f; font-weight: bold;" />
+                    <h:outputText value="Cidade: #{cidadesBean.cidadeSelecionada.nome}" rendered="#{cidadesBean.cidadeSelecionada != null}" style="font-weight: bold; margin-top: 10px;" />
+                </p:panelGrid>
+                <p:commandButton id="confirmar" value="Sim, Excluir"
+                                 action="#{cidadesBean.excluirCidade}"
+                                 process="@this"
+                                 update="formDados :mensagens"
+                                 oncomplete="PF('confirmacaoExclusao').hide()"
+                                 styleClass="ui-button-danger"
+                                 icon="pi pi-check" />
+                <p:commandButton id="cancelar" value="Cancelar"
+                                 onclick="PF('confirmacaoExclusao').hide(); return false;"
+                                 process="@none"
+                                 type="button"
+                                 styleClass="ui-button-secondary"
+                                 icon="pi pi-times" />
+            </p:dialog>
+
+        </h:form>   
 </h:body>
 </html>

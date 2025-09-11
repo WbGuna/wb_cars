@@ -4,6 +4,7 @@ package br.com.wbcars.dto;
 import br.com.wbcars.enuns.EstadoBrasil;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class CidadeDTO implements Serializable {
@@ -70,6 +71,19 @@ public class CidadeDTO implements Serializable {
     
     public void setDataAlteracao(LocalDateTime dataAlteracao) { 
     	this.dataAlteracao = dataAlteracao; 
+    }
+    
+    // Métodos para formatação de data
+    public String getDataCadastroFormatada() {
+        return dataCadastro != null ? 
+            dataCadastro.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : 
+            "-";
+    }
+    
+    public String getDataAlteracaoFormatada() {
+        return dataAlteracao != null ? 
+            dataAlteracao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : 
+            "-";
     }
 
     @Override

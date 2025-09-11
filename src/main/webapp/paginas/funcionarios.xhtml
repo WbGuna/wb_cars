@@ -25,11 +25,8 @@
     <!-- Inicialização do bean da página -->
     <f:event type="preRenderView" listener="#{funcionariosBean.init()}"/>
     
-    <!-- Header componentizado -->
     <ui:include src="/componentes/header.xhtml"/>
-    
-    <!-- Título da página -->
-    <h1 style="text-align: center; margin: 20px 0;">👤 Funcionários</h1>
+    <div class="dashboard-title" style="text-align:center; margin: 20px 0; font-size:28px; font-weight:800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">👤 Funcionários</div>
     
 </h:body>
 </html>
