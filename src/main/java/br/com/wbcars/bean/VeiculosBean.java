@@ -1,5 +1,6 @@
 package br.com.wbcars.bean;
 
+import br.com.wbcars.dto.ClienteDTO;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,6 +15,7 @@ import jakarta.faces.application.FacesMessage;
 @Named
 @ViewScoped
 public class VeiculosBean implements Serializable {
+    private List<ClienteDTO> clientes;
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = Logger.getLogger(VeiculosBean.class.getName());
@@ -33,6 +35,7 @@ public class VeiculosBean implements Serializable {
     public void init() {
         LOGGER.info("Inicializando página de Veículos");
         novoVeiculo = new VeiculoDTO();
+        clientes = facade.findAllClientes();
         buscarVeiculos();
         LOGGER.info("Página inicializada com sucesso");
     }
@@ -105,6 +108,10 @@ public class VeiculosBean implements Serializable {
                 adicionarMensagemErro("Placa do veículo é obrigatória");
                 return;
             }
+            if (novoVeiculo.getCliente() == null) {
+                adicionarMensagemErro("Selecione o cliente do veículo");
+                return;
+            }
             novoVeiculo.setDataCadastro(java.time.LocalDateTime.now());
             facade.saveVeiculo(novoVeiculo);
             buscarVeiculos();
@@ -133,6 +140,10 @@ public class VeiculosBean implements Serializable {
                 adicionarMensagemErro("Placa do veículo é obrigatória");
                 return;
             }
+            if (veiculoSelecionado.getCliente() == null) {
+                adicionarMensagemErro("Selecione o cliente do veículo");
+                return;
+            }
             veiculoSelecionado.setDataAlteracao(java.time.LocalDateTime.now());
             facade.updateVeiculo(veiculoSelecionado);
             buscarVeiculos();
@@ -142,6 +153,8 @@ public class VeiculosBean implements Serializable {
             adicionarMensagemErro("Erro ao editar veículo: " + e.getMessage());
         }
     }
+    public List<ClienteDTO> getClientes() { return clientes; }
+    public void setClientes(List<ClienteDTO> clientes) { this.clientes = clientes; }
 
     public void excluirVeiculo() {
         try {

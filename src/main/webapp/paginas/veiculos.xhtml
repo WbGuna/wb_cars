@@ -82,6 +82,9 @@
                 <p:column headerText="ID" sortBy="#{veiculo.id}" width="8%">
                     <h:outputText value="#{veiculo.id}" />
                 </p:column>
+                <p:column headerText="Cliente" sortBy="#{veiculo.cliente.nome}" width="18%">
+                    <h:outputText value="#{veiculo.cliente.nome} [#{veiculo.cliente.cpfCnpj}]" />
+                </p:column>
                 <p:column headerText="Modelo" sortBy="#{veiculo.modelo}" width="15%">
                     <h:outputText value="#{veiculo.modelo}" />
                 </p:column>
@@ -121,6 +124,11 @@
     <h:form id="formDialogs">
         <p:dialog id="dialogCadastro" widgetVar="dialogCadastro" header="Novo Veículo" modal="true" resizable="false" width="500" height="400">
             <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+                <p:outputLabel for="novoCliente" value="Cliente*:" />
+                <p:selectOneMenu id="novoCliente" value="#{veiculosBean.novoVeiculo.cliente}" converter="clienteDTOConverter" required="true" requiredMessage="Selecione o cliente" style="width: 100%;">
+                    <f:selectItem itemLabel="Selecione o cliente..." itemValue="" />
+                    <f:selectItems value="#{veiculosBean.clientes}" var="cli" itemLabel="#{cli.nome} [#{cli.cpfCnpj}]" itemValue="#{cli}" />
+                </p:selectOneMenu>
                 <p:outputLabel for="novoModelo" value="Modelo*:" />
                 <p:inputText id="novoModelo" value="#{veiculosBean.novoVeiculo.modelo}" required="true" requiredMessage="Modelo é obrigatório" styleClass="form-control" />
                 <p:outputLabel for="novoMarca" value="Marca*:" />
@@ -140,6 +148,11 @@
         </p:dialog>
         <p:dialog id="dialogEdicao" widgetVar="dialogEdicao" header="Editar Veículo" modal="true" resizable="false" width="500" height="400">
             <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8" rendered="#{veiculosBean.veiculoSelecionado != null}">
+                <p:outputLabel for="editarCliente" value="Cliente*:" />
+                <p:selectOneMenu id="editarCliente" value="#{veiculosBean.veiculoSelecionado.cliente}" converter="clienteDTOConverter" required="true" requiredMessage="Selecione o cliente" style="width: 100%;">
+                    <f:selectItem itemLabel="Selecione o cliente..." itemValue="" />
+                    <f:selectItems value="#{veiculosBean.clientes}" var="cli" itemLabel="#{cli.nome} [#{cli.cpfCnpj}]" itemValue="#{cli}" />
+                </p:selectOneMenu>
                 <p:outputLabel for="editarModelo" value="Modelo*:" />
                 <p:inputText id="editarModelo" value="#{veiculosBean.veiculoSelecionado.modelo}" required="true" requiredMessage="Modelo é obrigatório" styleClass="form-control" />
                 <p:outputLabel for="editarMarca" value="Marca*:" />
