@@ -15,8 +15,11 @@
     <f:event type="preRenderView" listener="#{veiculosBean.init()}"/>
 
     <ui:include src="/componentes/header.xhtml"/>
-    <div class="dashboard-title" style="text-align:center; margin: 20px 0; font-size:28px; font-weight:800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-        🚗 Veículos
+    
+    <div class="welcome-panel" style="padding-top: 2px; padding-bottom: 6px;">
+        <h2 style="display: flex; align-items: center; gap: 12px; font-size: 30px; font-weight: 900; color: #333; font-family: 'Segoe UI', 'Arial', sans-serif; letter-spacing: 1px; margin: 20px 0 10px 0;">
+            <span style="font-size: 34px;">🚗</span> Veículos
+        </h2>
     </div>
 
     <!-- FILTROS -->

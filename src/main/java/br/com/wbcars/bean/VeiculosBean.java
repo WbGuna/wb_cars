@@ -3,9 +3,6 @@ package br.com.wbcars.bean;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import br.com.wbcars.dto.VeiculoDTO;
 import br.com.wbcars.facade.WBCarsFacade;
 import jakarta.faces.view.ViewScoped;

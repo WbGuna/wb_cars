@@ -132,6 +132,41 @@ public class ClienteDTO implements Serializable {
         this.dataAlteracao = dataAlteracao; 
     }
 
+    public String getCpfCnpjFormatado() {
+        if (cpfCnpj == null) return "";
+        String value = cpfCnpj.replaceAll("\\D", "");
+        if (value.length() == 11) {
+            return value.replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
+        } else if (value.length() == 14) {
+            return value.replaceAll("(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})", "$1.$2.$3/$4-$5");
+        }
+        return cpfCnpj;
+    }
+
+    public String getCelularFormatado() {
+        if (celular == null) return "";
+        String value = celular.replaceAll("\\D", "");
+        if (value.length() == 11) {
+            return value.replaceAll("(\\d{2})(\\d{5})(\\d{4})", "($1) $2-$3");
+        } else if (value.length() == 10) {
+            return value.replaceAll("(\\d{2})(\\d{4})(\\d{4})", "($1) $2-$3");
+        }
+        return celular;
+    }
+
+
+    public String getDataCadastroFormatado() {
+        if (dataCadastro == null) return "";
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dataCadastro.format(formatter);
+    }
+
+    public String getDataAlteracaoFormatado() {
+        if (dataAlteracao == null) return "";
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dataAlteracao.format(formatter);
+    }
+
     @Override
 	public int hashCode() {
 		return Objects.hash(id);

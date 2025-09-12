@@ -11,22 +11,231 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>WB Cars - Clientes</title>
     </f:facet>
-    
-    <!-- Custom CSS com parâmetro para evitar cache -->
     <h:outputStylesheet library="css" name="wbcars.css">
         <f:param name="v" value="#{java.time.LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC)}"/>
     </h:outputStylesheet>
 </h:head>
 
 <h:body styleClass="dashboard-container">
-    <!-- Verificação de autenticação -->
     <f:event type="preRenderView" listener="#{clientesBean.headerBean.verificarLogin()}"/>
-    
-    <!-- Inicialização do bean da página -->
     <f:event type="preRenderView" listener="#{clientesBean.init()}"/>
-    
     <ui:include src="/componentes/header.xhtml"/>
-    <div class="dashboard-title" style="text-align:center; margin: 20px 0; font-size:28px; font-weight:800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">👥 Clientes</div>
     
+    <div class="welcome-panel" style="padding-top: 2px; padding-bottom: 6px;">
+        <h2 style="display: flex; align-items: center; gap: 12px; font-size: 30px; font-weight: 900; color: #333; font-family: 'Segoe UI', 'Arial', sans-serif; letter-spacing: 1px; margin: 20px 0 10px 0;">
+            <span style="font-size: 34px;">👥</span> Clientes
+        </h2>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="welcome-panel">
+        <h:form id="formFiltros">
+            <p:panelGrid columns="4" style="width: 100%; margin-bottom: 10px;">
+                <h:panelGroup>
+                    <p:outputLabel value="Campo: " for="campoBusca" style="margin-right: 5px;" />
+                    <p:selectOneMenu id="campoBusca" value="#{clientesBean.campoBusca}" style="width: 180px;">
+                        <f:selectItem itemLabel="Selecione a coluna..." itemValue="" />
+                        <f:selectItem itemLabel="ID" itemValue="id" />
+                        <f:selectItem itemLabel="Nome" itemValue="nome" />
+                        <f:selectItem itemLabel="CPF/CNPJ" itemValue="cpfCnpj" />
+                        <f:selectItem itemLabel="Email" itemValue="email" />
+                        <f:selectItem itemLabel="Celular" itemValue="celular" />
+                        <f:selectItem itemLabel="Rua" itemValue="rua" />
+                        <f:selectItem itemLabel="Bairro" itemValue="bairro" />
+                        <f:selectItem itemLabel="Status" itemValue="status" />
+                        <f:selectItem itemLabel="Data Nasc." itemValue="dataNascimento" />
+                        <f:selectItem itemLabel="Cidade" itemValue="cidade" />
+                        <f:selectItem itemLabel="Data Cadastro" itemValue="dataCadastro" />
+                        <f:selectItem itemLabel="Data Alteração" itemValue="dataAlteracao" />
+                    </p:selectOneMenu>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:outputLabel value="Valor: " for="valorBusca" style="margin-right: 5px;" />
+                    <p:inputText id="valorBusca" value="#{clientesBean.valorBusca}" placeholder="Digite o valor para buscar..." style="width: 180px;" />
+                </h:panelGroup>
+                <p:commandButton value="Buscar"
+                               action="#{clientesBean.buscarClientes}"
+                               update=":formDados:tabelaClientes :mensagens"
+                               process="@form"
+                               styleClass="ui-button-success" />
+                <p:commandButton value="Limpar"
+                               action="#{clientesBean.limparFiltros}"
+                               update=":formFiltros :formDados:tabelaClientes :mensagens"
+                               process="@this"
+                               styleClass="ui-button-secondary" />
+            </p:panelGrid>
+            <div style="text-align: center; margin-top: 10px;">
+                <p:commandButton value="Novo Cliente"
+                               action="#{clientesBean.abrirDialogNovoCliente}"
+                               update="formDialogs:dialogCadastro"
+                               oncomplete="PF('dialogCadastro').show()"
+                               styleClass="ui-button-info" />
+            </div>
+        </h:form>
+    </div>
+
+    <!-- MENSAGENS DE FEEDBACK -->
+    <p:messages id="mensagens" showDetail="true" closable="true" style="margin: 10px 0;" />
+
+    <!-- GRID -->
+    <div class="actions-panel">
+        <h:form id="formDados">
+            <p:dataTable id="tabelaClientes"
+                       value="#{clientesBean.clientes}"
+                       var="cliente"
+                       paginator="true"
+                       rows="10"
+                       sortMode="multiple"
+                       reflow="true"
+                       emptyMessage="Nenhum cliente encontrado"
+                       styleClass="ui-datatable-striped">
+                <p:column headerText="ID" sortBy="#{cliente.id}" width="8%">
+                    <h:outputText value="#{cliente.id}" />
+                </p:column>
+                <p:column headerText="Nome" sortBy="#{cliente.nome}" width="20%">
+                    <h:outputText value="#{cliente.nome}" />
+                </p:column>
+                <p:column headerText="CPF/CNPJ" sortBy="#{cliente.cpfCnpj}" width="15%">
+                    <h:outputText value="#{cliente.cpfCnpjFormatado}" />
+                </p:column>
+                <p:column headerText="Email" sortBy="#{cliente.email}" width="15%">
+                    <h:outputText value="#{cliente.email}" />
+                </p:column>
+                <p:column headerText="Celular" sortBy="#{cliente.celular}" width="10%">
+                    <h:outputText value="#{cliente.celularFormatado}" />
+                </p:column>
+                <p:column headerText="Rua" sortBy="#{cliente.rua}" width="15%">
+                    <h:outputText value="#{cliente.rua.length() > 20 ? cliente.rua.substring(0, 20) + '...' : cliente.rua}" title="#{cliente.rua}" />
+                </p:column>
+                <p:column headerText="Bairro" sortBy="#{cliente.bairro}" width="15%">
+                    <h:outputText value="#{cliente.bairro.length() > 20 ? cliente.bairro.substring(0, 20) + '...' : cliente.bairro}" title="#{cliente.bairro}" />
+                </p:column>
+                <p:column headerText="Status" sortBy="#{cliente.status}" width="10%">
+                    <h:outputText value="#{cliente.status.descricao}" />
+                </p:column>
+                <p:column headerText="Data Nasc." sortBy="#{cliente.dataNascimento}" width="12%">
+                    <h:outputText value="#{cliente.dataNascimento}" />
+                </p:column>
+                <p:column headerText="Cidade" sortBy="#{cliente.cidade.nome}" width="10%">
+                    <h:outputText value="#{cliente.cidade.nome}" />
+                </p:column>
+                <p:column headerText="Data Cadastro" sortBy="#{cliente.dataCadastro}" width="12%">
+                    <h:outputText value="#{cliente.dataCadastroFormatado}" />
+                </p:column>
+                <p:column headerText="Data Alteração" sortBy="#{cliente.dataAlteracao}" width="12%">
+                    <h:outputText value="#{cliente.dataAlteracaoFormatado}" />
+                </p:column>
+                <p:column headerText="Ações" exportable="false" width="18%">
+                    <p:commandButton icon="pi pi-pencil"
+                                   action="#{clientesBean.prepararEdicao(cliente)}"
+                                   update="formDialogs:dialogEdicao"
+                                   oncomplete="PF('dialogEdicao').show()"
+                                   styleClass="ui-button-warning"
+                                   style="margin-right: 5px;" />
+                    <p:commandButton icon="pi pi-trash"
+                                   action="#{clientesBean.prepararExclusao(cliente)}"
+                                   update="formDialogs:confirmacaoExclusao"
+                                   oncomplete="PF('confirmacaoExclusao').show()"
+                                   styleClass="ui-button-danger" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </div>
+
+    <!-- DIALOGS -->
+    <h:form id="formDialogs">
+        <p:dialog id="dialogCadastro" widgetVar="dialogCadastro" header="Novo Cliente" modal="true" resizable="false" width="500" height="400">
+            <p:panelGrid columns="2" style="width:100%;margin-bottom:10px;gap:8px;" styleClass="ui-panelgrid-blank">
+                <p:outputLabel for="novoNome" value="Nome*: " style="font-weight:bold;text-align:left;" />
+                <p:inputText id="novoNome" value="#{clientesBean.novoCliente.nome}" required="true" requiredMessage="Nome é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" />
+
+                <p:outputLabel for="novoCpfCnpj" value="CPF/CNPJ*: " style="font-weight:bold;text-align:left;" />
+                <p:inputText id="novoCpfCnpj" value="#{clientesBean.novoCliente.cpfCnpj}" required="true" requiredMessage="CPF/CNPJ é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" validator="#{clientesBean.validarCpfCnpj}" onblur="formatarCpfCnpjField(this)" />
+
+                <p:outputLabel for="novoEmail" value="Email*: " style="font-weight:bold;text-align:left;" />
+                <p:inputText id="novoEmail" value="#{clientesBean.novoCliente.email}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" validator="#{clientesBean.validarEmail}" required="true" requiredMessage="Email é obrigatório" maxlength="80" title="#{clientesBean.novoCliente.email}" />
+
+                <p:outputLabel for="novoCelular" value="Celular*: " style="font-weight:bold;text-align:left;" />
+                <p:inputMask id="novoCelular" value="#{clientesBean.novoCliente.celular}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" mask="(99) 99999-9999" required="true" requiredMessage="Celular é obrigatório" />
+
+                <p:outputLabel for="novoRua" value="Rua*: " style="font-weight:bold;text-align:left;" />
+                <p:inputText id="novoRua" value="#{clientesBean.novoCliente.rua}" required="true" requiredMessage="Rua é obrigatória" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" maxlength="80" title="#{clientesBean.novoCliente.rua}" />
+
+                <p:outputLabel for="novoBairro" value="Bairro*: " style="font-weight:bold;text-align:left;" />
+                <p:inputText id="novoBairro" value="#{clientesBean.novoCliente.bairro}" required="true" requiredMessage="Bairro é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" maxlength="80" title="#{clientesBean.novoCliente.bairro}" />
+
+                <p:outputLabel for="novoStatus" value="Status*: " style="font-weight:bold;text-align:left;" />
+                <p:selectOneMenu id="novoStatus" value="#{clientesBean.novoCliente.status}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" required="true" requiredMessage="Status é obrigatório">
+                    <f:selectItem itemLabel="Selecione..." itemValue="" />
+                    <f:selectItems value="#{clientesBean.listaStatus}" var="status" itemLabel="#{status.descricao}" itemValue="#{status}" />
+                </p:selectOneMenu>
+
+                <p:outputLabel for="novoDataNascimento" value="Data Nascimento*: " style="font-weight:bold;text-align:left;" />
+                <p:calendar id="novoDataNascimento" value="#{clientesBean.novoCliente.dataNascimento}" required="true" requiredMessage="Data de nascimento é obrigatória" pattern="dd/MM/yyyy" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" showIcon="true" />
+
+                <p:outputLabel for="novoCidade" value="Cidade*: " style="font-weight:bold;text-align:left;" />
+                <p:selectOneMenu id="novoCidade" value="#{clientesBean.novoCliente.cidade}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" filter="true" filterMatchMode="contains" required="true" requiredMessage="Cidade é obrigatória">
+                    <f:selectItem itemLabel="Selecione..." itemValue="" />
+                    <f:selectItems value="#{clientesBean.listaCidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+                    <f:converter converterId="cidadeDTOConverter" />
+                </p:selectOneMenu>
+            </p:panelGrid>
+            <p:messages showDetail="true" closable="true" />
+            <f:facet name="footer">
+                <p:commandButton value="Salvar" action="#{clientesBean.salvarCliente}" update="formDados :mensagens" oncomplete="PF('dialogCadastro').hide()" styleClass="ui-button-success" />
+                <p:commandButton value="Cancelar" onclick="PF('dialogCadastro').hide()" type="button" styleClass="ui-button-secondary" />
+            </f:facet>
+        </p:dialog>
+    <p:dialog id="dialogEdicao" widgetVar="dialogEdicao" header="Editar Cliente" modal="true" resizable="false" width="500" height="400">
+            <p:panelGrid columns="2" style="width:100%;margin-bottom:10px;gap:8px;" styleClass="ui-panelgrid-blank">
+                <p:outputLabel for="editarNome" value="Nome*: " style="font-weight:bold;text-align:left;" rendered="#{clientesBean.clienteSelecionado != null}" />
+                <p:inputText id="editarNome" value="#{clientesBean.clienteSelecionado.nome}" required="true" requiredMessage="Nome é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" rendered="#{clientesBean.clienteSelecionado != null}" />
+
+                <p:outputLabel for="editarCpfCnpj" value="CPF/CNPJ*: " style="font-weight:bold;text-align:left;" rendered="#{clientesBean.clienteSelecionado != null}" />
+                <p:inputText id="editarCpfCnpj" value="#{clientesBean.clienteSelecionado.cpfCnpj}" required="true" requiredMessage="CPF/CNPJ é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" validator="#{clientesBean.validarCpfCnpj}" onblur="formatarCpfCnpjField(this)" rendered="#{clientesBean.clienteSelecionado != null}" />
+
+                <p:outputLabel for="editarEmail" value="Email*: " style="font-weight:bold;text-align:left;" rendered="#{clientesBean.clienteSelecionado != null}" />
+                <p:inputText id="editarEmail" value="#{clientesBean.clienteSelecionado.email}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" validator="#{clientesBean.validarEmail}" required="true" requiredMessage="Email é obrigatório" maxlength="80" title="#{clientesBean.clienteSelecionado.email}" rendered="#{clientesBean.clienteSelecionado != null}" />
+
+                <p:outputLabel for="editarCelular" value="Celular*: " style="font-weight:bold;text-align:left;" rendered="#{clientesBean.clienteSelecionado != null}" />
+                <p:inputMask id="editarCelular" value="#{clientesBean.clienteSelecionado.celular}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" mask="(99) 99999-9999" required="true" requiredMessage="Celular é obrigatório" rendered="#{clientesBean.clienteSelecionado != null}" />
+
+                <p:outputLabel for="editarRua" value="Rua*: " style="font-weight:bold;text-align:left;" rendered="#{clientesBean.clienteSelecionado != null}" />
+                <p:inputText id="editarRua" value="#{clientesBean.clienteSelecionado.rua}" required="true" requiredMessage="Rua é obrigatória" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" maxlength="80" title="#{clientesBean.clienteSelecionado.rua}" rendered="#{clientesBean.clienteSelecionado != null}" />
+
+                <p:outputLabel for="editarBairro" value="Bairro*: " style="font-weight:bold;text-align:left;" rendered="#{clientesBean.clienteSelecionado != null}" />
+                <p:inputText id="editarBairro" value="#{clientesBean.clienteSelecionado.bairro}" required="true" requiredMessage="Bairro é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" maxlength="80" title="#{clientesBean.clienteSelecionado.bairro}" rendered="#{clientesBean.clienteSelecionado != null}" />
+
+                <p:outputLabel for="editarStatus" value="Status*: " style="font-weight:bold;text-align:left;" rendered="#{clientesBean.clienteSelecionado != null}" />
+                <p:selectOneMenu id="editarStatus" value="#{clientesBean.clienteSelecionado.status}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" required="true" requiredMessage="Status é obrigatório" rendered="#{clientesBean.clienteSelecionado != null}">
+                    <f:selectItem itemLabel="Selecione..." itemValue="" />
+                    <f:selectItems value="#{clientesBean.listaStatus}" var="status" itemLabel="#{status.descricao}" itemValue="#{status}" />
+                </p:selectOneMenu>
+
+                <p:outputLabel for="editarDataNascimento" value="Data Nascimento*: " style="font-weight:bold;text-align:left;" rendered="#{clientesBean.clienteSelecionado != null}" />
+                <p:calendar id="editarDataNascimento" value="#{clientesBean.clienteSelecionado.dataNascimento}" required="true" requiredMessage="Data de nascimento é obrigatória" pattern="dd/MM/yyyy" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" showIcon="true" rendered="#{clientesBean.clienteSelecionado != null}" />
+
+                <p:outputLabel for="editarCidade" value="Cidade*: " style="font-weight:bold;text-align:left;" rendered="#{clientesBean.clienteSelecionado != null}" />
+                <p:selectOneMenu id="editarCidade" value="#{clientesBean.clienteSelecionado.cidade}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" filter="true" filterMatchMode="contains" required="true" requiredMessage="Cidade é obrigatória" rendered="#{clientesBean.clienteSelecionado != null}">
+                    <f:selectItem itemLabel="Selecione..." itemValue="" />
+                    <f:selectItems value="#{clientesBean.listaCidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+                    <f:converter converterId="cidadeDTOConverter" />
+                </p:selectOneMenu>
+            </p:panelGrid>
+            <p:messages showDetail="true" closable="true" />
+            <f:facet name="footer">
+                <p:commandButton value="Atualizar" action="#{clientesBean.editarCliente}" process="formDialogs:dialogEdicao" update="formDados :mensagens" oncomplete="if (!args.validationFailed) PF('dialogEdicao').hide()" styleClass="ui-button-success" />
+                <p:commandButton value="Cancelar" onclick="PF('dialogEdicao').hide()" type="button" styleClass="ui-button-secondary" />
+            </f:facet>
+        </p:dialog>
+        <p:dialog id="confirmacaoExclusao" widgetVar="confirmacaoExclusao" header="Confirmar Exclusão" modal="true" resizable="false" width="400" height="200">
+            <p:panelGrid columns="1" style="text-align: center; margin: 10px 0;">
+                <h:outputText value="Esta ação não pode ser desfeita!" style="color: #d32f2f; font-weight: bold;" />
+                <h:outputText value="Cliente: #{clientesBean.clienteSelecionado.nome}" rendered="#{clientesBean.clienteSelecionado != null}" style="font-weight: bold; margin-top: 10px;" />
+            </p:panelGrid>
+            <p:commandButton id="confirmar" value="Sim, Excluir" action="#{clientesBean.excluirCliente}" process="@this" update="formDados :mensagens" oncomplete="PF('confirmacaoExclusao').hide()" styleClass="ui-button-danger" icon="pi pi-check" />
+            <p:commandButton id="cancelar" value="Cancelar" onclick="PF('confirmacaoExclusao').hide(); return false;" process="@none" type="button" styleClass="ui-button-secondary" icon="pi pi-times" />
+        </p:dialog>
+    </h:form>
 </h:body>
 </html>
