@@ -9,6 +9,38 @@ import br.com.wbcars.enuns.StatusGeral;
 import br.com.wbcars.enuns.TipoFornecimento;
 
 public class FornecedorDTO implements Serializable {
+    public String getCpfCnpjFormatado() {
+        if (cpfCnpj == null) return "";
+        String value = cpfCnpj.replaceAll("[^0-9]", "");
+        if (value.length() == 11) {
+            return value.replaceFirst("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
+        } else if (value.length() == 14) {
+            return value.replaceFirst("(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})", "$1.$2.$3/$4-$5");
+        }
+        return cpfCnpj;
+    }
+
+    public String getTelefoneFormatado() {
+        if (telefone == null) return "";
+        String value = telefone.replaceAll("[^0-9]", "");
+        if (value.length() == 11) {
+            return value.replaceFirst("(\\d{2})(\\d{5})(\\d{4})", "($1) $2-$3");
+        } else if (value.length() == 10) {
+            return value.replaceFirst("(\\d{2})(\\d{4})(\\d{4})", "($1) $2-$3");
+        }
+        return telefone;
+    }
+    public String getDataCadastroFormatado() {
+        if (dataCadastro == null) return "";
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dataCadastro.format(formatter);
+    }
+
+    public String getDataAlteracaoFormatado() {
+        if (dataAlteracao == null) return "";
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dataAlteracao.format(formatter);
+    }
 
 	private static final long serialVersionUID = -6729930439773845363L;
 	

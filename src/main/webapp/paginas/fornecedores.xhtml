@@ -1,35 +1,231 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <f:facet name="first">
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>WB Cars - Fornecedores</title>
-    </f:facet>
-    
-    <!-- Custom CSS com parâmetro para evitar cache -->
-    <h:outputStylesheet library="css" name="wbcars.css">
-        <f:param name="v" value="#{java.time.LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC)}"/>
-    </h:outputStylesheet>
+	<f:facet name="first">
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>WB Cars - Fornecedores</title>
+	</f:facet>
+	<h:outputStylesheet library="css" name="wbcars.css">
+		<f:param name="v" value="#{java.time.LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC)}"/>
+	</h:outputStylesheet>
 </h:head>
 
 <h:body styleClass="dashboard-container">
-    <!-- Verificação de autenticação -->
-    <f:event type="preRenderView" listener="#{fornecedoresBean.headerBean.verificarLogin()}"/>
+	<f:event type="preRenderView" listener="#{fornecedoresBean.headerBean.verificarLogin()}"/>
+	<f:event type="preRenderView" listener="#{fornecedoresBean.init()}"/>
+	<ui:include src="/componentes/header.xhtml"/>
     
-    <!-- Inicialização do bean da página -->
-    <f:event type="preRenderView" listener="#{fornecedoresBean.init()}"/>
-    
-    <!-- Header componentizado -->
-    <ui:include src="/componentes/header.xhtml"/>
-    
-    <!-- Título da página -->
-    <div class="dashboard-title" style="text-align:center; margin: 20px 0; font-size:28px; font-weight:800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🏭 Fornecedores</div>
-    
+	<div class="welcome-panel" style="padding-top: 2px; padding-bottom: 6px;">
+		<h2 style="display: flex; align-items: center; gap: 12px; font-size: 30px; font-weight: 900; color: #333; font-family: 'Segoe UI', 'Arial', sans-serif; letter-spacing: 1px; margin: 20px 0 10px 0;">
+			<span style="font-size: 34px;">🏢</span> Fornecedores
+		</h2>
+	</div>
+
+	<!-- FILTROS -->
+	<div class="welcome-panel">
+		<h:form id="formFiltros">
+			<p:panelGrid columns="4" style="width: 100%; margin-bottom: 10px;">
+				<h:panelGroup>
+					<p:outputLabel value="Campo: " for="campoBusca" style="margin-right: 5px;" />
+					<p:selectOneMenu id="campoBusca" value="#{fornecedoresBean.campoBusca}" style="width: 180px;">
+						<f:selectItem itemLabel="Selecione a coluna..." itemValue="" />
+						<f:selectItem itemLabel="ID" itemValue="id" />
+						<f:selectItem itemLabel="Nome" itemValue="nome" />
+						<f:selectItem itemLabel="CPF/CNPJ" itemValue="cpfCnpj" />
+						<f:selectItem itemLabel="Email" itemValue="email" />
+						<f:selectItem itemLabel="Telefone" itemValue="telefone" />
+						<f:selectItem itemLabel="Rua" itemValue="rua" />
+						<f:selectItem itemLabel="Bairro" itemValue="bairro" />
+						<f:selectItem itemLabel="Status" itemValue="status" />
+						<f:selectItem itemLabel="Cidade" itemValue="cidade" />
+						<f:selectItem itemLabel="Data Cadastro" itemValue="dataCadastro" />
+						<f:selectItem itemLabel="Data Alteração" itemValue="dataAlteracao" />
+					</p:selectOneMenu>
+				</h:panelGroup>
+				<h:panelGroup>
+					<p:outputLabel value="Valor: " for="valorBusca" style="margin-right: 5px;" />
+					<p:inputText id="valorBusca" value="#{fornecedoresBean.valorBusca}" placeholder="Digite o valor para buscar..." style="width: 180px;" />
+				</h:panelGroup>
+				<p:commandButton value="Buscar"
+							   action="#{fornecedoresBean.buscarFornecedores}"
+							   update=":formDados:tabelaFornecedores :mensagens"
+							   process="@form"
+							   styleClass="ui-button-success" />
+				<p:commandButton value="Limpar"
+							   action="#{fornecedoresBean.limparFiltros}"
+							   update=":formFiltros :formDados:tabelaFornecedores :mensagens"
+							   process="@this"
+							   styleClass="ui-button-secondary" />
+			</p:panelGrid>
+			<div style="text-align: center; margin-top: 10px;">
+				<p:commandButton value="Novo Fornecedor"
+							   action="#{fornecedoresBean.abrirDialogNovoFornecedor}"
+							   update="formDialogs:dialogCadastro"
+							   oncomplete="PF('dialogCadastro').show()"
+							   styleClass="ui-button-info" />
+			</div>
+		</h:form>
+	</div>
+
+	<!-- MENSAGENS DE FEEDBACK -->
+	<p:messages id="mensagens" showDetail="true" closable="true" style="margin: 10px 0;" />
+
+	<!-- GRID -->
+	<div class="actions-panel">
+		<h:form id="formDados">
+			<p:dataTable id="tabelaFornecedores"
+					   value="#{fornecedoresBean.fornecedores}"
+					   var="fornecedor"
+					   paginator="true"
+					   rows="10"
+					   sortMode="multiple"
+					   reflow="true"
+					   emptyMessage="Nenhum fornecedor encontrado"
+					   styleClass="ui-datatable-striped">
+				<p:column headerText="ID" sortBy="#{fornecedor.id}" width="8%">
+					<h:outputText value="#{fornecedor.id}" />
+				</p:column>
+				<p:column headerText="Nome" sortBy="#{fornecedor.nome}" width="20%">
+					<h:outputText value="#{fornecedor.nome}" />
+				</p:column>
+				<p:column headerText="CPF/CNPJ" sortBy="#{fornecedor.cpfCnpj}" width="15%">
+					<h:outputText value="#{fornecedor.cpfCnpjFormatado}" />
+				</p:column>
+				<p:column headerText="Email" sortBy="#{fornecedor.email}" width="15%">
+					<h:outputText value="#{fornecedor.email}" />
+				</p:column>
+				<p:column headerText="Telefone" sortBy="#{fornecedor.telefone}" width="10%">
+					<h:outputText value="#{fornecedor.telefoneFormatado}" />
+				</p:column>
+				<p:column headerText="Rua" sortBy="#{fornecedor.rua}" width="15%">
+					<h:outputText value="#{fornecedor.rua.length() > 20 ? fornecedor.rua.substring(0, 20) + '...' : fornecedor.rua}" title="#{fornecedor.rua}" />
+				</p:column>
+				<p:column headerText="Bairro" sortBy="#{fornecedor.bairro}" width="15%">
+					<h:outputText value="#{fornecedor.bairro.length() > 20 ? fornecedor.bairro.substring(0, 20) + '...' : fornecedor.bairro}" title="#{fornecedor.bairro}" />
+				</p:column>
+				<p:column headerText="Status" sortBy="#{fornecedor.status}" width="10%">
+					<h:outputText value="#{fornecedor.status.descricao}" />
+				</p:column>
+				<p:column headerText="Cidade" sortBy="#{fornecedor.cidade.nome}" width="10%">
+					<h:outputText value="#{fornecedor.cidade.nome}" />
+				</p:column>
+				<p:column headerText="Data Cadastro" sortBy="#{fornecedor.dataCadastro}" width="12%">
+					<h:outputText value="#{fornecedor.dataCadastroFormatado}" />
+				</p:column>
+				<p:column headerText="Data Alteração" sortBy="#{fornecedor.dataAlteracao}" width="12%">
+					<h:outputText value="#{fornecedor.dataAlteracaoFormatado}" />
+				</p:column>
+				<p:column headerText="Ações" exportable="false" width="18%">
+					<p:commandButton icon="pi pi-pencil"
+								   action="#{fornecedoresBean.prepararEdicao(fornecedor)}"
+								   update="formDialogs:dialogEdicao"
+								   oncomplete="PF('dialogEdicao').show()"
+								   styleClass="ui-button-warning"
+								   style="margin-right: 5px;" />
+					<p:commandButton icon="pi pi-trash"
+								   action="#{fornecedoresBean.prepararExclusao(fornecedor)}"
+								   update="formDialogs:confirmacaoExclusao"
+								   oncomplete="PF('confirmacaoExclusao').show()"
+								   styleClass="ui-button-danger" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</div>
+
+	<!-- DIALOGS -->
+	<h:form id="formDialogs">
+		<p:dialog id="dialogCadastro" widgetVar="dialogCadastro" header="Novo Fornecedor" modal="true" resizable="false" width="500" height="400">
+			<p:panelGrid columns="2" style="width:100%;margin-bottom:10px;gap:8px;" styleClass="ui-panelgrid-blank">
+				<p:outputLabel for="novoNome" value="Nome*: " style="font-weight:bold;text-align:left;" />
+				<p:inputText id="novoNome" value="#{fornecedoresBean.novoFornecedor.nome}" required="true" requiredMessage="Nome é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" />
+
+				<p:outputLabel for="novoCpfCnpj" value="CPF/CNPJ*: " style="font-weight:bold;text-align:left;" />
+				<p:inputText id="novoCpfCnpj" value="#{fornecedoresBean.novoFornecedor.cpfCnpj}" required="true" requiredMessage="CPF/CNPJ é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" validator="#{fornecedoresBean.validarCpfCnpj}" onblur="formatarCpfCnpjField(this)" />
+
+				<p:outputLabel for="novoEmail" value="Email*: " style="font-weight:bold;text-align:left;" />
+				<p:inputText id="novoEmail" value="#{fornecedoresBean.novoFornecedor.email}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" validator="#{fornecedoresBean.validarEmail}" required="true" requiredMessage="Email é obrigatório" maxlength="80" title="#{fornecedoresBean.novoFornecedor.email}" />
+
+				<p:outputLabel for="novoTelefone" value="Telefone*: " style="font-weight:bold;text-align:left;" />
+				<p:inputMask id="novoTelefone" value="#{fornecedoresBean.novoFornecedor.telefone}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" mask="(99) 99999-9999" required="true" requiredMessage="Telefone é obrigatório" />
+
+				<p:outputLabel for="novoRua" value="Rua*: " style="font-weight:bold;text-align:left;" />
+				<p:inputText id="novoRua" value="#{fornecedoresBean.novoFornecedor.rua}" required="true" requiredMessage="Rua é obrigatória" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" maxlength="80" title="#{fornecedoresBean.novoFornecedor.rua}" />
+
+				<p:outputLabel for="novoBairro" value="Bairro*: " style="font-weight:bold;text-align:left;" />
+				<p:inputText id="novoBairro" value="#{fornecedoresBean.novoFornecedor.bairro}" required="true" requiredMessage="Bairro é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" maxlength="80" title="#{fornecedoresBean.novoFornecedor.bairro}" />
+
+				<p:outputLabel for="novoStatus" value="Status*: " style="font-weight:bold;text-align:left;" />
+				<p:selectOneMenu id="novoStatus" value="#{fornecedoresBean.novoFornecedor.status}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" required="true" requiredMessage="Status é obrigatório">
+					<f:selectItem itemLabel="Selecione..." itemValue="" />
+					<f:selectItems value="#{fornecedoresBean.listaStatus}" var="status" itemLabel="#{status.descricao}" itemValue="#{status}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel for="novoCidade" value="Cidade*: " style="font-weight:bold;text-align:left;" />
+				<p:selectOneMenu id="novoCidade" value="#{fornecedoresBean.novoFornecedor.cidade}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" filter="true" filterMatchMode="contains" required="true" requiredMessage="Cidade é obrigatória">
+					<f:selectItem itemLabel="Selecione..." itemValue="" />
+					<f:selectItems value="#{fornecedoresBean.listaCidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+					<f:converter converterId="cidadeDTOConverter" />
+				</p:selectOneMenu>
+			</p:panelGrid>
+			<p:messages showDetail="true" closable="true" />
+			<f:facet name="footer">
+				<p:commandButton value="Salvar" action="#{fornecedoresBean.salvarFornecedor}" update="formDados :mensagens" oncomplete="PF('dialogCadastro').hide()" styleClass="ui-button-success" />
+				<p:commandButton value="Cancelar" onclick="PF('dialogCadastro').hide()" type="button" styleClass="ui-button-secondary" />
+			</f:facet>
+		</p:dialog>
+	<p:dialog id="dialogEdicao" widgetVar="dialogEdicao" header="Editar Fornecedor" modal="true" resizable="false" width="500" height="400">
+			<p:panelGrid columns="2" style="width:100%;margin-bottom:10px;gap:8px;" styleClass="ui-panelgrid-blank">
+				<p:outputLabel for="editarNome" value="Nome*: " style="font-weight:bold;text-align:left;" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+				<p:inputText id="editarNome" value="#{fornecedoresBean.fornecedorSelecionado.nome}" required="true" requiredMessage="Nome é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+
+				<p:outputLabel for="editarCpfCnpj" value="CPF/CNPJ*: " style="font-weight:bold;text-align:left;" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+				<p:inputText id="editarCpfCnpj" value="#{fornecedoresBean.fornecedorSelecionado.cpfCnpj}" required="true" requiredMessage="CPF/CNPJ é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" validator="#{fornecedoresBean.validarCpfCnpj}" onblur="formatarCpfCnpjField(this)" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+
+				<p:outputLabel for="editarEmail" value="Email*: " style="font-weight:bold;text-align:left;" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+				<p:inputText id="editarEmail" value="#{fornecedoresBean.fornecedorSelecionado.email}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" validator="#{fornecedoresBean.validarEmail}" required="true" requiredMessage="Email é obrigatório" maxlength="80" title="#{fornecedoresBean.fornecedorSelecionado.email}" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+
+				<p:outputLabel for="editarTelefone" value="Telefone*: " style="font-weight:bold;text-align:left;" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+				<p:inputMask id="editarTelefone" value="#{fornecedoresBean.fornecedorSelecionado.telefone}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" mask="(99) 99999-9999" required="true" requiredMessage="Telefone é obrigatório" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+
+				<p:outputLabel for="editarRua" value="Rua*: " style="font-weight:bold;text-align:left;" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+				<p:inputText id="editarRua" value="#{fornecedoresBean.fornecedorSelecionado.rua}" required="true" requiredMessage="Rua é obrigatória" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" maxlength="80" title="#{fornecedoresBean.fornecedorSelecionado.rua}" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+
+				<p:outputLabel for="editarBairro" value="Bairro*: " style="font-weight:bold;text-align:left;" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+				<p:inputText id="editarBairro" value="#{fornecedoresBean.fornecedorSelecionado.bairro}" required="true" requiredMessage="Bairro é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" maxlength="80" title="#{fornecedoresBean.fornecedorSelecionado.bairro}" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+
+				<p:outputLabel for="editarStatus" value="Status*: " style="font-weight:bold;text-align:left;" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+				<p:selectOneMenu id="editarStatus" value="#{fornecedoresBean.fornecedorSelecionado.status}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" required="true" requiredMessage="Status é obrigatório" rendered="#{fornecedoresBean.fornecedorSelecionado != null}">
+					<f:selectItem itemLabel="Selecione..." itemValue="" />
+					<f:selectItems value="#{fornecedoresBean.listaStatus}" var="status" itemLabel="#{status.descricao}" itemValue="#{status}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel for="editarCidade" value="Cidade*: " style="font-weight:bold;text-align:left;" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" />
+				<p:selectOneMenu id="editarCidade" value="#{fornecedoresBean.fornecedorSelecionado.cidade}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" filter="true" filterMatchMode="contains" required="true" requiredMessage="Cidade é obrigatória" rendered="#{fornecedoresBean.fornecedorSelecionado != null}">
+					<f:selectItem itemLabel="Selecione..." itemValue="" />
+					<f:selectItems value="#{fornecedoresBean.listaCidades}" var="cidade" itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+					<f:converter converterId="cidadeDTOConverter" />
+				</p:selectOneMenu>
+			</p:panelGrid>
+			<p:messages showDetail="true" closable="true" />
+			<f:facet name="footer">
+				<p:commandButton value="Atualizar" action="#{fornecedoresBean.editarFornecedor}" process="formDialogs:dialogEdicao" update="formDados :mensagens" oncomplete="if (!args.validationFailed) PF('dialogEdicao').hide()" styleClass="ui-button-success" />
+				<p:commandButton value="Cancelar" onclick="PF('dialogEdicao').hide()" type="button" styleClass="ui-button-secondary" />
+			</f:facet>
+		</p:dialog>
+		<p:dialog id="confirmacaoExclusao" widgetVar="confirmacaoExclusao" header="Confirmar Exclusão" modal="true" resizable="false" width="400" height="200">
+			<p:panelGrid columns="1" style="text-align: center; margin: 10px 0;">
+				<h:outputText value="Esta ação não pode ser desfeita!" style="color: #d32f2f; font-weight: bold;" />
+				<h:outputText value="Fornecedor: #{fornecedoresBean.fornecedorSelecionado.nome}" rendered="#{fornecedoresBean.fornecedorSelecionado != null}" style="font-weight: bold; margin-top: 10px;" />
+			</p:panelGrid>
+			<p:commandButton id="confirmar" value="Sim, Excluir" action="#{fornecedoresBean.excluirFornecedor}" process="@this" update="formDados :mensagens" oncomplete="PF('confirmacaoExclusao').hide()" styleClass="ui-button-danger" icon="pi pi-check" />
+			<p:commandButton id="cancelar" value="Cancelar" onclick="PF('confirmacaoExclusao').hide(); return false;" process="@none" type="button" styleClass="ui-button-secondary" icon="pi pi-times" />
+		</p:dialog>
+	</h:form>
 </h:body>
 </html>
