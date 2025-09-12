@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -11,25 +12,168 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>WB Cars - Produtos</title>
     </f:facet>
-    
-    <!-- Custom CSS com parâmetro para evitar cache -->
     <h:outputStylesheet library="css" name="wbcars.css">
         <f:param name="v" value="#{java.time.LocalDateTime.now().toEpochSecond(java.time.ZoneOffset.UTC)}"/>
     </h:outputStylesheet>
 </h:head>
 
 <h:body styleClass="dashboard-container">
-    <!-- Verificação de autenticação -->
     <f:event type="preRenderView" listener="#{produtosBean.headerBean.verificarLogin()}"/>
-    
-    <!-- Inicialização do bean da página -->
     <f:event type="preRenderView" listener="#{produtosBean.init()}"/>
-    
-    <!-- Header componentizado -->
     <ui:include src="/componentes/header.xhtml"/>
-    
-    <!-- Título da página -->
     <div class="dashboard-title" style="text-align:center; margin: 20px 0; font-size:28px; font-weight:800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">📦 Produtos</div>
-    
+
+    <!-- FILTROS -->
+    <div class="welcome-panel">
+        <h:form id="formFiltros">
+            <p:panelGrid columns="4" style="width: 100%; margin-bottom: 10px;">
+                <h:panelGroup>
+                    <p:outputLabel value="Campo: " for="campoBusca" style="margin-right: 5px;" />
+                    <p:selectOneMenu id="campoBusca" value="#{produtosBean.campoBusca}" style="width: 180px;">
+                        <f:selectItem itemLabel="Selecione a coluna..." itemValue="" />
+                        <f:selectItem itemLabel="ID" itemValue="id" />
+                        <f:selectItem itemLabel="Nome" itemValue="nome" />
+                        <f:selectItem itemLabel="Fornecedor" itemValue="fornecedor" />
+                        <f:selectItem itemLabel="Unidade de Medida" itemValue="unidadeMedida" />
+                        <f:selectItem itemLabel="Data Cadastro" itemValue="dataCadastro" />
+                        <f:selectItem itemLabel="Data Alteração" itemValue="dataAlteracao" />
+                    </p:selectOneMenu>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:outputLabel value="Valor: " for="valorBusca" style="margin-right: 5px;" />
+                    <p:inputText id="valorBusca" value="#{produtosBean.valorBusca}" placeholder="Digite o valor para buscar..." style="width: 180px;" />
+                </h:panelGroup>
+                <p:commandButton value="Buscar"
+                               action="#{produtosBean.buscarProdutos}"
+                               update=":formDados:tabelaProdutos :mensagens"
+                               process="@form"
+                               styleClass="ui-button-success" />
+                <p:commandButton value="Limpar"
+                               action="#{produtosBean.limparFiltros}"
+                               update=":formFiltros :formDados:tabelaProdutos :mensagens"
+                               process="@this"
+                               styleClass="ui-button-secondary" />
+            </p:panelGrid>
+            <div style="text-align: center; margin-top: 10px;">
+                <p:commandButton value="Novo Produto"
+                               action="#{produtosBean.abrirDialogNovoProduto}"
+                               update="formDialogs:dialogCadastro"
+                               oncomplete="PF('dialogCadastro').show()"
+                               styleClass="ui-button-info" />
+            </div>
+        </h:form>
+    </div>
+
+    <!-- MENSAGENS DE FEEDBACK -->
+    <p:messages id="mensagens" showDetail="true" closable="true" style="margin: 10px 0;" />
+
+    <!-- GRID -->
+    <div class="actions-panel">
+        <h:form id="formDados">
+            <p:dataTable id="tabelaProdutos"
+                       value="#{produtosBean.produtos}"
+                       var="produto"
+                       paginator="true"
+                       rows="10"
+                       sortMode="multiple"
+                       reflow="true"
+                       emptyMessage="Nenhum produto encontrado"
+                       styleClass="ui-datatable-striped">
+                <p:column headerText="ID" sortBy="#{produto.id}" width="8%">
+                    <h:outputText value="#{produto.id}" />
+                </p:column>
+                <p:column headerText="Nome" sortBy="#{produto.nome}" width="20%">
+                    <h:outputText value="#{produto.nome}" />
+                </p:column>
+                <p:column headerText="Fornecedor" sortBy="#{produto.fornecedor.nome}" width="20%">
+                    <h:outputText value="#{produto.fornecedor.nome}" />
+                </p:column>
+                <p:column headerText="Unidade de Medida" sortBy="#{produto.unidadeMedida.tipo}" width="15%">
+                    <h:outputText value="#{produto.unidadeMedida.tipo}" />
+                </p:column>
+                <p:column headerText="Data Cadastro" sortBy="#{produto.dataCadastro}" width="12%">
+                    <h:outputText value="#{produto.dataCadastroFormatado}" />
+                </p:column>
+                <p:column headerText="Data Alteração" sortBy="#{produto.dataAlteracao}" width="12%">
+                    <h:outputText value="#{produto.dataAlteracaoFormatado}" />
+                </p:column>
+                <p:column headerText="Ações" exportable="false" width="18%">
+                    <p:commandButton icon="pi pi-pencil"
+                                   action="#{produtosBean.prepararEdicao(produto)}"
+                                   update="formDialogs:dialogEdicao"
+                                   oncomplete="PF('dialogEdicao').show()"
+                                   styleClass="ui-button-warning"
+                                   style="margin-right: 5px;" />
+                    <p:commandButton icon="pi pi-trash"
+                                   action="#{produtosBean.prepararExclusao(produto)}"
+                                   update="formDialogs:confirmacaoExclusao"
+                                   oncomplete="PF('confirmacaoExclusao').show()"
+                                   styleClass="ui-button-danger" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </div>
+
+    <!-- DIALOGS -->
+    <h:form id="formDialogs">
+        <p:dialog id="dialogCadastro" widgetVar="dialogCadastro" header="Novo Produto" modal="true" resizable="false" width="500" height="400">
+            <p:panelGrid columns="2" style="width:100%;margin-bottom:10px;gap:8px;" styleClass="ui-panelgrid-blank">
+                <p:outputLabel for="novoNome" value="Nome*: " style="font-weight:bold;text-align:left;" />
+                <p:inputText id="novoNome" value="#{produtosBean.novoProduto.nome}" required="true" requiredMessage="Nome é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" />
+
+                <p:outputLabel for="novoFornecedor" value="Fornecedor*: " style="font-weight:bold;text-align:left;" />
+                <p:selectOneMenu id="novoFornecedor" value="#{produtosBean.novoProduto.fornecedor}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" filter="true" filterMatchMode="contains" required="true" requiredMessage="Fornecedor é obrigatório">
+                    <f:selectItem itemLabel="Selecione..." itemValue="" />
+                    <f:selectItems value="#{produtosBean.listaFornecedores}" var="fornecedor" itemLabel="#{fornecedor.nome}" itemValue="#{fornecedor}" />
+                    <f:converter converterId="fornecedorDTOConverter" />
+                </p:selectOneMenu>
+
+                <p:outputLabel for="novoUnidade" value="Unidade de Medida*: " style="font-weight:bold;text-align:left;" />
+                <p:selectOneMenu id="novoUnidade" value="#{produtosBean.novoProduto.unidadeMedida}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" filter="true" filterMatchMode="contains" required="true" requiredMessage="Unidade de medida é obrigatória">
+                    <f:selectItem itemLabel="Selecione..." itemValue="" />
+                    <f:selectItems value="#{produtosBean.listaUnidades}" var="unidade" itemLabel="#{unidade.tipo}" itemValue="#{unidade}" />
+                    <f:converter converterId="unidadeMedidaDTOConverter" />
+                </p:selectOneMenu>
+            </p:panelGrid>
+            <p:messages showDetail="true" closable="true" />
+            <f:facet name="footer">
+                <p:commandButton value="Salvar" action="#{produtosBean.salvarProduto}" update="formDados :mensagens" oncomplete="PF('dialogCadastro').hide()" styleClass="ui-button-success" />
+                <p:commandButton value="Cancelar" onclick="PF('dialogCadastro').hide()" type="button" styleClass="ui-button-secondary" />
+            </f:facet>
+        </p:dialog>
+    <p:dialog id="dialogEdicao" widgetVar="dialogEdicao" header="Editar Produto" modal="true" resizable="false" width="500" height="400">
+            <p:panelGrid columns="2" style="width:100%;margin-bottom:10px;gap:8px;" styleClass="ui-panelgrid-blank">
+                <p:outputLabel for="editarNome" value="Nome*: " style="font-weight:bold;text-align:left;" rendered="#{produtosBean.produtoSelecionado != null}" />
+                <p:inputText id="editarNome" value="#{produtosBean.produtoSelecionado.nome}" required="true" requiredMessage="Nome é obrigatório" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" rendered="#{produtosBean.produtoSelecionado != null}" />
+
+                <p:outputLabel for="editarFornecedor" value="Fornecedor*: " style="font-weight:bold;text-align:left;" rendered="#{produtosBean.produtoSelecionado != null}" />
+                <p:selectOneMenu id="editarFornecedor" value="#{produtosBean.produtoSelecionado.fornecedor}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" filter="true" filterMatchMode="contains" required="true" requiredMessage="Fornecedor é obrigatório" rendered="#{produtosBean.produtoSelecionado != null}">
+                    <f:selectItem itemLabel="Selecione..." itemValue="" />
+                    <f:selectItems value="#{produtosBean.listaFornecedores}" var="fornecedor" itemLabel="#{fornecedor.nome}" itemValue="#{fornecedor}" />
+                    <f:converter converterId="fornecedorDTOConverter" />
+                </p:selectOneMenu>
+
+                <p:outputLabel for="editarUnidade" value="Unidade de Medida*: " style="font-weight:bold;text-align:left;" rendered="#{produtosBean.produtoSelecionado != null}" />
+                <p:selectOneMenu id="editarUnidade" value="#{produtosBean.produtoSelecionado.unidadeMedida}" style="width:98%;min-width:260px;max-width:400px;margin-left:-68px;" filter="true" filterMatchMode="contains" required="true" requiredMessage="Unidade de medida é obrigatória" rendered="#{produtosBean.produtoSelecionado != null}">
+                    <f:selectItem itemLabel="Selecione..." itemValue="" />
+                    <f:selectItems value="#{produtosBean.listaUnidades}" var="unidade" itemLabel="#{unidade.tipo}" itemValue="#{unidade}" />
+                    <f:converter converterId="unidadeMedidaDTOConverter" />
+                </p:selectOneMenu>
+            </p:panelGrid>
+            <p:messages showDetail="true" closable="true" />
+            <f:facet name="footer">
+                <p:commandButton value="Atualizar" action="#{produtosBean.editarProduto}" process="formDialogs:dialogEdicao" update="formDados :mensagens" oncomplete="if (!args.validationFailed) PF('dialogEdicao').hide()" styleClass="ui-button-success" />
+                <p:commandButton value="Cancelar" onclick="PF('dialogEdicao').hide()" type="button" styleClass="ui-button-secondary" />
+            </f:facet>
+        </p:dialog>
+        <p:dialog id="confirmacaoExclusao" widgetVar="confirmacaoExclusao" header="Confirmar Exclusão" modal="true" resizable="false" width="400" height="200">
+            <p:panelGrid columns="1" style="text-align: center; margin: 10px 0;">
+                <h:outputText value="Esta ação não pode ser desfeita!" style="color: #d32f2f; font-weight: bold;" />
+                <h:outputText value="Produto: #{produtosBean.produtoSelecionado.nome}" rendered="#{produtosBean.produtoSelecionado != null}" style="font-weight: bold; margin-top: 10px;" />
+            </p:panelGrid>
+            <p:commandButton id="confirmar" value="Sim, Excluir" action="#{produtosBean.excluirProduto}" process="@this" update="formDados :mensagens" oncomplete="PF('confirmacaoExclusao').hide()" styleClass="ui-button-danger" icon="pi pi-check" />
+            <p:commandButton id="cancelar" value="Cancelar" onclick="PF('confirmacaoExclusao').hide(); return false;" process="@none" type="button" styleClass="ui-button-secondary" icon="pi pi-times" />
+        </p:dialog>
+    </h:form>
 </h:body>
 </html>

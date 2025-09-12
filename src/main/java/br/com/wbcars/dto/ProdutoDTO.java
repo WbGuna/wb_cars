@@ -99,4 +99,16 @@ public class ProdutoDTO implements Serializable {
         ", dataAlteracao=" + dataAlteracao +
         '}';
     }
+
+    public String getDataCadastroFormatado() {
+        if (dataCadastro == null) return "";
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dataCadastro.format(formatter);
+    }
+
+    public String getDataAlteracaoFormatado() {
+        if (dataAlteracao == null) return "";
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dataAlteracao.format(formatter);
+    }
 }
